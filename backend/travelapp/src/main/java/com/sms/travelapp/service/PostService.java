@@ -1,0 +1,11 @@
+package com.sms.travelapp.service;
+
+import com.sms.travelapp.dto.PostResponseDto;
+
+import java.util.List;
+
+public interface PostService {
+
+    List<PostResponseDto> getAllPosts();
+
+    }
