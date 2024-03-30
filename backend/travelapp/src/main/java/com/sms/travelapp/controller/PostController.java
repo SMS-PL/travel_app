@@ -35,7 +35,6 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
-
     @PostMapping("/")
     public ResponseEntity<Map<String,String>> createPost(@Valid @RequestBody PostRequestDto postDto){
         String res = postService.createPost(postDto);

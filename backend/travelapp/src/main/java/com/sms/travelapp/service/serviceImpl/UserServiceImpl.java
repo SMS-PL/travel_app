@@ -31,5 +31,4 @@ public class UserServiceImpl implements UserService {
     public Boolean checkUsernameAvailability(String username) {
         return !userRepository.existsByUsername(username);
     }
-
 }

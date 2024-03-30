@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 @Table(name = "user")
 public class UserEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -55,5 +56,4 @@ public class UserEntity {
     @JoinTable(name = "user_role",joinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id"))
     private List<Role> roles = new ArrayList<>();
-
 }

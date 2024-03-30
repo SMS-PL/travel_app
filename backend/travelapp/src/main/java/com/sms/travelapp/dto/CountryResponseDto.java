@@ -15,7 +15,5 @@ public class CountryResponseDto {
     private String iso;
     private String nicename;
     private String iso3;
-
     private String description;
-
 }
