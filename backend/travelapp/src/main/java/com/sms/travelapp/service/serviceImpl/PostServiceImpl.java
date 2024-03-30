@@ -64,7 +64,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public String deletePost(Long id) {
         Post post = postRepository.findById(id).orElseThrow(
-                ()-> new PostNotFound("Post not found"));
+                ()-> new PostNotFound("Post id-"+id+" not found"));
 
         UserEntity user = authService.getLoggedUser();
 
@@ -79,7 +79,7 @@ public class PostServiceImpl implements PostService {
     public PostResponseDto updatePost(Long id,PostRequestDto postRequestDto) {
        UserEntity user = authService.getLoggedUser();
        Post postDb = postRepository.findById(id).orElseThrow(
-               ()-> new PostNotFound("Post not found")
+               ()-> new PostNotFound("Post id-"+id+" not found")
        );
        if(!postDb.getAuthorId().equals(user.getId())){
            throw new AccessDeniedException("You are not authorized to update this post");
@@ -97,7 +97,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseDto getPostById(Long id) {
         Post post = postRepository.findById(id).orElseThrow(
-                ()-> new PostNotFound("Post not found")
+                ()-> new PostNotFound("Post id-"+id+" not found")
         );
         return PostMapper.mapToPostResponseDto(post);
     }
