@@ -16,7 +16,7 @@ public class PostMapper {
                 .authorId(post.getAuthorId())
                 .countryId(post.getCountryId())
                 .imageUrl(post.getImageUrl())
-                .description(post.getContent())
+                .content(post.getContent())
                 .createdAt(post.getCreatedAt())
                 .lastUpdated(post.getLastUpdated())
                 .build();

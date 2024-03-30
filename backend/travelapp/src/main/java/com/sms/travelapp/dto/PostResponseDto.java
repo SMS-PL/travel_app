@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Builder
 public class PostResponseDto {
     private Long id;
-    private String description;
+    private String content;
     private Long countryId;
     private String imageUrl;
     private Long authorId;
