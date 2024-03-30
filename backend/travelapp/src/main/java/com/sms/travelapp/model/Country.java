@@ -11,13 +11,25 @@ public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
-    private Long id;
+    private int id;
 
-    @Column(name="coordinates") // coordinates of capital city
-    private String coordinates;
+    @Column(name="iso")
+    private String iso;
 
     @Column(name="name")
     private String name;
+
+    @Column(name="nicename")
+    private String nicename;
+
+    @Column(name = "iso3")
+    private String iso3;
+
+    @Column(name = "numcode")
+    private int numcode;
+
+    @Column(name="phonecode")
+    private int phonecode;
 
     @Column(name="description")
     private String description;
