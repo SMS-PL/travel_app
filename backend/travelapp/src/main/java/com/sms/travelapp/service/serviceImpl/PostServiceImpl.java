@@ -74,4 +74,23 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(post.getId());
         return "Post id-"+ id +" deleted";
     }
+
+    @Override
+    public PostResponseDto updatePost(Long id,PostRequestDto postRequestDto) {
+       UserEntity user = authService.getLoggedUser();
+       Post postDb = postRepository.findById(id).orElseThrow(
+               ()-> new PostNotFound("Post not found")
+       );
+       if(!postDb.getAuthorId().equals(user.getId())){
+           throw new AccessDeniedException("You are not authorized to update this post");
+       }
+
+       if(postRequestDto.getContent() != null){
+           postDb.setContent(postRequestDto.getContent());
+       }
+
+       postRepository.save(postDb);
+
+        return PostMapper.mapToPostResponseDto(postDb);
+    }
 }

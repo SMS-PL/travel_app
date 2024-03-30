@@ -5,6 +5,7 @@ import com.sms.travelapp.dto.PostResponseDto;
 import com.sms.travelapp.mapper.StringResponseMapper;
 import com.sms.travelapp.service.PostService;
 import jakarta.validation.Valid;
+import jakarta.websocket.MessageHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,6 @@ public class PostController {
 
     @GetMapping("/")
     public ResponseEntity<List<PostResponseDto>> getAllPosts(){
-        System.out.println("Hello");
         List<PostResponseDto> posts = postService.getAllPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
@@ -42,4 +42,12 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(StringResponseMapper.mapToMap(res));
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long id,
+                                                      @RequestBody PostRequestDto postRequestDto){
+        PostResponseDto updatedPost = postService.updatePost(id,postRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedPost);
+    }
+
 }
