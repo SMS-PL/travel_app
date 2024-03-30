@@ -26,7 +26,7 @@ public class Country {
     private String iso3;
 
     @Column(name = "numcode")
-    private int numcode;
+    private Integer numcode;
 
     @Column(name="phonecode")
     private int phonecode;
