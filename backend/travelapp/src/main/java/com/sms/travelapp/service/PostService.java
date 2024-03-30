@@ -14,4 +14,6 @@ public interface PostService {
     String deletePost(Long id);
 
     PostResponseDto updatePost(Long id,PostRequestDto postResponseDto);
+
+    PostResponseDto getPostById(Long id);
 }

@@ -93,4 +93,12 @@ public class PostServiceImpl implements PostService {
 
         return PostMapper.mapToPostResponseDto(postDb);
     }
+
+    @Override
+    public PostResponseDto getPostById(Long id) {
+        Post post = postRepository.findById(id).orElseThrow(
+                ()-> new PostNotFound("Post not found")
+        );
+        return PostMapper.mapToPostResponseDto(post);
+    }
 }
