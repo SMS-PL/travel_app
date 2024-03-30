@@ -7,4 +7,5 @@ import java.util.List;
 public interface CountryService {
     List<CountryResponseDto> getAllCountries();
 
+    CountryResponseDto getCountryById(int id);
 }
