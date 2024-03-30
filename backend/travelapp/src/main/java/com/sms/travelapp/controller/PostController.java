@@ -4,6 +4,7 @@ import com.sms.travelapp.dto.PostRequestDto;
 import com.sms.travelapp.dto.PostResponseDto;
 import com.sms.travelapp.mapper.StringResponseMapper;
 import com.sms.travelapp.service.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +30,16 @@ public class PostController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Map<String,String>> createPost(@RequestBody PostRequestDto postDto){
+    public ResponseEntity<Map<String,String>> createPost(@Valid @RequestBody PostRequestDto postDto){
         String res = postService.createPost(postDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(StringResponseMapper.mapToMap(res));
     }
 
-    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String,String>> deletePost(@PathVariable Long id){
+        String res = postService.deletePost(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(StringResponseMapper.mapToMap(res));
+    }
 }

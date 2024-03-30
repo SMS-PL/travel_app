@@ -11,4 +11,5 @@ public interface PostService {
 
     String createPost(PostRequestDto postDto);
 
+    String deletePost(Long id);
 }
