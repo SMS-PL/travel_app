@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -28,9 +29,11 @@ public class PostController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<HashMap<String,String>> createPost(@RequestBody PostRequestDto postDto){
+    public ResponseEntity<Map<String,String>> createPost(@RequestBody PostRequestDto postDto){
         String res = postService.createPost(postDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(StringResponseMapper.mapToMap(res));
     }
+
+    
 }
