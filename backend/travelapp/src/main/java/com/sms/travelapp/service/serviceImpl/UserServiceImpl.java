@@ -31,4 +31,9 @@ public class UserServiceImpl implements UserService {
     public Boolean checkUsernameAvailability(String username) {
         return !userRepository.existsByUsername(username);
     }
+
+    @Override
+    public Boolean checkEmailAvailability(String email) {
+        return !userRepository.existsByEmail(email);
+    }
 }

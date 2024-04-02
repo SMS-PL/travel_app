@@ -10,4 +10,6 @@ public interface UserService {
 
     Boolean checkUsernameAvailability(String username);
 
+    Boolean checkEmailAvailability(String email);
+
 }
