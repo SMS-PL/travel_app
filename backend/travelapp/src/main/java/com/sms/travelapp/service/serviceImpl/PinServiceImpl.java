@@ -35,9 +35,7 @@ public class PinServiceImpl implements PinService {
 
     @Override
     public PinResponseDto createPin(PinRequestDto pinRequestDto) {
-        System.out.println("elo");
         Pin pin = new Pin();
-        System.out.println("elo");
         UserEntity user = authService.getLoggedUser();
 
         pin.setAuthorId(user.getId());
