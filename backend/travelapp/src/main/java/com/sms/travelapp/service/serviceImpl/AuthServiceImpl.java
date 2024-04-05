@@ -17,7 +17,7 @@ public class AuthServiceImpl implements AuthService {
     public UserEntity getLoggedUser() {
         String username =
                 SecurityContextHolder.getContext().getAuthentication().getName();
-        UserEntity user = userRepository.findByUsername(username).orElseThrow(
+        UserEntity user = userRepository.findByEmail(username).orElseThrow(
                 ()-> new UsernameNotFoundException("User not found"));
         return user;
     }
