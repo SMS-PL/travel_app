@@ -10,4 +10,6 @@ public interface PinService {
     List<PinResponseDto> getAllPins();
 
     PinResponseDto createPin(PinRequestDto pinRequestDto);
+
+    String deletePin(Long pinId);
 }
