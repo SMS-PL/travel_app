@@ -2,6 +2,7 @@ package com.sms.travelapp.service.serviceImpl;
 
 import com.sms.travelapp.dto.Post.PostRequestDto;
 import com.sms.travelapp.dto.Post.PostResponseDto;
+import com.sms.travelapp.exception.AccessDenied;
 import com.sms.travelapp.exception.PostNotFound;
 import com.sms.travelapp.mapper.PostMapper;
 import com.sms.travelapp.model.Post;
@@ -65,7 +66,7 @@ public class PostServiceImpl implements PostService {
         UserEntity user = authService.getLoggedUser();
 
         if(!Objects.equals(post.getAuthorId(), user.getId())){
-            throw new AccessDeniedException("You are not authorized to delete this post");
+            throw new AccessDenied("You are not authorized to delete this post!");
         }
         postRepository.deleteById(post.getId());
         return "Post id-"+ id +" deleted";
