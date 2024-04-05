@@ -1,4 +1,4 @@
-package com.sms.travelapp.dto;
+package com.sms.travelapp.dto.Auth;
 
 import com.sms.travelapp.model.Role;
 import lombok.Builder;

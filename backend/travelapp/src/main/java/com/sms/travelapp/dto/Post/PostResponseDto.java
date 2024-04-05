@@ -1,4 +1,4 @@
-package com.sms.travelapp.dto;
+package com.sms.travelapp.dto.Post;
 
 import jakarta.persistence.Column;
 import lombok.Builder;

@@ -1,7 +1,7 @@
 package com.sms.travelapp.service;
 
-import com.sms.travelapp.dto.PostRequestDto;
-import com.sms.travelapp.dto.PostResponseDto;
+import com.sms.travelapp.dto.Post.PostRequestDto;
+import com.sms.travelapp.dto.Post.PostResponseDto;
 
 import java.util.List;
 

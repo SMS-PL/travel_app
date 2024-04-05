@@ -1,7 +1,7 @@
 package com.sms.travelapp.mapper;
 
 
-import com.sms.travelapp.dto.PostResponseDto;
+import com.sms.travelapp.dto.Post.PostResponseDto;
 import com.sms.travelapp.model.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

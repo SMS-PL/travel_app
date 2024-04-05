@@ -1,9 +1,9 @@
 package com.sms.travelapp.controller;
 
 import com.sms.travelapp.config.security.JWTGenerator;
-import com.sms.travelapp.dto.AuthResponseDto;
-import com.sms.travelapp.dto.LoginDto;
-import com.sms.travelapp.dto.RegisterDto;
+import com.sms.travelapp.dto.Auth.AuthResponseDto;
+import com.sms.travelapp.dto.Auth.LoginDto;
+import com.sms.travelapp.dto.Auth.RegisterDto;
 import com.sms.travelapp.mapper.StringResponseMapper;
 import com.sms.travelapp.model.Role;
 import com.sms.travelapp.model.UserEntity;

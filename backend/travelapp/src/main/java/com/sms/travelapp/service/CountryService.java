@@ -1,6 +1,6 @@
 package com.sms.travelapp.service;
 
-import com.sms.travelapp.dto.CountryResponseDto;
+import com.sms.travelapp.dto.Country.CountryResponseDto;
 
 import java.util.List;
 

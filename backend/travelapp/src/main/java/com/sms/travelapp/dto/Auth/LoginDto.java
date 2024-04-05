@@ -1,4 +1,4 @@
-package com.sms.travelapp.dto;
+package com.sms.travelapp.dto.Auth;
 
 import lombok.Data;
 

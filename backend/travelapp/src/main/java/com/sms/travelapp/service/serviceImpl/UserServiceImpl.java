@@ -1,6 +1,6 @@
 package com.sms.travelapp.service.serviceImpl;
 
-import com.sms.travelapp.dto.UserResponseDto;
+import com.sms.travelapp.dto.Auth.UserResponseDto;
 import com.sms.travelapp.mapper.UserMapper;
 import com.sms.travelapp.model.UserEntity;
 import com.sms.travelapp.repository.UserRepository;

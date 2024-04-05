@@ -1,17 +1,15 @@
 package com.sms.travelapp.controller;
 
-import com.sms.travelapp.dto.PostRequestDto;
-import com.sms.travelapp.dto.PostResponseDto;
+import com.sms.travelapp.dto.Post.PostRequestDto;
+import com.sms.travelapp.dto.Post.PostResponseDto;
 import com.sms.travelapp.mapper.StringResponseMapper;
 import com.sms.travelapp.service.PostService;
 import jakarta.validation.Valid;
-import jakarta.websocket.MessageHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

@@ -1,6 +1,6 @@
 package com.sms.travelapp.mapper;
 
-import com.sms.travelapp.dto.CountryResponseDto;
+import com.sms.travelapp.dto.Country.CountryResponseDto;
 import com.sms.travelapp.model.Country;
 
 public class CountryMapper {

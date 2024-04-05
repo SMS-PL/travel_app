@@ -1,7 +1,7 @@
 package com.sms.travelapp.service.serviceImpl;
 
-import com.sms.travelapp.dto.PostRequestDto;
-import com.sms.travelapp.dto.PostResponseDto;
+import com.sms.travelapp.dto.Post.PostRequestDto;
+import com.sms.travelapp.dto.Post.PostResponseDto;
 import com.sms.travelapp.exception.PostNotFound;
 import com.sms.travelapp.mapper.PostMapper;
 import com.sms.travelapp.model.Post;
@@ -11,11 +11,7 @@ import com.sms.travelapp.repository.UserRepository;
 import com.sms.travelapp.service.AuthService;
 import com.sms.travelapp.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.config.annotation.web.AuthorizeRequestsDsl;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

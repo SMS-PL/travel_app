@@ -1,6 +1,6 @@
 package com.sms.travelapp.service.serviceImpl;
 
-import com.sms.travelapp.dto.CountryResponseDto;
+import com.sms.travelapp.dto.Country.CountryResponseDto;
 import com.sms.travelapp.exception.CountryNotFound;
 import com.sms.travelapp.mapper.CountryMapper;
 import com.sms.travelapp.model.Country;

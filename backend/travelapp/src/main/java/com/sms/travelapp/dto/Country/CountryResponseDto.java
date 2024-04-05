@@ -1,4 +1,4 @@
-package com.sms.travelapp.dto;
+package com.sms.travelapp.dto.Country;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;

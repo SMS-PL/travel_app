@@ -1,7 +1,7 @@
 package com.sms.travelapp.controller;
 
 
-import com.sms.travelapp.dto.CountryResponseDto;
+import com.sms.travelapp.dto.Country.CountryResponseDto;
 import com.sms.travelapp.service.CountryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
