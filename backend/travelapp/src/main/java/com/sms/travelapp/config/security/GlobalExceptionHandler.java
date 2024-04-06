@@ -1,9 +1,6 @@
 package com.sms.travelapp.config.security;
 
-import com.sms.travelapp.exception.AccessDenied;
-import com.sms.travelapp.exception.CountryNotFound;
-import com.sms.travelapp.exception.PinNotFound;
-import com.sms.travelapp.exception.PostNotFound;
+import com.sms.travelapp.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -51,6 +48,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleAccessDeniedException(AccessDenied ex) {
         Map<String, String> error = Collections.singletonMap("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(UserNotFound.class)
+    public ResponseEntity<Object> handleUserNotFoundException(UserNotFound ex) {
+        Map<String, String> error = Collections.singletonMap("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
 }
