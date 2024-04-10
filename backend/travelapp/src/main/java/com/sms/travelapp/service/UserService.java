@@ -1,6 +1,7 @@
 package com.sms.travelapp.service;
 
 import com.sms.travelapp.dto.Auth.UserResponseDto;
+import org.springframework.data.domain.Page;
 
 public interface UserService {
 
@@ -12,4 +13,6 @@ public interface UserService {
 
     Boolean checkEmailAvailability(String email);
 
+
+    Page<UserResponseDto> searchForUser(String query, int pageNumber, int pageSize);
 }

@@ -7,8 +7,14 @@ import com.sms.travelapp.model.UserEntity;
 import com.sms.travelapp.repository.UserRepository;
 import com.sms.travelapp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,5 +44,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean checkEmailAvailability(String email) {
         return !userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public Page<UserResponseDto> searchForUser(String query, int pageNumber, int pageSize) {
+        Page<UserEntity> users = userRepository.findByUsernameOrFirstNameOrLastNameContaining(query,
+                PageRequest.of(
+                        pageNumber,
+                        pageSize,
+                        Sort.by("firstName").ascending()
+                ));
+
+        return new PageImpl<>(
+                users.getContent().stream().map(UserMapper::mapToUserResponseDto).collect(Collectors.toList()),
+                PageRequest.of(pageNumber,pageSize),
+                users.getTotalElements()
+        );
     }
 }
