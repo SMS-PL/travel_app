@@ -4,6 +4,8 @@ package com.sms.travelapp.controller;
 import com.sms.travelapp.dto.Country.CountryResponseDto;
 import com.sms.travelapp.service.CountryService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,5 +31,12 @@ public class CountryController {
     public ResponseEntity<CountryResponseDto> getCountryById(@PathVariable int id){
         CountryResponseDto country = countryService.getCountryById(id);
         return ResponseEntity.status(HttpStatus.OK).body(country);
+    }
+
+    @GetMapping("/search/{queryCountry}")
+    public ResponseEntity<Page<CountryResponseDto>> searchForCountries(@PathVariable String queryCountry,
+                                                                       @RequestParam int pageNumber, @RequestParam int pageSize){
+        Page<CountryResponseDto> res = countryService.searchForCountry(queryCountry,pageNumber,pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }

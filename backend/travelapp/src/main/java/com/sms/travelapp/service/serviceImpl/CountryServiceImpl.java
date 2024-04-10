@@ -7,9 +7,14 @@ import com.sms.travelapp.model.Country;
 import com.sms.travelapp.repository.CountryRepository;
 import com.sms.travelapp.service.CountryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,5 +36,34 @@ public class CountryServiceImpl implements CountryService {
                 () -> new CountryNotFound("Country id -" + id + " not found")
         );
         return CountryMapper.mapToCountryResponseDto(country);
+    }
+
+    @Override
+    public Page<CountryResponseDto> searchForCountry(String queryCountry, int pageNumber, int pageSize) {
+        if(queryCountry==null) queryCountry = " ";
+        Page<Country> countries;
+        if(queryCountry.startsWith("$")){
+            queryCountry = queryCountry.substring(1);
+            queryCountry = queryCountry.trim();
+            queryCountry = queryCountry.toUpperCase();
+            countries = countryRepository.findAllByNameStartingWith(queryCountry,
+                    PageRequest.of(pageNumber,
+                            pageSize,
+                            Sort.by("name").ascending()));
+        }else{
+            queryCountry = queryCountry.trim();
+            queryCountry = queryCountry.toUpperCase();
+            countries = countryRepository.findByNameContaining(queryCountry,
+                    PageRequest.of(pageNumber,
+                            pageSize,
+                            Sort.by("name").ascending()));
+        }
+
+
+        return new PageImpl<>(
+                countries.getContent().stream().map(CountryMapper::mapToCountryResponseDto).collect(Collectors.toList()),
+                PageRequest.of(pageNumber,pageSize),
+                countries.getTotalElements()
+        );
     }
 }
