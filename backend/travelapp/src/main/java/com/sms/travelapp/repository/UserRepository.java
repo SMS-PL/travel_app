@@ -18,6 +18,6 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
 
     Boolean existsByUsername(String username);
 
-    @Query("SELECT u FROM UserEntity u WHERE u.username LIKE %:query% OR u.firstName LIKE %:query% OR u.lastName LIKE %:query%")
+    @Query("SELECT u FROM UserEntity u WHERE u.username LIKE %:query% OR u.firstName LIKE %:query% OR u.lastName LIKE %:query% OR u.email LIKE %:query%")
     Page<UserEntity> findByUsernameOrFirstNameOrLastNameContaining(@Param("query") String query, Pageable pageable);
 }
