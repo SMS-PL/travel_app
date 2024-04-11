@@ -1,7 +1,7 @@
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useForm } from "react-hook-form";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +15,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import MainContainer from "@/components/MainContainer/MainContainer";
 
 const Login = () => {
     const isAuthenticated = useIsAuthenticated();
@@ -78,12 +79,12 @@ const Login = () => {
         return <Navigate to={"/"} replace />;
     } else {
         return (
-            <div className="flex flex-col items-center justify-center h-[100vh]">
-                <Card className="w-[350px]">
+            <MainContainer>
+                <Card className="max-w-full w-[400px]">
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <CardHeader>
-                            <CardTitle>Login</CardTitle>
-                            <CardDescription>Deploy your new project in one-click.</CardDescription>
+                            <CardTitle className="mt-8 scroll-m-20 text-2xl font-bold tracking-tight">Login</CardTitle>
+                            <CardDescription>Enter your details to log in!</CardDescription>
                         </CardHeader>
                         <CardContent>
                             
@@ -117,15 +118,19 @@ const Login = () => {
                                         <p className="text-red-500">{errors.password && errors.password.message}</p>
 
                                     </div>
+
+                                    <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                                        Don’t have an account yet? <Link to="/register" className="font-medium text-primary hover:underline dark:text-primary">Sign up</Link>
+                                    </p>
                                 </div>
-                            
                         </CardContent>
-                        <CardFooter className="flex">
+                        
+                        <CardFooter className="flex flex-col">
                             <Button className="w-full" type="submit" >Login</Button>
                         </CardFooter>
                     </form>
                 </Card>
-            </div>
+            </MainContainer>
         );
     }
 };

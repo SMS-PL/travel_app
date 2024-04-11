@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import MainContainer from "@/components/MainContainer/MainContainer";
 
 function Register() {
 
@@ -71,12 +72,12 @@ function Register() {
         return <Navigate to={"/"} replace />;
     } else {
         return (
-            <div className="flex flex-col items-center justify-center h-[100vh]">
-                <Card className="w-[350px]">
+            <MainContainer>
+                <Card className="max-w-full w-[400px]">
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <CardHeader>
-                            <CardTitle>Register</CardTitle>
-                            <CardDescription>Deploy your new project in one-click.</CardDescription>
+                            <CardTitle className="mt-8 scroll-m-20 text-2xl font-bold tracking-tight">Register</CardTitle>
+                            <CardDescription>Provide your details and create an account!</CardDescription>
                         </CardHeader>
 
                         <CardContent>
@@ -182,15 +183,20 @@ function Register() {
                                     />
                                     <p className="text-red-500">{errors.passwordRepeated && errors.passwordRepeated.message}</p>
                                 </div>
+
+                                <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                                    Do you already have an account?
+                                    <Link to="/login" className="font-medium text-primary hover:underline dark:text-primary"> Sign in</Link>
+                                </p>
                             </div>
                         </CardContent>
 
                         <CardFooter className="flex">
-                            <Button className="w-full" type="submit" >Login</Button>
+                            <Button className="w-full" type="submit" >Register</Button>
                         </CardFooter>
                     </form>
                 </Card>
-            </div>
+            </MainContainer>
 
 
 

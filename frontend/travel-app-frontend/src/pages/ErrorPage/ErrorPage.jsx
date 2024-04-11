@@ -1,10 +1,12 @@
 import React from "react";
+import Navbar from "@/components/Navbar/Navbar";
+import MainContainer from "@/components/MainContainer/MainContainer";
 
 function ErrorPage() {
     return (
-        <div className="flex justify-center items-center w-full h-[100vh]">
-            <h1 className="font-bold ">404 - Not Found</h1>
-        </div>
+        <MainContainer>
+            <h1 className="font-bold text-3xl">404 - Not Found</h1>
+        </MainContainer>
     );
 }
 

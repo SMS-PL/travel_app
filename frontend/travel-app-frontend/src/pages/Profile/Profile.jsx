@@ -2,10 +2,13 @@ import Navbar from "../../components/Navbar/Navbar";
 import { useParams } from 'react-router-dom';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { useState, useEffect } from 'react';
+import MainContainer from "@/components/MainContainer/MainContainer";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
 	const { userId } = useParams();
 	const authHeader = useAuthHeader();
+	const navigate = useNavigate();
 
 	const [userData, setUserData] = useState("");
 
@@ -31,22 +34,20 @@ function Profile() {
 		.catch(error => {
 			console.log(error.message);
 			console.error('Wystąpił błąd podczas wczytywania profilu użytkownika:', error);
+			navigate("/");
 		});
 
 	}, [userId]);
 
 
     return (
-        <div className="flex flex-col w-full">
-			<Navbar />
-			<main className="flex flex-col justify-center items-center py-10">
-				<h1>AUTORYZOWANA STRONA</h1>
-				<h3 className="font-black text-2xl">PROFIL</h3>
-				{userData.firstName}<br />
-				{userData.lastName}<br />
-				@{userData.username}<br />
-			</main>
-        </div>
+        <MainContainer>
+			<h3 className="font-black text-2xl">PROFIL</h3>
+			{userData.firstName}<br />
+			{userData.lastName}<br />
+			@{userData.username}<br />
+	
+        </MainContainer>
     );
 }
 

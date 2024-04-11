@@ -1,17 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
 import Navbar from "../../components/Navbar/Navbar";
+import MainContainer from "@/components/MainContainer/MainContainer";
 
 const Home = () => {
 
     return (
-        <div className="flex flex-col w-full">
-            <Navbar />
-            <main className="flex flex-col justify-center items-center">
-                <h1>AUTORYZOWANA STRONA</h1>
-                <h3 className="font-black text-2xl">HOME</h3>
-            </main>
-        </div>
+        <MainContainer >
+            <h3 className="font-black text-2xl">HOME</h3>
+        </MainContainer>
     )
 }
 
