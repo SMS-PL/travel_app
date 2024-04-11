@@ -5,10 +5,12 @@ import com.sms.travelapp.dto.Auth.AuthResponseDto;
 import com.sms.travelapp.dto.Auth.LoginDto;
 import com.sms.travelapp.dto.Auth.RegisterDto;
 import com.sms.travelapp.mapper.StringResponseMapper;
+import com.sms.travelapp.mapper.UserMapper;
 import com.sms.travelapp.model.Role;
 import com.sms.travelapp.model.UserEntity;
 import com.sms.travelapp.repository.RoleRepository;
 import com.sms.travelapp.repository.UserRepository;
+import com.sms.travelapp.service.AuthService;
 import com.sms.travelapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final UserRepository userRepository;
+    private final AuthService authService;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWTGenerator jwtGenerator;
@@ -51,7 +54,10 @@ public class AuthController {
                         loginDto.getEmail(),loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtGenerator.generateToken(authentication);
-        return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
+        UserEntity user = authService.getLoggedUser();
+        AuthResponseDto response = new AuthResponseDto(token);
+        response.setUser(UserMapper.mapToUserResponseDto(user));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
