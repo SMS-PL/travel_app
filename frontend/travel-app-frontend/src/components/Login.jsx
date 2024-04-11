@@ -103,11 +103,6 @@ const Login = () => {
                                             placeholder="********"
                                             {...register("password", {
                                                 required: "Password is required",
-                                                minLength: {
-                                                    value: 8,
-                                                    message:
-                                                        "Password must have at least 8 characters",
-                                                },
                                             })}
                                         />
                                         <p className="text-red-500">{errors.password && errors.password.message}</p>
