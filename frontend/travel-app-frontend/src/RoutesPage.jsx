@@ -23,7 +23,7 @@ const RoutesPage = () => {
                 {/* private */}
                 <Route element={<AuthOutlet fallbackPath='/login' />}>
                     <Route path='/' element={<Home/>} />
-                    <Route path='/profile' element={<Profile />} />
+                    <Route path='/profile/:userId' element={<Profile />} />
                     <Route path='/logout' element={<Logout />} />
                 </Route>
 
