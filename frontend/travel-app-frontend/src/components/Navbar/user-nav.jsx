@@ -15,7 +15,6 @@ import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
 
 export function UserNav() {
     const auth = useAuthUser();
-    console.log(auth);
 
     return (
         <DropdownMenu className="mx-5">

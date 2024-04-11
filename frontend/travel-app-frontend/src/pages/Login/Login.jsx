@@ -42,7 +42,7 @@ const Login = () => {
                 );
 
                 const data = await response.json();
-                console.log(values);
+                // console.log(values);
 
                 signIn({
                     auth: { token: data.accessToken, type: 'Bearer' },
