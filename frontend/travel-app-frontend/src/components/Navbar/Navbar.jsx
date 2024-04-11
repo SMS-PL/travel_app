@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 // import { CommandMenu } from "@/components/command-menu"
 import { Icons } from "@/components/icons";
-import { MainNav } from "@/components/main-nav";
-import { ModeToggle } from "@/components/mode-toggle";
-import { UserNav } from "@/components/user-nav";
+import { MainNav } from "./main-nav";
+import { ModeToggle } from "@/components/ui/mode-toggle";
+import { UserNav } from "./user-nav";
 
 // import { buttonVariants } from "@/registry/new-york/ui/button"
 

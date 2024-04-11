@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom'
-import useAuthUser from 'react-auth-kit/hooks/useAuthUser'
-import Navbar from "./Navbar";
+import { useNavigate } from 'react-router-dom';
+import useAuthUser from 'react-auth-kit/hooks/useAuthUser';
+import Navbar from "../../components/Navbar/Navbar";
 
 const Home = () => {
 

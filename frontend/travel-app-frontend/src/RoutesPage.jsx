@@ -2,12 +2,12 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 // import RequireAuth from "@auth-kit/react-router/RequireAuth";
 import AuthOutlet from '@auth-kit/react-router/AuthOutlet'
-import Profile from "./components/Profile";
-import Home from "./components/Home";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import Logout from "./components/Logout";
-import ErrorPage from "./ErrorPage";
+import Profile from "./pages/Profile/Profile";
+import Home from "./pages/Home/Home";
+import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
+import Logout from "./pages/Logout/Logout";
+import ErrorPage from "./pages/ErrorPage/ErrorPage";
 
 // import Secure from "./componants/Secure";
 
