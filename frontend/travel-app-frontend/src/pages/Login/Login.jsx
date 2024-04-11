@@ -46,9 +46,18 @@ const Login = () => {
 
                 signIn({
                     auth: { token: data.accessToken, type: 'Bearer' },
-                    userState: {  
-                        email: `${values.email}`,
-                        uid: 123456
+                    userState: {
+                        id: `${data.user.id}`,
+                        firstName: `${data.user.firstName}`,
+                        lastName: `${data.user.lastName}`,
+                        username: `${data.user.username}`,
+                        email: `${data.user.email}`,
+                        about: `${data.user.about}`,
+                        photoUrl: `${data.user.photoUrl}`,
+                        backgroundUrl: `${data.user.backgroundUrl}`,
+                        // createdAt: `${data.user.createdAt}`,
+                        // roles: `${data.user.photoUrl}`,
+
                     },
                 });
 
