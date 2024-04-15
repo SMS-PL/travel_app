@@ -2,7 +2,11 @@ package com.sms.travelapp.mapper;
 
 import com.sms.travelapp.dto.Country.CountryResponseDto;
 import com.sms.travelapp.model.Country;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
+@RequiredArgsConstructor
 public class CountryMapper {
 
     public static CountryResponseDto mapToCountryResponseDto(Country country) {
