@@ -44,6 +44,9 @@ public class UserEntity {
     @Column(name = "background_image")
     private String backgroundImage;
 
+    @Column(name = "last_given_heart")
+    private Timestamp lastGivenHeart;
+
     @Column(name = "created_at")
     @CreationTimestamp
     private Timestamp createdAt;

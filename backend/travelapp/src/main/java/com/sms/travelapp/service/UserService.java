@@ -15,4 +15,8 @@ public interface UserService {
 
 
     Page<UserResponseDto> searchForUser(String query, int pageNumber, int pageSize);
+
+    void giveHeart();
+
+    boolean checkIfHeartAvailable();
 }

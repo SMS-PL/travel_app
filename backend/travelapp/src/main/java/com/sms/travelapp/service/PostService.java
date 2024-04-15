@@ -1,5 +1,6 @@
 package com.sms.travelapp.service;
 
+import com.sms.travelapp.dto.Post.PostReactionCountResponseDto;
 import com.sms.travelapp.dto.Post.PostRequestDto;
 import com.sms.travelapp.dto.Post.PostResponseDto;
 
@@ -16,4 +17,6 @@ public interface PostService {
     PostResponseDto updatePost(Long id,PostRequestDto postResponseDto);
 
     PostResponseDto getPostById(Long id);
+
+    PostReactionCountResponseDto reactToPost(Long id, int reactionType);
 }

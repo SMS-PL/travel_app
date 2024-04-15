@@ -56,4 +56,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(HeartAlreadyUsed.class)
+    public ResponseEntity<Object> handleHeartAlreadyUsedException(HeartAlreadyUsed ex) {
+        Map<String, String> error = Collections.singletonMap("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
 }

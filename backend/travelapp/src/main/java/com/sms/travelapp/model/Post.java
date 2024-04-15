@@ -30,6 +30,12 @@ public class Post {
     @Column(name = "author_id")
     private Long authorId;
 
+    @Column(name = "like_count")
+    private Long likeCount;
+
+    @Column(name = "heart_count")
+    private Long heartCount;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private Timestamp createdAt;

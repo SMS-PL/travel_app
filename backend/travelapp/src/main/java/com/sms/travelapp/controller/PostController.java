@@ -1,5 +1,6 @@
 package com.sms.travelapp.controller;
 
+import com.sms.travelapp.dto.Post.PostReactionCountResponseDto;
 import com.sms.travelapp.dto.Post.PostRequestDto;
 import com.sms.travelapp.dto.Post.PostResponseDto;
 import com.sms.travelapp.mapper.StringResponseMapper;
@@ -52,6 +53,12 @@ public class PostController {
                                                       @RequestBody PostRequestDto postRequestDto){
         PostResponseDto updatedPost = postService.updatePost(id,postRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(updatedPost);
+    }
+
+    @PostMapping("/{id}/{reactionType}")
+    public ResponseEntity<PostReactionCountResponseDto> reactToPost(@PathVariable Long id, @PathVariable int reactionType){
+        PostReactionCountResponseDto res = postService.reactToPost(id,reactionType);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
 }

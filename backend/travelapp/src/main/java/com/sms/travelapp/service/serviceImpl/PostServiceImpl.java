@@ -1,16 +1,22 @@
 package com.sms.travelapp.service.serviceImpl;
 
+import com.sms.travelapp.dto.Post.PostReactionCountResponseDto;
 import com.sms.travelapp.dto.Post.PostRequestDto;
 import com.sms.travelapp.dto.Post.PostResponseDto;
 import com.sms.travelapp.exception.AccessDenied;
+import com.sms.travelapp.exception.HeartAlreadyUsed;
 import com.sms.travelapp.exception.PostNotFound;
 import com.sms.travelapp.mapper.PostMapper;
+import com.sms.travelapp.mapper.PostReactionMapper;
 import com.sms.travelapp.model.Post;
+import com.sms.travelapp.model.PostReaction;
 import com.sms.travelapp.model.UserEntity;
+import com.sms.travelapp.repository.PostReactionRepository;
 import com.sms.travelapp.repository.PostRepository;
 import com.sms.travelapp.repository.UserRepository;
 import com.sms.travelapp.service.AuthService;
 import com.sms.travelapp.service.PostService;
+import com.sms.travelapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -26,6 +32,8 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
+    private final PostReactionRepository postReactionRepository;
+    private final UserService userService;
     @Override
     public List<PostResponseDto> getAllPosts() {
         return postRepository.findAll().stream().map(
@@ -97,5 +105,74 @@ public class PostServiceImpl implements PostService {
                 ()-> new PostNotFound("Post id-"+id+" not found")
         );
         return PostMapper.mapToPostResponseDto(post);
+    }
+
+    @Override
+    public PostReactionCountResponseDto reactToPost(Long postId, int reactionType) {
+        UserEntity user = authService.getLoggedUser();
+        Post postDb = postRepository.findById(postId).orElseThrow(
+                ()-> new PostNotFound("Post id-"+postId+" not found")
+        );
+
+        PostReaction postReaction;
+
+        if(postReactionRepository.existsByAuthorAndPost(user,postDb)){
+
+            postReaction = postReactionRepository.findByAuthorAndPost(user,postDb);
+            if(postReaction.getReactionType()==reactionType){
+                if (postReaction.getReactionType() == 0) {
+                    postDb.setLikeCount(postDb.getLikeCount() - 1);
+                } else {
+                    postDb.setHeartCount(postDb.getHeartCount() - 1);
+                }
+                System.out.println(postDb.getLikeCount());
+                postReactionRepository.delete(postReaction);
+                postRepository.save(postDb);
+            }else{
+                if(reactionType==1){
+                   if(!userService.checkIfHeartAvailable()){
+                       throw new HeartAlreadyUsed("You have already used your 1 heart reaction a day. Try again tomorrow");
+                   }else{
+                       postReaction.setReactionType(1);
+                       postDb.setLikeCount(postDb.getLikeCount()-1);
+                       postDb.setHeartCount(postDb.getHeartCount()+1);
+                       postReactionRepository.save(postReaction);
+                       userService.giveHeart();
+                       postRepository.save(postDb);
+                   }
+                }else{
+                    postReaction.setReactionType(0);
+                    postDb.setLikeCount(postDb.getLikeCount()+1);
+                    postDb.setHeartCount(postDb.getHeartCount()-1);
+                    postReactionRepository.save(postReaction);
+                    postRepository.save(postDb);
+                }
+            }
+        }
+        else{
+            if (reactionType == 0) {
+                postReaction = new PostReaction();
+                postReaction.setReactionType(0);
+                postReaction.setAuthor(user);
+                postReaction.setPost(postDb);
+                postReactionRepository.save(postReaction);
+                postDb.setLikeCount(postDb.getLikeCount()+1);
+                postRepository.save(postDb);
+            }else{
+                if(userService.checkIfHeartAvailable()){
+                    postReaction = new PostReaction();
+                    postReaction.setReactionType(1);
+                    postReaction.setAuthor(user);
+                    postReaction.setPost(postDb);
+                    postReactionRepository.save(postReaction);
+                    postDb.setLikeCount(postDb.getHeartCount()+1);
+                    postRepository.save(postDb);
+                }else{
+                    throw new HeartAlreadyUsed("You have already used your 1 heart reaction a day. Try again tomorrow");
+                }
+            }
+        }
+
+        return PostReactionMapper.mapToPostReactionCountResponseDto(postReaction);
     }
 }

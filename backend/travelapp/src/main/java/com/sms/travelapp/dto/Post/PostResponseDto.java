@@ -16,6 +16,8 @@ public class PostResponseDto {
     private Long countryId;
     private String imageUrl;
     private Long authorId;
+    private Long likes;
+    private Long hearts;
     private Timestamp createdAt;
     private Timestamp lastUpdated;
 }
