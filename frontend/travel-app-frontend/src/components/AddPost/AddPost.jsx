@@ -13,29 +13,19 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar";
-import { useState, useEffect } from 'react';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { useNavigate } from 'react-router-dom';
 
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 function AddPost() {
 	const authHeader = useAuthHeader();
 	const navigate = useNavigate();
     const { toast } = useToast();
+	const auth = useAuthUser();
 
     const {
         register,
@@ -54,7 +44,7 @@ function AddPost() {
                     "Authorization": authHeader,
                 },
                 body: JSON.stringify({
-                    "content": values.content,
+                    "content": values.description,
                     "countryId": 1,                  // na razie jest na sztywno
                     "imageUrl": "image.pl/image"     // na razie jest na sztywno
                 })
@@ -66,13 +56,14 @@ function AddPost() {
                 return response.json();
             })
             .then(data => {
+                window.location.reload();  // odświeża stronę, aby zobaczyć nowy post -> rozwiązanie tymczasowe
                 toast({
                     title: "Hurrah!",
                     description: "Post added correctly!",
                     className: "bg-green-800"
                 })
                 console.log(data);
-                navigate("/");
+                
             })
             .catch(error => {
                 toast({
@@ -91,30 +82,40 @@ function AddPost() {
     return (
         <Card>
             <form onSubmit={handleSubmit(onSubmit)} className="">
-                <CardHeader className="flex flex-row  items-center">
-                    
-                    <Avatar>
-                        <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                    
-                    <div className="w-full ml-4">
-                        <Textarea
-                            id="content"
-                            placeholder="Tell us a little bit about yourself"
-                            className="resize-none"
-                            {...register("content", {
-                                required: "Content is required",
-                            })}
+                <CardHeader className="flex flex-col items-center">
+                    <div >
+                        <h1 className="text-center  scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-4xl">
+                            Hi <span className="text-primary">{auth.firstName}</span>!
+                        </h1>
+                        <h3 className="pb-5 text-center font-semibold scroll-m-20 text-xl tracking-tight py-2">
+                            Tell us where are you?
+                        </h3>
+                    </div>
 
-                        />
-                        <p className="text-red-600">{errors.content}</p>
+                    <div className="flex flex-row items-center w-full">
+                        <Avatar>
+                            <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                        
+                        <div className="w-full ml-4">
+                            <Textarea
+                                id="description"
+                                placeholder="Tell us a little bit about yourself"
+                                className="resize-none"
+                                {...register("description", {
+                                    required: "Description is required",
+                                })}
+
+                            />
+                            <p className="text-red-600">{errors.content}</p>
+                        </div>
                     </div>
                 </CardHeader>
-
+                
                 {/* <CardContent> </CardContent> */}
-
                 <CardFooter className="flex justify-between">
+                    
                         {/* <Input
                             id="img"
                             type="file"
@@ -127,7 +128,7 @@ function AddPost() {
                             // })}
                         /> */}
 
-                    <Button variant="outline" type="submit" className="bg-primary">Add post</Button>
+                    <Button variant="outline" type="submit" className="bg-primary w-full">Add post</Button>
                 </CardFooter>
             </form>
         </Card>
