@@ -1,6 +1,7 @@
 package com.sms.travelapp.mapper;
 
 
+import com.sms.travelapp.dto.Comment.CommentReactionCountResponseDto;
 import com.sms.travelapp.dto.Comment.CommentResponseDto;
 import com.sms.travelapp.model.Comment;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +16,15 @@ public class CommentMapper {
                 .id(comment.getId())
                 .author(UserMapper.mapToUserResponseDto(comment.getAuthor()))
                 .content(comment.getContent())
+                .reactionCount(comment.getReactionCount()==null ? 0L : comment.getReactionCount())
                 .createdAt(comment.getCreatedAt())
                 .lastUpdated(comment.getLastUpdated())
+                .build();
+    }
+
+    public static CommentReactionCountResponseDto MapToCommentReactionCountResponseDto(Comment comment){
+        return CommentReactionCountResponseDto.builder()
+                .reactionCount(comment.getReactionCount())
                 .build();
     }
 

@@ -1,6 +1,7 @@
 package com.sms.travelapp.controller;
 
 
+import com.sms.travelapp.dto.Comment.CommentReactionCountResponseDto;
 import com.sms.travelapp.dto.Comment.CommentRequestDto;
 import com.sms.travelapp.dto.Comment.CommentResponseDto;
 import com.sms.travelapp.service.CommentService;
@@ -47,6 +48,13 @@ public class CommentController {
     @PatchMapping("/{commentId}")
     public ResponseEntity<CommentResponseDto> editComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto){
         CommentResponseDto res = commentService.editComment(commentId, commentRequestDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @PostMapping("{commentId}/react")
+    public ResponseEntity<CommentReactionCountResponseDto> reactToComment(@PathVariable Long commentId){
+        CommentReactionCountResponseDto res = commentService.reactToComment(commentId);
 
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }

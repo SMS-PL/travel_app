@@ -29,6 +29,9 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    @Column(name = "reaction_count")
+    private Long reactionCount;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private Timestamp createdAt;

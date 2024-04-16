@@ -1,5 +1,6 @@
 package com.sms.travelapp.service.serviceImpl;
 
+import com.sms.travelapp.dto.Comment.CommentReactionCountResponseDto;
 import com.sms.travelapp.dto.Comment.CommentRequestDto;
 import com.sms.travelapp.dto.Comment.CommentResponseDto;
 import com.sms.travelapp.exception.AccessDenied;
@@ -8,8 +9,10 @@ import com.sms.travelapp.exception.PostNotFound;
 import com.sms.travelapp.mapper.CommentMapper;
 import com.sms.travelapp.mapper.StringResponseMapper;
 import com.sms.travelapp.model.Comment;
+import com.sms.travelapp.model.CommentReaction;
 import com.sms.travelapp.model.Post;
 import com.sms.travelapp.model.UserEntity;
+import com.sms.travelapp.repository.CommentReactionRepository;
 import com.sms.travelapp.repository.CommentRepository;
 import com.sms.travelapp.repository.PostRepository;
 import com.sms.travelapp.service.AuthService;
@@ -33,6 +36,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final AuthService authService;
     private final PostRepository postRepository;
+    private final CommentReactionRepository commentReactionRepository;
 
     @Override
     public Page<CommentResponseDto> getCommentsByPostId(Long postId, int pageSize, int pageNumber, String sortBy) {
@@ -102,5 +106,32 @@ public class CommentServiceImpl implements CommentService {
         comment.setContent(commentRequestDto.getContent());
         commentRepository.save(comment);
         return CommentMapper.MapToCommentResponseDto(comment);
+    }
+
+    @Override
+    public CommentReactionCountResponseDto reactToComment(Long commentId) {
+        UserEntity user = authService.getLoggedUser();
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new CommentNotFound("Comment not found!")
+        );
+
+        if(commentReactionRepository.existsByAuthorAndComment(user,comment)){
+           CommentReaction commentReaction = commentReactionRepository.findByAuthorAndComment(user,comment);
+           comment.setReactionCount(comment.getReactionCount()-1);
+           commentReactionRepository.delete(commentReaction);
+        }else{
+            CommentReaction commentReaction = new CommentReaction();
+            commentReaction.setAuthor(user);
+            commentReaction.setComment(comment);
+            comment.setReactionCount(
+                        comment.getReactionCount()==null
+                                ? 1L
+                                : comment.getReactionCount()+1
+            );
+            commentRepository.save(comment);
+            commentReactionRepository.save(commentReaction);
+        }
+        return CommentMapper.MapToCommentReactionCountResponseDto(comment);
+        
     }
 }

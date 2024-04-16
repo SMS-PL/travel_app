@@ -1,5 +1,6 @@
 package com.sms.travelapp.service;
 
+import com.sms.travelapp.dto.Comment.CommentReactionCountResponseDto;
 import com.sms.travelapp.dto.Comment.CommentRequestDto;
 import com.sms.travelapp.dto.Comment.CommentResponseDto;
 import org.springframework.data.domain.Page;
@@ -14,4 +15,6 @@ public interface CommentService {
     Map<String, String> removeComment(Long commentId);
 
     CommentResponseDto editComment(Long commentId, CommentRequestDto commentRequestDto);
+
+    CommentReactionCountResponseDto reactToComment(Long commentId);
 }
