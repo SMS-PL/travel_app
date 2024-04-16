@@ -68,4 +68,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    @ExceptionHandler(CommentNotFound.class)
+    public ResponseEntity<Object> handleCommentNotFoundException(CommentNotFound ex) {
+        Map<String, String> error = Collections.singletonMap("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
 }

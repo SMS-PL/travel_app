@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("api/v1/comments")
 @RequiredArgsConstructor
@@ -31,8 +33,15 @@ public class CommentController {
     @PostMapping("/{postId}")
     public ResponseEntity<CommentResponseDto> addComment(@PathVariable Long postId, @RequestBody CommentRequestDto commentRequestDto){
         CommentResponseDto res = commentService.addComment(postId, commentRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(res);
 
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Map<String,String>> removeComment(@PathVariable Long commentId){
+        Map<String,String> res = commentService.removeComment(commentId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
 }

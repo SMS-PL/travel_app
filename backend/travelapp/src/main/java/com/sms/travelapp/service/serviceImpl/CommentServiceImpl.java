@@ -2,8 +2,11 @@ package com.sms.travelapp.service.serviceImpl;
 
 import com.sms.travelapp.dto.Comment.CommentRequestDto;
 import com.sms.travelapp.dto.Comment.CommentResponseDto;
+import com.sms.travelapp.exception.AccessDenied;
+import com.sms.travelapp.exception.CommentNotFound;
 import com.sms.travelapp.exception.PostNotFound;
 import com.sms.travelapp.mapper.CommentMapper;
+import com.sms.travelapp.mapper.StringResponseMapper;
 import com.sms.travelapp.model.Comment;
 import com.sms.travelapp.model.Post;
 import com.sms.travelapp.model.UserEntity;
@@ -18,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -68,5 +72,20 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.save(comment);
         return CommentMapper.MapToCommentResponseDto(comment);
+    }
+
+    @Override
+    public Map<String, String> removeComment(Long commentId) {
+        UserEntity user = authService.getLoggedUser();
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                ()-> new CommentNotFound("Comment not found!")
+        );
+        if(!comment.getAuthor().equals(user)){
+            throw new AccessDenied("This is not your comment!");
+        }
+
+        commentRepository.delete(comment);
+        return StringResponseMapper.mapToMap("Comment id-" + commentId + " deleted successfully");
+
     }
 }
