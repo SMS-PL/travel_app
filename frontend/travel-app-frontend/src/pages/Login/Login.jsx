@@ -16,11 +16,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import MainContainer from "@/components/MainContainer/MainContainer";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 
 const Login = () => {
     const isAuthenticated = useIsAuthenticated();
     const signIn = useSignIn();
     const navigate = useNavigate();
+    const { toast } = useToast();
 
     const {
         register,
@@ -62,10 +65,20 @@ const Login = () => {
                     },
                 });
 
+                toast({
+                    title: "Hurrah!",
+                    description: "Successfully logged in!",
+                    className: "bg-green-800"
+                })
+
                 navigate("/");
 
             } catch (error) {
-                console.log("Chyba niepoprawne dane logowania -> ", error.message);
+                toast({
+                    variant: "destructive",
+                    title: "Uh oh! Something went wrong.",
+                    description: error.message,
+                })
             }
         } else {
             alert("INVALID");
