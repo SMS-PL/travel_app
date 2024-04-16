@@ -191,7 +191,7 @@ public class PostServiceImpl implements PostService {
                    .map(UserResponseDto::getId)
                    .toList();
 
-           postsPage = postRepository.findAllByUserEntity_IdIn(friendsIds, PageRequest.of(pageNumber, pageSize));
+           postsPage = postRepository.findAllByUserEntity_IdIn(friendsIds, PageRequest.of(pageNumber, pageSize,Sort.by("createdAt").descending()));
 
        }else if(feedType.equals("home")){
             postsPage = postRepository.findAll(PageRequest.of(pageNumber,
