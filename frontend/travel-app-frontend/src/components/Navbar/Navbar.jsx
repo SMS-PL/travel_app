@@ -5,9 +5,11 @@ import { MainNav } from "./main-nav";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { UserNav } from "./user-nav";
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
+import { useLocation } from 'react-router-dom';
 
 export function Navbar() {
     const isAuthenticated = useIsAuthenticated();
+    const location = useLocation();
 
     return (
         <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -29,14 +31,14 @@ export function Navbar() {
                     { isAuthenticated() ?
                         <>
                             <Link to="/">
-                                <Icons.home className="h-7 w-7 fill-foreground" />
+                                {location.pathname == "/" ? <Icons.homeFeedFill className="h-7 w-7 fill-primary" /> : <Icons.homeFeedEmpty className="h-7 w-7 fill-foreground" />}
                             </Link>
                             <Link to="/friends-feed">
-                                <Icons.friendsFeed className="h-7 w-7 fill-foreground" />
+                                {location.pathname == "/friends-feed" ? <Icons.friendsFeedFill className="h-7 w-7 fill-primary" /> : <Icons.friendsFeedEmpty className="h-7 w-7 fill-foreground" />}
                             </Link>
                             <Link to="/location-feed">
-                                <Icons.locationFeed className="h-7 w-7 fill-foreground" />
-                            </Link> 
+                                {location.pathname == "/location-feed" ? <Icons.locationFeedFill className="h-7 w-7 fill-primary" /> : <Icons.locationFeedEmpty className="h-7 w-7 fill-foreground" />}
+                            </Link>
                         </> : null }
                     </div>
                 </div>
