@@ -1,9 +1,15 @@
 package com.sms.travelapp.service.serviceImpl;
 
+import com.sms.travelapp.dto.Comment.CommentRequestDto;
 import com.sms.travelapp.dto.Comment.CommentResponseDto;
+import com.sms.travelapp.exception.PostNotFound;
 import com.sms.travelapp.mapper.CommentMapper;
 import com.sms.travelapp.model.Comment;
+import com.sms.travelapp.model.Post;
+import com.sms.travelapp.model.UserEntity;
 import com.sms.travelapp.repository.CommentRepository;
+import com.sms.travelapp.repository.PostRepository;
+import com.sms.travelapp.service.AuthService;
 import com.sms.travelapp.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +27,8 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
+    private final AuthService authService;
+    private final PostRepository postRepository;
 
     @Override
     public Page<CommentResponseDto> getCommentsByPostId(Long postId, int pageSize, int pageNumber, String sortBy) {
@@ -43,5 +51,22 @@ public class CommentServiceImpl implements CommentService {
                 commentPage.getTotalElements()
         );
 
+    }
+
+    @Override
+    public CommentResponseDto addComment(Long postId, CommentRequestDto commentRequestDto) {
+        UserEntity user = authService.getLoggedUser();
+        Post post  = postRepository.findById(postId).orElseThrow(
+                ()-> new PostNotFound("Post not found!")
+        );
+
+
+        Comment comment = new Comment();
+        comment.setContent(commentRequestDto.getContent());
+        comment.setAuthor(user);
+        comment.setPost(post);
+
+        commentRepository.save(comment);
+        return CommentMapper.MapToCommentResponseDto(comment);
     }
 }

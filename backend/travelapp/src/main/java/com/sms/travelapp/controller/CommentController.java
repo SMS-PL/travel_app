@@ -1,6 +1,7 @@
 package com.sms.travelapp.controller;
 
 
+import com.sms.travelapp.dto.Comment.CommentRequestDto;
 import com.sms.travelapp.dto.Comment.CommentResponseDto;
 import com.sms.travelapp.service.CommentService;
 import jakarta.annotation.Nullable;
@@ -23,7 +24,15 @@ public class CommentController {
                                                                         @RequestParam int pageSize,
                                                                         @RequestParam int pageNumber,
                                                                         @RequestParam @Nullable String sortBy){
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getCommentsByPostId(postId,pageSize,pageNumber,sortBy));
+        Page<CommentResponseDto> res = commentService.getCommentsByPostId(postId,pageSize,pageNumber,sortBy);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @PostMapping("/{postId}")
+    public ResponseEntity<CommentResponseDto> addComment(@PathVariable Long postId, @RequestBody CommentRequestDto commentRequestDto){
+        CommentResponseDto res = commentService.addComment(postId, commentRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+
     }
 
 }
