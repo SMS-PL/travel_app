@@ -13,10 +13,12 @@ public class CommentMapper {
     public static CommentResponseDto MapToCommentResponseDto(Comment comment){
         return CommentResponseDto.builder()
                 .id(comment.getId())
-                .author(comment.getAuthor())
+                .author(UserMapper.mapToUserResponseDto(comment.getAuthor()))
                 .content(comment.getContent())
                 .createdAt(comment.getCreatedAt())
                 .lastUpdated(comment.getLastUpdated())
                 .build();
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.sms.travelapp.dto.Comment;
 
+import com.sms.travelapp.dto.Auth.UserResponseDto;
 import com.sms.travelapp.model.Comment;
 import com.sms.travelapp.model.UserEntity;
 import lombok.Builder;
@@ -13,8 +14,7 @@ import java.util.List;
 public class CommentResponseDto {
     private Long id;
     private String content;
-    private UserEntity author;
-    private Comment comment;
+    private UserResponseDto author;
     private Long reactionCount;
     private Timestamp createdAt;
     private Timestamp lastUpdated;
