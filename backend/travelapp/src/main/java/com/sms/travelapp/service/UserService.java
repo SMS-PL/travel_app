@@ -3,6 +3,8 @@ package com.sms.travelapp.service;
 import com.sms.travelapp.dto.Auth.UserResponseDto;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface UserService {
 
     Long getUserId();
@@ -13,6 +15,7 @@ public interface UserService {
 
     Boolean checkEmailAvailability(String email);
 
+    List<UserResponseDto> getFriendList();
 
     Page<UserResponseDto> searchForUser(String query, int pageNumber, int pageSize);
 

@@ -1,6 +1,7 @@
 package com.sms.travelapp.service.serviceImpl;
 
 import com.sms.travelapp.dto.Auth.UserResponseDto;
+import com.sms.travelapp.exception.SelfFriendRequest;
 import com.sms.travelapp.exception.UserNotFound;
 import com.sms.travelapp.mapper.StringResponseMapper;
 import com.sms.travelapp.mapper.UserMapper;
@@ -34,6 +35,7 @@ public class FriendshipServiceImpl implements FriendshipService {
                 ()-> new UserNotFound("User Not found!")
         );
 
+
         List<UserResponseDto> friends = new ArrayList<>();
 
         for (Friendship f :
@@ -55,6 +57,10 @@ public class FriendshipServiceImpl implements FriendshipService {
         UserEntity friend = userRepository.findById(friendId).orElseThrow(
                 ()-> new UserNotFound("User you sent request to not found!")
         );
+        if(user==friend){
+            throw new SelfFriendRequest("You can't send a friend request to yourself!");
+        }
+
 
         if(!friendshipRepository.existsByUserAndFriend(user,friend)){
             Friendship friendship = new Friendship();

@@ -3,7 +3,9 @@ package com.sms.travelapp.service.serviceImpl;
 import com.sms.travelapp.dto.Auth.UserResponseDto;
 import com.sms.travelapp.exception.UserNotFound;
 import com.sms.travelapp.mapper.UserMapper;
+import com.sms.travelapp.model.Friendship;
 import com.sms.travelapp.model.UserEntity;
+import com.sms.travelapp.repository.FriendshipRepository;
 import com.sms.travelapp.repository.UserRepository;
 import com.sms.travelapp.service.AuthService;
 import com.sms.travelapp.service.UserService;
@@ -21,6 +23,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +33,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final AuthService authService;
+    private final FriendshipRepository friendshipRepository;
 
     @Override
     public Long getUserId() {
@@ -52,6 +57,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean checkEmailAvailability(String email) {
         return !userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public List<UserResponseDto> getFriendList() {
+        UserEntity user = authService.getLoggedUser();
+        List<UserResponseDto> friends = new ArrayList<>();
+        for (Friendship f :
+                friendshipRepository.findAllByUser(user)) {
+            if(friendshipRepository.existsByUserAndFriend(f.getFriend(),user)){
+                if(friendshipRepository.existsByUserAndFriend(user,f.getFriend())){
+                    friends.add(UserMapper.mapToUserResponseDto(f.getFriend()));
+                }
+            }
+        }
+        return friends;
     }
 
     @Override

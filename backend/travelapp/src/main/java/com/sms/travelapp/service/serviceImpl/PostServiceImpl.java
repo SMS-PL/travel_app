@@ -1,5 +1,6 @@
 package com.sms.travelapp.service.serviceImpl;
 
+import com.sms.travelapp.dto.Auth.UserResponseDto;
 import com.sms.travelapp.dto.Post.PostReactionCountResponseDto;
 import com.sms.travelapp.dto.Post.PostRequestDto;
 import com.sms.travelapp.dto.Post.PostResponseDto;
@@ -18,6 +19,10 @@ import com.sms.travelapp.service.AuthService;
 import com.sms.travelapp.service.PostService;
 import com.sms.travelapp.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -174,5 +179,37 @@ public class PostServiceImpl implements PostService {
         }
 
         return PostReactionMapper.mapToPostReactionCountResponseDto(postReaction);
+    }
+
+    @Override
+    public Page<PostResponseDto> getFeedPosts(String feedType, int pageSize, int pageNumber) {
+       Page<Post> postsPage;
+
+       if(Objects.equals(feedType, "friends")) {
+           List<Long> friendsIds = userService.getFriendList()
+                   .stream()
+                   .map(UserResponseDto::getId)
+                   .toList();
+
+           postsPage = postRepository.findAllByUserEntity_IdIn(friendsIds, PageRequest.of(pageNumber, pageSize));
+
+       }else if(feedType.equals("home")){
+            postsPage = postRepository.findAll(PageRequest.of(pageNumber,
+                   pageSize,
+                   Sort.by("createdAt").descending()));
+       }else{
+           //TODO
+           postsPage = null;
+       }
+
+
+        return new PageImpl<>(
+                postsPage
+                        .stream()
+                        .map(PostMapper::mapToPostResponseDto)
+                        .collect(Collectors.toList()),
+                PageRequest.of(pageNumber,pageSize),
+                postsPage.getTotalElements()
+        );
     }
 }

@@ -7,6 +7,7 @@ import com.sms.travelapp.mapper.StringResponseMapper;
 import com.sms.travelapp.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,14 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<PostResponseDto> getPostById(@PathVariable Long id){
         PostResponseDto res = postService.getPostById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @GetMapping("/feed")
+    public ResponseEntity<Page<PostResponseDto>> getFeedPosts(@RequestParam String feedType,
+                                                                      @RequestParam int pageSize,
+                                                                      @RequestParam int pageNumber){
+        Page<PostResponseDto> res = postService.getFeedPosts(feedType,pageSize,pageNumber);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
