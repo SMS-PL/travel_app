@@ -48,7 +48,8 @@ const Home = () => {
 
     return (
         <MainContainer >
-            <div className="">
+            <div className="max-w-full w-[650px]">
+
                 <AddPost />
 
                 {posts.map((post) => 
