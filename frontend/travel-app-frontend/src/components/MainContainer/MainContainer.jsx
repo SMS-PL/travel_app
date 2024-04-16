@@ -6,7 +6,7 @@ function MainContainer({children}) {
     return (
         <div className="flex flex-col items-start min-h-screen">
             <Navbar />
-            <main className="container relative mx-auto flex flex-col items-center justify-start py-10">
+            <main className="container relative mx-auto flex flex-col items-center justify-start py-5 ">
                 {children}
             </main>
             <Footer />
