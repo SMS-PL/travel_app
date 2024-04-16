@@ -2,6 +2,7 @@ import RoutesPage from "./RoutesPage";
 import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
 import { ThemeProvider } from "@/components/ThemeProvider"
+import { Toaster } from "@/components/ui/toaster"
 
 const store = createStore({
     authName: "_auth",
@@ -16,6 +17,7 @@ function App() {
             <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
                 <AuthProvider store={store}>
                     <RoutesPage />
+                    <Toaster />
                 </AuthProvider>
             </ThemeProvider>
         </>
