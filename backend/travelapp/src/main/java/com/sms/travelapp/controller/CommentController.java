@@ -44,4 +44,11 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<CommentResponseDto> editComment(@PathVariable Long commentId, @RequestBody CommentRequestDto commentRequestDto){
+        CommentResponseDto res = commentService.editComment(commentId, commentRequestDto);
+
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
 }

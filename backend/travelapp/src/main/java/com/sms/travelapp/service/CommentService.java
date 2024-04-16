@@ -12,4 +12,6 @@ public interface CommentService {
     CommentResponseDto addComment(Long postId, CommentRequestDto commentRequestDto);
 
     Map<String, String> removeComment(Long commentId);
+
+    CommentResponseDto editComment(Long commentId, CommentRequestDto commentRequestDto);
 }

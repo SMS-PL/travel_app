@@ -88,4 +88,19 @@ public class CommentServiceImpl implements CommentService {
         return StringResponseMapper.mapToMap("Comment id-" + commentId + " deleted successfully");
 
     }
+
+    @Override
+    public CommentResponseDto editComment(Long commentId, CommentRequestDto commentRequestDto) {
+        UserEntity user = authService.getLoggedUser();
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new CommentNotFound("Comment not found!")
+        );
+        if (!comment.getAuthor().equals(user)) {
+            throw new AccessDenied("This is not your comment!");
+        }
+
+        comment.setContent(commentRequestDto.getContent());
+        commentRepository.save(comment);
+        return CommentMapper.MapToCommentResponseDto(comment);
+    }
 }
