@@ -35,6 +35,17 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Page<PostResponseDto>>
+    getPostsByUserId(@PathVariable Long userId,
+                             @RequestParam int pageSize,
+                             @RequestParam int pageNumber){
+        Page<PostResponseDto> res = postService.getPostsByUser(userId,pageSize,pageNumber);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+
+
     @GetMapping("/feed")
     public ResponseEntity<Page<PostResponseDto>> getFeedPosts(@RequestParam String feedType,
                                                                       @RequestParam int pageSize,
