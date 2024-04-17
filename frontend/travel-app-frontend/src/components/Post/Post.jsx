@@ -74,7 +74,7 @@ function Post({id, content, countryId, imageUrl, authorId, createdAt, lastUpdate
 
     return (
         <Card className="mt-5 w-full">
-            <CardHeader className="flex flex-row">
+            <CardHeader className="flex flex-row pb-1">
                 <Link to={`/profile/${user.id}`} className="flex flex-row">
                     <Avatar>
                         <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
@@ -95,7 +95,7 @@ function Post({id, content, countryId, imageUrl, authorId, createdAt, lastUpdate
 
             <CardContent>
                 {content}
-                <Skeleton className="w-full h-[500px] mt-2" />
+                <Skeleton className="w-full h-[500px] mt-4" />
                 {/* <img src="https://picsum.photos/600/600" alt="" className="w-full"/> */}
             </CardContent>
             
