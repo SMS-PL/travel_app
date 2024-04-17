@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post,Long> {
 
-    List<Post> findAllByAuthorId(Long authorId);
+    Page<Post> findAllByAuthorId(Long id, PageRequest pg);
 
     @Query("SELECT p FROM Post p WHERE p.authorId IN :friendIds")
     Page<Post> findAllByUserEntity_IdIn(List<Long> friendIds, Pageable pageable);

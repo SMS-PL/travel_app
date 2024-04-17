@@ -212,4 +212,21 @@ public class PostServiceImpl implements PostService {
                 postsPage.getTotalElements()
         );
     }
+
+    @Override
+    public Page<PostResponseDto> getPostsByUser(Long userId, int pageSize, int pageNumber) {
+        Page<Post> postsPage = postRepository.findAllByAuthorId(userId,PageRequest.of(pageNumber,
+                pageSize,
+                Sort.by("createdAt").descending()));
+
+        return new PageImpl<>(
+                postsPage
+                        .stream()
+                        .map(PostMapper::mapToPostResponseDto)
+                        .collect(Collectors.toList()),
+                PageRequest.of(pageNumber,pageSize),
+                postsPage.getTotalElements()
+        );
+
+    }
 }

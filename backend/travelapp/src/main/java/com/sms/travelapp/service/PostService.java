@@ -22,4 +22,6 @@ public interface PostService {
     PostReactionCountResponseDto reactToPost(Long id, int reactionType);
 
     Page<PostResponseDto> getFeedPosts(String feedType, int pageSize, int pageNumber);
+
+    Page<PostResponseDto> getPostsByUser(Long userId, int pageSize, int pageNumber);
 }
