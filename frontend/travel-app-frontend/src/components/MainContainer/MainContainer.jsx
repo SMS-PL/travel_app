@@ -46,13 +46,22 @@ function MainContainer({children, type = "default"}) {
                     
                 ) : null}
 
-                {type == "default" ? (
-                    <div className="max-w-full w-[700px] flex justify-center items-center">
+                {type == "profile" ? (
+                    <div className="max-w-full flex flex-col justify-center items-center">
+                        <h2 className="text-center scroll-m-20 text-lg font-extrabold tracking-tight lg:text-4xl py-5">
+                            Profile
+                        </h2>
                         {children}
                     </div>
-
-
                 ) : null}
+
+                {type == "default" ? (
+                    <div className="max-w-full w-[700px] flex flex-col justify-center items-center">
+                        {children}
+                    </div>
+                ) : null}
+
+
             </main>
 
             <Footer />
