@@ -1,0 +1,9 @@
+package com.sms.travelapp.repository;
+
+import com.sms.travelapp.model.Achievement;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AchievementRepository extends JpaRepository<Achievement,Long> {
+
+
+}
