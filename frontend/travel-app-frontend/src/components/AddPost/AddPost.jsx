@@ -57,6 +57,7 @@ function AddPost() {
                 return response.json();
             })
             .then(data => {
+                setTimeout(() => { location.reload(); }, 1000);
                 //window.location.reload();  // odświeża stronę, aby zobaczyć nowy post -> rozwiązanie tymczasowe
                 toast({
                     title: "Hurrah!",
