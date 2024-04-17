@@ -18,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import MainContainer from "@/components/MainContainer/MainContainer";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import { cn } from "@/lib/utils";
 
 const Login = () => {
     const isAuthenticated = useIsAuthenticated();
@@ -93,56 +94,58 @@ const Login = () => {
     } else {
         return (
             <MainContainer>
-                <Card className="max-w-full w-[400px]">
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <CardHeader>
-                            <CardTitle className="mt-8 scroll-m-20 text-2xl font-bold tracking-tight">Login</CardTitle>
-                            <CardDescription>Enter your details to log in!</CardDescription>
-                        </CardHeader>
-                        <CardContent>
+                <div className="h-screen flex justify-center items-center">
+                    <Card className="max-w-full w-[400px]">
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <CardHeader>
+                                <CardTitle className="mt-8 scroll-m-20 text-2xl font-bold tracking-tight">Login</CardTitle>
+                                <CardDescription>Enter your details to log in!</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                
+                                    <div className="grid w-full items-center gap-4">
+                                        <div className="flex flex-col space-y-1.5">
+                                            <Label htmlFor="email" className={cn(errors.email ? "text-red-500" : "text-foreground")}>Email</Label>
+                                            <Input 
+                                                id="email"
+                                                type="email"
+                                                placeholder="example@gmail.com" 
+                                                {...register("email", {
+                                                    required: "Email is required",
+                                                    pattern: {
+                                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i,
+                                                        message: "Email is not validated",
+                                                    },
+                                                })}
+                                            />
+                                            <p className="text-red-500 h-2 text-xs">{errors.email && errors.email.message}</p>
+                                        </div>
+                                        <div className="flex flex-col space-y-1.5">
+                                            <Label htmlFor="password" className={cn(errors.password ? "text-red-500" : "text-foreground")}>Password</Label>
+                                            <Input 
+                                                id="password" 
+                                                type="password"
+                                                placeholder="********"
+                                                {...register("password", {
+                                                    required: "Password is required",
+                                                })}
+                                            />
+                                            <p className="text-red-500 h-2 text-xs">{errors.password && errors.password.message}</p>
+
+                                        </div>
+
+                                        <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                                            Don’t have an account yet? <Link to="/register" className="font-medium text-primary hover:underline dark:text-primary">Sign up</Link>
+                                        </p>
+                                    </div>
+                            </CardContent>
                             
-                                <div className="grid w-full items-center gap-4">
-                                    <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="email">Email</Label>
-                                        <Input 
-                                            id="email"
-                                            type="email"
-                                            placeholder="example@gmail.com" 
-                                            {...register("email", {
-                                                required: "Email is required",
-                                                pattern: {
-                                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i,
-                                                    message: "Email is not validated",
-                                                },
-                                            })}
-                                        />
-                                        <p className="text-red-500">{errors.email && errors.email.message}</p>
-                                    </div>
-                                    <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="password">Password</Label>
-                                        <Input 
-                                            id="password" 
-                                            type="password"
-                                            placeholder="********"
-                                            {...register("password", {
-                                                required: "Password is required",
-                                            })}
-                                        />
-                                        <p className="text-red-500">{errors.password && errors.password.message}</p>
-
-                                    </div>
-
-                                    <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                                        Don’t have an account yet? <Link to="/register" className="font-medium text-primary hover:underline dark:text-primary">Sign up</Link>
-                                    </p>
-                                </div>
-                        </CardContent>
-                        
-                        <CardFooter className="flex flex-col">
-                            <Button className="w-full" type="submit" >Login</Button>
-                        </CardFooter>
-                    </form>
-                </Card>
+                            <CardFooter className="flex flex-col">
+                                <Button className="w-full" type="submit" >Login</Button>
+                            </CardFooter>
+                        </form>
+                    </Card>
+                </div>
             </MainContainer>
         );
     }
