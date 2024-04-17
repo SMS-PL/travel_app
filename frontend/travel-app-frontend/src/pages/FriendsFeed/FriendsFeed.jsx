@@ -67,14 +67,10 @@ const FriendsFeed = () => {
 				<Card className="mt-5 w-full">
 					<CardHeader className="flex flex-row">
 						<Skeleton className="h-12 w-12 rounded-full" />
-
-					
-						<div className="px-2 w-fit">
-							<CardTitle><Skeleton className="h-4 w-[250px]" /></CardTitle>
-							<CardDescription className="text-nowrap"><Skeleton className="h-4 w-[250px] mt-2" /></CardDescription>
+						<div className="px-2 w-fit flex flex-col">
+                            <Skeleton className="h-4 w-[250px]" />
+                            <Skeleton className="h-4 w-[200px] mt-2" />
 						</div>
-
-			
 					</CardHeader>
 
 					<CardContent>
@@ -87,6 +83,7 @@ const FriendsFeed = () => {
 						<Button variant="outline">Comments</Button>
 					</CardFooter>
 				</Card>
+
 
 			) : (
 				posts.map((post) => (

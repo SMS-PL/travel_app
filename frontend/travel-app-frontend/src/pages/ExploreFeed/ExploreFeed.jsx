@@ -68,13 +68,11 @@ const FriendsFeed = () => {
 					<CardHeader className="flex flex-row">
 						<Skeleton className="h-12 w-12 rounded-full" />
 
-					
 						<div className="px-2 w-fit">
 							<CardTitle><Skeleton className="h-4 w-[250px]" /></CardTitle>
 							<CardDescription className="text-nowrap"><Skeleton className="h-4 w-[250px] mt-2" /></CardDescription>
 						</div>
 
-			
 					</CardHeader>
 
 					<CardContent>
