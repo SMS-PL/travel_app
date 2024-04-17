@@ -17,6 +17,7 @@ import { useState, useEffect } from 'react';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function Post({id, content, countryId, imageUrl, authorId, createdAt, lastUpdated, className}) {
 	const [user, setUser] = useState({});
@@ -94,7 +95,8 @@ function Post({id, content, countryId, imageUrl, authorId, createdAt, lastUpdate
 
             <CardContent>
                 {content}
-                <img src="https://picsum.photos/600/600" alt="" className="w-full"/>
+                <Skeleton className="w-full h-[500px] mt-2" />
+                {/* <img src="https://picsum.photos/600/600" alt="" className="w-full"/> */}
             </CardContent>
             
             <CardFooter className="flex justify-between">
