@@ -14,6 +14,7 @@ import {
     AvatarImage,
 } from "@/components/ui/avatar";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function Pins() {
     const auth = useAuthUser();
@@ -26,32 +27,13 @@ function Pins() {
                     Tell us <span className="text-primary font-extrabold">where</span> are you?
                 </h3>
             </CardHeader>
-            <CardContent className="flex flex-row gap-2 justify-center " >
-                <Avatar className="w-[50px] h-[50px]">
-                    <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
-                    <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-
-                <Avatar className="w-[50px] h-[50px]">
-                    <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
-                    <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <Avatar className="w-[50px] h-[50px]">
-                    <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
-                    <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <Avatar className="w-[50px] h-[50px]">
-                    <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
-                    <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <Avatar className="w-[50px] h-[50px]">
-                    <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
-                    <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <Avatar className="w-[50px] h-[50px]">
-                    <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
-                    <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
+            <CardContent className="flex flex-row gap-2 justify-center" >
+                <Skeleton className="w-[50px] h-[50px] rounded-full"/>
+                <Skeleton className="w-[50px] h-[50px] rounded-full"/>
+                <Skeleton className="w-[50px] h-[50px] rounded-full"/>
+                <Skeleton className="w-[50px] h-[50px] rounded-full"/>
+                <Skeleton className="w-[50px] h-[50px] rounded-full"/>
+                <Skeleton className="w-[50px] h-[50px] rounded-full"/>
             </CardContent>
             {/* <CardFooter className="flex justify-between">
 
