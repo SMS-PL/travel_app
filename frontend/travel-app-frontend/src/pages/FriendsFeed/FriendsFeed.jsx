@@ -15,90 +15,92 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-
-import {
-	Pagination,
-	PaginationContent,
-	PaginationEllipsis,
-	PaginationItem,
-	PaginationLink,
-	PaginationNext,
-	PaginationPrevious,
-} from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import {useInView} from "react-intersection-observer";
+import {useInfiniteQuery} from "@tanstack/react-query";
+
 const FriendsFeed = () => {
-	const [posts, setPosts] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
 	const authHeader = useAuthHeader();
-	const navigate = useNavigate();
+	const {ref, inView} = useInView();
 
-    useEffect(() => {
-		setIsLoading(true);
-		// fetch("http://localhost:5000/api/v1/posts/feed?feedType=friends&pageSize=10&pageNumber=0", {
-		// 	method: 'GET',
-		// 	headers: {
-		// 		'Content-Type': 'application/json', 
-		// 		"Authorization": authHeader,
-		// 	},
-		// })
-		// .then(response => {
-		// 	if (!response.ok) {
-		// 		throw new Error('Błąd sieci!');
-		// 	}
-		// 	return response.json();
-		// })
-		// .then(data => {
-		// 	setPosts(data.content);
-		// 	setIsLoading(false);
-		// })
-		// .catch(error => {
-		// 	console.log(error.message);
-		// 	navigate("/");
-		// });
+	useEffect(() => {
+		if(inView) fetchNextPage();
+	}, [inView]);
 
-	}, []);
+	const fetchPost = async (page) => {
+		const response = await fetch(`http://localhost:5000/api/v1/posts/feed?feedType=friends&pageSize=5&pageNumber=${page.pageParam}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json', 
+				"Authorization": authHeader,
+			},
+		});
+
+		return await response.json();
+	}
+
+	const {
+		data,
+		error,
+		fetchNextPage,
+		hasNextPage,
+		isFetching,
+		isFetchingNextPage,
+		status,
+	} = useInfiniteQuery({
+		queryKey: ['posts_friends'],
+		queryFn: fetchPost,
+		initialPageParam: 0,
+		getNextPageParam: (lastPage, pages) => {
+			return lastPage.length === 0 ? null : pages.length + 1;
+		},
+	})
 
 
     return (
         <MainContainer type="friendsFeed">
 
-			{isLoading ? (
+			{status == "pending" ? (
 				<Card className="mt-5 w-full">
 					<CardHeader className="flex flex-row">
 						<Skeleton className="h-12 w-12 rounded-full" />
-						<div className="px-2 w-fit flex flex-col">
-                            <Skeleton className="h-4 w-[250px]" />
+						<div className="px-2 w-fit">
+							<Skeleton className="h-4 w-[250px]" />
                             <Skeleton className="h-4 w-[200px] mt-2" />
 						</div>
 					</CardHeader>
-
 					<CardContent>
 						<Skeleton className="h-14 w-full mb-5" />
 						<Skeleton className="w-full h-[500px]" />
 					</CardContent>
-					
 					<CardFooter className="flex justify-between">
 						<Button variant="outline">Likes</Button>
 						<Button variant="outline">Comments</Button>
 					</CardFooter>
 				</Card>
 
-
 			) : (
-				posts.map((post) => (
-					<Post
-						key={post.id}
-						id={post.id}
-						content={post.content}
-						countryId={post.countryId}
-						imageUrl={post.imageUrl}
-						authorId={post.authorId}
-						createdAt={post.createdAt}
-						lastUpdated={post.lastUpdated}
-					/>
-				))
+				<>
+					{data.pages.map((group, i) => (
+						group.content.map((post) => (
+							<Post
+								key={post.id}
+								id={post.id}
+								content={post.content}
+								countryId={post.countryId}
+								imageUrl={post.imageUrl}
+								authorId={post.authorId}
+								createdAt={post.createdAt}
+								lastUpdated={post.lastUpdated}
+							/>
+						))
+					))}
+					
+				</>
 			)}
+
+			{hasNextPage && <div ref={ref} className=""></div>}
 
         </MainContainer>
     )
