@@ -36,8 +36,8 @@ export function Navbar() {
                             <Link to="/friends-feed">
                                 {location.pathname == "/friends-feed" ? <Icons.friendsFeedFill className="h-7 w-7 fill-primary" /> : <Icons.friendsFeedEmpty className="h-7 w-7 fill-foreground" />}
                             </Link>
-                            <Link to="/location-feed">
-                                {location.pathname == "/location-feed" ? <Icons.locationFeedFill className="h-7 w-7 fill-primary" /> : <Icons.locationFeedEmpty className="h-7 w-7 fill-foreground" />}
+                            <Link to="/explore-feed">
+                                {location.pathname == "/explore-feed" ? <Icons.locationFeedFill className="h-7 w-7 fill-primary" /> : <Icons.locationFeedEmpty className="h-7 w-7 fill-foreground" />}
                             </Link>
                         </> : null }
                     </div>
