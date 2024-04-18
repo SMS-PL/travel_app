@@ -66,6 +66,8 @@ public class PostServiceImpl implements PostService {
         post.setImageUrl(postDto.getImageUrl());
         post.setCountryId(postDto.getCountryId());
         post.setAuthorId(user.getId());
+        post.setHeartCount(0L);
+        post.setLikeCount(0L);
         postRepository.save(post);
 
         return "Post Created!";
