@@ -13,7 +13,5 @@ import java.sql.Timestamp;
 
 @Data
 public class PinRequestDto {
-
     private Point localization;
-    private int countryId;
 }

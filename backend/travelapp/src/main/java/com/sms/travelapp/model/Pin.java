@@ -1,6 +1,7 @@
 package com.sms.travelapp.model;
 
 
+import com.sms.travelapp.dto.PlaceDetails;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -18,13 +19,18 @@ public class Pin {
     @Column(name="id")
     private Long id;
 
-    @Column(name = "author_id")
-    private Long authorId;
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private UserEntity author;
 
-    @Column(name = "country_id")
-    private int countryId;
+    @Column(name = "city")
+    private String city;
 
-    @Column(name="coordinates")
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private Country country;
+
+    @Column(name="localization")
     private Point localization;
 
     @CreationTimestamp

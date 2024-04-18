@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
 import java.nio.file.AccessDeniedException;
 import java.util.Collections;
@@ -80,4 +81,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    @ExceptionHandler(PlaceNotFound.class)
+    public ResponseEntity<Object> handlePlaceNotFoundException(PlaceNotFound ex, WebRequest request) {
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("error", ex.getMessage());
+        if (ex.getCause() != null) {
+            errorDetails.put("cause", ex.getCause().toString());
+        }
+
+        errorDetails.put("path", request.getDescription(false));
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorDetails);
+    }
 }

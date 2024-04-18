@@ -14,9 +14,11 @@ public class PinMapper {
         return PinResponseDto.builder()
                 .id(pin.getId())
                 .localization(pin.getLocalization())
-                .countryId(pin.getCountryId())
+                .countryIso3(pin.getCountry().getIso3())
+                .countryId(pin.getCountry().getId())
+                .city(pin.getCity())
                 .createdAt(pin.getCreatedAt())
-                .authorId(pin.getAuthorId())
+                .author(UserMapper.mapToUserResponseDto(pin.getAuthor()))
                 .build();
     }
 }

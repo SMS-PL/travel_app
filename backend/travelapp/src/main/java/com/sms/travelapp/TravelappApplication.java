@@ -12,6 +12,7 @@ public class TravelappApplication {
 		System.setProperty("DATABASE_URL", dotenv.get("DATABASE_URL"));
 		System.setProperty("DATABASE_USER", dotenv.get("DATABASE_USER"));
 		System.setProperty("DATABASE_PASSWORD", dotenv.get("DATABASE_PASSWORD"));
+		System.setProperty("GEO_API_KEY", dotenv.get("GEO_API_KEY"));
 		SpringApplication.run(TravelappApplication.class, args);
 	}
 

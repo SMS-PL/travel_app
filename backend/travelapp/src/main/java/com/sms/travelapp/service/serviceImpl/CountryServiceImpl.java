@@ -66,4 +66,9 @@ public class CountryServiceImpl implements CountryService {
                 countries.getTotalElements()
         );
     }
+
+    @Override
+    public Country getCountryByIso3(String iso3) {
+        return countryRepository.findByIso3(iso3);
+    }
 }

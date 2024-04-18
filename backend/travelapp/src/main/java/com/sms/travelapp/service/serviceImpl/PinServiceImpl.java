@@ -1,22 +1,32 @@
 package com.sms.travelapp.service.serviceImpl;
 
 
+import com.sms.travelapp.dto.Auth.UserResponseDto;
 import com.sms.travelapp.dto.Pin.PinRequestDto;
 import com.sms.travelapp.dto.Pin.PinResponseDto;
+import com.sms.travelapp.dto.PlaceDetails;
 import com.sms.travelapp.exception.AccessDenied;
 import com.sms.travelapp.exception.PinNotFound;
+import com.sms.travelapp.exception.PlaceNotFound;
+import com.sms.travelapp.mapper.CommentMapper;
 import com.sms.travelapp.mapper.PinMapper;
 import com.sms.travelapp.model.Pin;
 import com.sms.travelapp.model.UserEntity;
 import com.sms.travelapp.repository.PinRepository;
 import com.sms.travelapp.service.AuthService;
+import com.sms.travelapp.service.GeolocationService;
 import com.sms.travelapp.service.PinService;
+import com.sms.travelapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.NotFound;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +36,8 @@ public class PinServiceImpl implements PinService {
 
     private final PinRepository pinRepository;
     private final AuthService authService;
+    private final GeolocationService geolocationService;
+    private final UserService userService;
     @Override
     public List<PinResponseDto> getAllPins() {
         return pinRepository.findAll().stream().map(
@@ -35,12 +47,22 @@ public class PinServiceImpl implements PinService {
 
     @Override
     public PinResponseDto createPin(PinRequestDto pinRequestDto) {
-        Pin pin = new Pin();
-        UserEntity user = authService.getLoggedUser();
 
-        pin.setAuthorId(user.getId());
+        UserEntity user = authService.getLoggedUser();
+        PlaceDetails placeDetails;
+
+        try {
+            placeDetails = geolocationService.getInfo(pinRequestDto.getLocalization());
+        }catch (Exception e){
+            throw new PlaceNotFound("Place not found!");
+        }
+
+        Pin pin = new Pin();
+        pin.setAuthor(user);
         pin.setLocalization(pinRequestDto.getLocalization());
-        pin.setCountryId(pinRequestDto.getCountryId());
+        pin.setCity(placeDetails.getCity());
+        pin.setCountry(placeDetails.getCountry());
+        pin.setLocalization(pinRequestDto.getLocalization());
         pinRepository.save(pin);
         return PinMapper.mapToPinResponseDto(pin);
     }
@@ -51,10 +73,35 @@ public class PinServiceImpl implements PinService {
         Pin pin = pinRepository.findById(pinId).orElseThrow(
                 ()-> new PinNotFound("Pin not found!")
         );
-        if(!user.getId().equals(pin.getAuthorId())){
+        if(!user.getId().equals(pin.getAuthor().getId())){
             throw new AccessDenied("You are not authorized to delete this pin!");
         }
         pinRepository.delete(pin);
         return "Removed pin id-"+pinId;
+    }
+
+
+//PRZETESTOWAC I PUSHNAC
+
+    @Override
+    public Page<PinResponseDto> getActiveFriendsPins(int pageNumber, int pageSize) {
+
+        List<Long> friendsIds = userService.getFriendList().stream().map(UserResponseDto::getId).toList();
+        ZonedDateTime cutoff = ZonedDateTime.now().minusHours(24);
+
+
+       Page<Pin> pins = pinRepository.findAllActiveByAuthorIds(friendsIds,
+                                                cutoff,
+                                                PageRequest.of(pageNumber,pageSize));
+        return new PageImpl<>(
+                pins
+                        .stream()
+                        .map(PinMapper::mapToPinResponseDto)
+                        .collect(Collectors.toList()),PageRequest.of(pageNumber,pageSize),
+                pins.getTotalElements()
+        );
+
+
+
     }
 }
