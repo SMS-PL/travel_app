@@ -13,10 +13,7 @@ import com.sms.travelapp.mapper.PinMapper;
 import com.sms.travelapp.model.Pin;
 import com.sms.travelapp.model.UserEntity;
 import com.sms.travelapp.repository.PinRepository;
-import com.sms.travelapp.service.AuthService;
-import com.sms.travelapp.service.GeolocationService;
-import com.sms.travelapp.service.PinService;
-import com.sms.travelapp.service.UserService;
+import com.sms.travelapp.service.*;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.NotFound;
 import org.springframework.data.domain.Page;
@@ -38,6 +35,7 @@ public class PinServiceImpl implements PinService {
     private final AuthService authService;
     private final GeolocationService geolocationService;
     private final UserService userService;
+    private final UserCountryService userCountryService;
     @Override
     public List<PinResponseDto> getAllPins() {
         return pinRepository.findAll().stream().map(
@@ -56,6 +54,8 @@ public class PinServiceImpl implements PinService {
         }catch (Exception e){
             throw new PlaceNotFound("Place not found!");
         }
+
+        userCountryService.updateStats(placeDetails);
 
         Pin pin = new Pin();
         pin.setAuthor(user);
