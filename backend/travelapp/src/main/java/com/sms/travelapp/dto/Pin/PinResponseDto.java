@@ -20,6 +20,7 @@ public class PinResponseDto {
     private Long id;
     private UserResponseDto author;
     private String city;
+    private String countryName;
     private String countryIso3;
     private int countryId;
     private Point localization;

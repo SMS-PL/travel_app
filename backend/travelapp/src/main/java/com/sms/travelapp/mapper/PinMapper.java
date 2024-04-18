@@ -14,6 +14,7 @@ public class PinMapper {
         return PinResponseDto.builder()
                 .id(pin.getId())
                 .localization(pin.getLocalization())
+                .countryName(pin.getCountry().getNicename())
                 .countryIso3(pin.getCountry().getIso3())
                 .countryId(pin.getCountry().getId())
                 .city(pin.getCity())
