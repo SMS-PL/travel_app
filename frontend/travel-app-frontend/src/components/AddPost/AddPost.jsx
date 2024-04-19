@@ -21,7 +21,6 @@ import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 
 import { Icons } from "@/components/icons";
- 
 
 function AddPost({setAddNewPost}) {
 	const authHeader = useAuthHeader();
@@ -32,7 +31,7 @@ function AddPost({setAddNewPost}) {
         register,
         handleSubmit,
         // watch,
-        // reset,
+        reset,
         formState: { errors, isValid },
     } = useForm();
 
@@ -62,6 +61,8 @@ function AddPost({setAddNewPost}) {
                     description: "Post added correctly!",
                     className: "bg-green-800"
                 })
+                
+                reset();
 
                 setAddNewPost(true);
                 console.log(data);
@@ -96,7 +97,8 @@ function AddPost({setAddNewPost}) {
                         <Textarea
                             id="description"
                             placeholder="Tell us a little bit about yourself"
-                            className="resize-y;"
+                            className="resize-y"
+
                             {...register("description", {
                                 required: "Description is required",
                             })}
