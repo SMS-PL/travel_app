@@ -86,7 +86,7 @@ const FriendsFeed = () => {
 						group.content.map((post) => (
 							<Post
 								key={post.id}
-								id={post.id}
+								postId={post.id}
 								content={post.content}
 								countryId={post.countryId}
 								imageUrl={post.imageUrl}
