@@ -23,7 +23,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
  
 
-function AddPost() {
+function AddPost({setAddNewPost}) {
 	const authHeader = useAuthHeader();
 	const navigate = useNavigate();
     const { toast } = useToast();
@@ -57,13 +57,13 @@ function AddPost() {
                 return response.json();
             })
             .then(data => {
-                setTimeout(() => { location.reload(); }, 1000);
-                //window.location.reload();  // odświeża stronę, aby zobaczyć nowy post -> rozwiązanie tymczasowe
                 toast({
                     title: "Hurrah!",
                     description: "Post added correctly!",
                     className: "bg-green-800"
                 })
+
+                setAddNewPost(true);
                 console.log(data);
                 
             })

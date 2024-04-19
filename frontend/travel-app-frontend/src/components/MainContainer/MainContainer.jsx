@@ -4,7 +4,7 @@ import Footer from "@/components/Footer/Footer";
 import AddPost from "@/components/AddPost/AddPost";
 import Pins from "@/components/Pins/Pins";
 
-function MainContainer({children, type = "default"}) {
+function MainContainer({children, type = "default", setAddNewPost}) {
     return (
         <div className="flex flex-col items-start min-h-screen">
             <Navbar />
@@ -16,7 +16,7 @@ function MainContainer({children, type = "default"}) {
                             Home
                         </h2>
                         <Pins />
-                        <AddPost />
+                        <AddPost setAddNewPost={setAddNewPost}/>
                         {children}
                     </div>
                     
