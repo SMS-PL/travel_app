@@ -101,11 +101,7 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
             </CardContent>
             
             <CardFooter className="flex justify-between">
-                <Reaction type="like" likes={likes} postId={postId} />
-                <Reaction type="heart" heart={hearts} postId={postId} />
-                {/* <Button variant="outline">Likes {likes}</Button> */}
-                {/* <Button variant="outline">Hearts {hearts}</Button> */}
-                {/* <Button variant="outline">Comments</Button> */}
+                <Reaction  likes={likes} hearts={hearts} postId={postId} />
             </CardFooter>
         </Card>
     );
