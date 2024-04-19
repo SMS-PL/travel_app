@@ -2,7 +2,7 @@ import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import MainContainer from "@/components/MainContainer/MainContainer";
 import { useState, useEffect } from 'react';
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import Post from "@/components/Post/Post";
 
 import {
@@ -16,11 +16,13 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 import {useInView} from "react-intersection-observer";
-import {useInfiniteQuery} from "@tanstack/react-query";
+import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
 
 const Home = () => {
 	const authHeader = useAuthHeader();
 	const {ref, inView} = useInView();
+
+	const [addNewPost, setAddNewPost] = useState(false);
 
 	useEffect(() => {
 		if(inView) fetchNextPage();
@@ -34,7 +36,6 @@ const Home = () => {
 				"Authorization": authHeader,
 			},
 		});
-
 		return await response.json();
 	}
 
@@ -46,6 +47,7 @@ const Home = () => {
 		isFetching,
 		isFetchingNextPage,
 		status,
+		refetch
 	} = useInfiniteQuery({
 		queryKey: ['posts'],
 		queryFn: fetchPost,
@@ -55,8 +57,13 @@ const Home = () => {
 		},
 	})
 
+	if(addNewPost) {
+		setAddNewPost(false);
+		refetch({ refetchPage: (page, index) => index === 0 })
+	}
+
 	return (
-        <MainContainer type="homeFeed">
+        <MainContainer type="homeFeed" setAddNewPost={setAddNewPost}>
 
 			{status == "pending" ? (
 				<Card className="mt-5 w-full">
@@ -78,23 +85,30 @@ const Home = () => {
 				</Card>
 
 			) : (
-				<>
-					{data.pages.map((group, i) => (
-						group.content.map((post) => (
-							<Post
-								key={post.id}
-								id={post.id}
-								content={post.content}
-								countryId={post.countryId}
-								imageUrl={post.imageUrl}
-								authorId={post.authorId}
-								createdAt={post.createdAt}
-								lastUpdated={post.lastUpdated}
-							/>
-						))
-					))}
-					
-				</>
+				data.pages[0].empty == true ? (
+					<div>
+						Brak postów do wyświetlenia
+					</div> 
+				) : (
+					<>
+						{data.pages.map((group, i) => (
+							group.content.map((post) => (
+								<Post
+									key={post.id}
+									postId={post.id}
+									content={post.content}
+									countryId={post.countryId}
+									imageUrl={post.imageUrl}
+									authorId={post.authorId}
+									createdAt={post.createdAt}
+									lastUpdated={post.lastUpdated}
+									likes={post.likes}
+									hearts={post.hearts}
+								/>
+							))
+						))}
+					</>
+				)
 			)}
 
 			{hasNextPage && <div ref={ref} className=""></div>}
