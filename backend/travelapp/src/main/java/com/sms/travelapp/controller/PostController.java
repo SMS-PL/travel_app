@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +61,15 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(StringResponseMapper.mapToMap(res));
     }
+
+    @GetMapping("/{postId}/userReaction")
+    public ResponseEntity<Map<String, Integer>> checkUserReaction(@PathVariable Long postId) {
+        Integer res = postService.checkUserReaction(postId);
+        Map<String, Integer> responseBody = new HashMap<>();
+        responseBody.put("reaction", res);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String,String>> deletePost(@PathVariable Long id){

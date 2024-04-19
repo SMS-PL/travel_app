@@ -231,4 +231,19 @@ public class PostServiceImpl implements PostService {
         );
 
     }
+
+    @Override
+    public Integer checkUserReaction(Long postId) {
+        UserEntity user = authService.getLoggedUser();
+        Post post = postRepository.findById(postId).orElseThrow(
+                ()-> new PostNotFound("Post not found!")
+        );
+
+        if(postReactionRepository.existsByAuthorAndPost(user,post)){
+            return postReactionRepository.findByAuthorAndPost(user,post).getReactionType();
+        }else{
+            return -1;
+        }
+
+    }
 }

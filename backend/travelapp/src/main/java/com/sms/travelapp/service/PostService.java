@@ -24,4 +24,6 @@ public interface PostService {
     Page<PostResponseDto> getFeedPosts(String feedType, int pageSize, int pageNumber);
 
     Page<PostResponseDto> getPostsByUser(Long userId, int pageSize, int pageNumber);
+
+    Integer checkUserReaction(Long postId);
 }
