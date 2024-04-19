@@ -18,8 +18,9 @@ import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
+import Reaction from "@/components/Reaction/Reaction";
 
-function Post({id, content, countryId, imageUrl, authorId, createdAt, lastUpdated, className}) {
+function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUpdated, likes, hearts, className}) {
 	const [user, setUser] = useState({});
     const [countryCode, setCountryCode] = useState("");
 
@@ -100,8 +101,11 @@ function Post({id, content, countryId, imageUrl, authorId, createdAt, lastUpdate
             </CardContent>
             
             <CardFooter className="flex justify-between">
-                <Button variant="outline">Likes</Button>
-                <Button variant="outline">Comments</Button>
+                <Reaction type="like" likes={likes} postId={postId} />
+                <Reaction type="heart" heart={hearts} postId={postId} />
+                {/* <Button variant="outline">Likes {likes}</Button> */}
+                {/* <Button variant="outline">Hearts {hearts}</Button> */}
+                {/* <Button variant="outline">Comments</Button> */}
             </CardFooter>
         </Card>
     );
