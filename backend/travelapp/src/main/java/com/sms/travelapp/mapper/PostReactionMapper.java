@@ -13,7 +13,7 @@ public class PostReactionMapper {
     public static PostReactionCountResponseDto mapToPostReactionCountResponseDto(PostReaction postReaction){
         return PostReactionCountResponseDto.builder()
                 .like(postReaction.getPost().getLikeCount())
-                .love(postReaction.getPost().getHeartCount())
+                .heart(postReaction.getPost().getHeartCount())
                 .build();
     }
 }

@@ -9,5 +9,5 @@ import lombok.Data;
 public class PostReactionCountResponseDto {
 
     private Long like;
-    private Long love;
+    private Long heart;
 }
