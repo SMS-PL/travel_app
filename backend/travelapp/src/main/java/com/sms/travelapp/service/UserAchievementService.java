@@ -1,8 +1,8 @@
 package com.sms.travelapp.service;
 
-import com.sms.travelapp.dto.Achievement.AchievementResponseDto;
+import com.sms.travelapp.dto.Achievement.UserAchievementResponseDto;
 import org.springframework.data.domain.Page;
 
 public interface UserAchievementService {
-    Page<AchievementResponseDto> getUserAchievements(Long userId, int pageSize, int pageNumber);
+    Page<UserAchievementResponseDto> getUserAchievements(Long userId, int pageSize, int pageNumber);
 }

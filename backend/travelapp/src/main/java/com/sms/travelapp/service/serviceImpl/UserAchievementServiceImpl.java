@@ -1,6 +1,6 @@
 package com.sms.travelapp.service.serviceImpl;
 
-import com.sms.travelapp.dto.Achievement.AchievementResponseDto;
+import com.sms.travelapp.dto.Achievement.UserAchievementResponseDto;
 import com.sms.travelapp.mapper.UserAchievementMapper;
 import com.sms.travelapp.model.UserAchievement;
 import com.sms.travelapp.repository.UserAchievementRepository;
@@ -12,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,7 +21,7 @@ public class UserAchievementServiceImpl implements UserAchievementService {
     private final UserAchievementRepository userAchievementRepository;
     private final UserAchievementMapper userAchievementMapper;
     @Override
-    public Page<AchievementResponseDto> getUserAchievements(Long userId, int pageSize, int pageNumber) {
+    public Page<UserAchievementResponseDto> getUserAchievements(Long userId, int pageSize, int pageNumber) {
         Sort sort = Sort.by("createdAt").descending();
 
 
@@ -31,7 +30,7 @@ public class UserAchievementServiceImpl implements UserAchievementService {
         return new PageImpl<>(
                 userAchievements
                         .stream()
-                        .map(userAchievementMapper::mapToAchievementResponseDto).collect(Collectors.toList()),
+                        .map(userAchievementMapper::mapToUserAchievementResponseDto).collect(Collectors.toList()),
                                 PageRequest.of(pageNumber,pageSize,sort),
                                 userAchievements.getTotalElements()
                         );

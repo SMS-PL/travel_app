@@ -1,6 +1,8 @@
 package com.sms.travelapp.service.serviceImpl;
 
+import com.sms.travelapp.dto.Achievement.AchievementResponseDto;
 import com.sms.travelapp.exception.CountryNotFound;
+import com.sms.travelapp.mapper.AchievementMapper;
 import com.sms.travelapp.model.*;
 import com.sms.travelapp.repository.AchievementRepository;
 import com.sms.travelapp.repository.CountryRepository;
@@ -8,10 +10,14 @@ import com.sms.travelapp.repository.UserAchievementRepository;
 import com.sms.travelapp.service.AchievementService;
 import com.sms.travelapp.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -57,6 +63,19 @@ public class AchievementServiceImpl implements AchievementService {
             userAchievementRepository.save(userAchievement);
         }
 
+    }
+
+    @Override
+    public Page<AchievementResponseDto> getAllAchievementsByLevel(int level, int pageSize, int pageNumber) {
+       Page<Achievement> achievements =  achievementRepository.findAllByLevel(level, PageRequest.of(pageNumber, pageSize));
+
+       return new PageImpl<>(
+               achievements
+                       .stream()
+                       .map(AchievementMapper::mapToAchievementResponseDto).collect(Collectors.toList()),
+               PageRequest.of(pageNumber,pageSize),
+               achievements.getTotalElements()
+               );
     }
 
 

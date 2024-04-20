@@ -1,10 +1,7 @@
 package com.sms.travelapp.dto.Achievement;
 
-
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.sms.travelapp.model.Country;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,8 +17,9 @@ public class AchievementResponseDto {
     private String title;
     private String description;
     private String icon;
-    private Long count;
-    private int type;
     private int level;
-    private Timestamp grantedAt;
+    private Long userCount;
+    private int type;
+    private Country country;
+    private Timestamp createdAt;
 }
