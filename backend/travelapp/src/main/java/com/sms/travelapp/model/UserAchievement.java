@@ -23,6 +23,9 @@ public class UserAchievement {
     @Column(name = "achievement_id")
     private Long achievementId;
 
+    @Column(name = "user_order")
+    private Long userOrder;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private Timestamp createdAt;

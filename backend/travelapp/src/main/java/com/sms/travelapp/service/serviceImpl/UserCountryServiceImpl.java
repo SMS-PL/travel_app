@@ -9,6 +9,7 @@ import com.sms.travelapp.model.UserCountry;
 import com.sms.travelapp.model.UserEntity;
 import com.sms.travelapp.repository.UserCountryRepository;
 import com.sms.travelapp.repository.UserRepository;
+import com.sms.travelapp.service.AchievementService;
 import com.sms.travelapp.service.AuthService;
 import com.sms.travelapp.service.UserCountryService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class UserCountryServiceImpl implements UserCountryService {
     private final UserCountryRepository userCountryRepository;
     private final AuthService authService;
     private final UserRepository userRepository;
+    private final AchievementService achievementService;
 
     @Override
     public void updateStats(PlaceDetails placeDetails) {
@@ -36,8 +38,9 @@ public class UserCountryServiceImpl implements UserCountryService {
 
         Country country = placeDetails.getCountry();
 
+        UserCountry userCountry;
         if(userCountryRepository.existsByUserIdAndCountryIdAndCountNotNull(user.getId(),country.getId())){
-            UserCountry userCountry = userCountryRepository
+             userCountry = userCountryRepository
                                             .findByUserIdAndCountryIdAndCountNotNull(user.getId(),country.getId());
 
             LocalDateTime today = LocalDateTime.now();
@@ -47,19 +50,19 @@ public class UserCountryServiceImpl implements UserCountryService {
             if(!lastUpdated.isAfter(thresholdDate)){
                 userCountry.setCount(userCountry.getCount()+1);
                 userCountryRepository.save(userCountry);
+                achievementService.checkForNewAchievements(userCountry);
             }
 
 
         }else{
-            UserCountry userCountry = new UserCountry();
+            userCountry = new UserCountry();
             userCountry.setCountryId(country.getId());
             userCountry.setUserId(user.getId());
             userCountry.setCount(1);
             userCountryRepository.save(userCountry);
+            achievementService.checkForNewAchievements(userCountry);
         }
 
-
-        //TODO: Checking for available achievements
     }
 
     @Override

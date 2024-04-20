@@ -28,7 +28,9 @@ public class UserAchievementMapper {
                 .id(achievement.getId())
                 .description(achievement.getDescription())
                 .title(achievement.getTitle())
-                .points(achievement.getPoints())
+                .level(achievement.getLevel())
+                .count(userAchievement.getUserOrder())
+                .type(achievement.getType())
                 .icon(achievement.getIcon())
                 .grantedAt(userAchievement.getCreatedAt())
                 .build();

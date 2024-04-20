@@ -26,8 +26,18 @@ public class Achievement {
     @Column(name = "icon")
     private String icon;
 
-    @Column(name = "points")
-    private int points;
+    @Column(name = "level")
+    private int level;
+
+    @Column(name = "user_count")
+    private Long userCount;
+
+    @Column(name = "type")
+    private int type;
+
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private Country country;
 
     @CreationTimestamp
     @Column(name = "created_at")

@@ -20,6 +20,8 @@ public class AchievementResponseDto {
     private String title;
     private String description;
     private String icon;
-    private int points;
+    private Long count;
+    private int type;
+    private int level;
     private Timestamp grantedAt;
 }
