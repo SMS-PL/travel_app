@@ -125,14 +125,15 @@ public class PostServiceImpl implements PostService {
 
         if(postReactionRepository.existsByAuthorAndPost(user,postDb)){
 
+
             postReaction = postReactionRepository.findByAuthorAndPost(user,postDb);
             if(postReaction.getReactionType()==reactionType){
+
                 if (postReaction.getReactionType() == 0) {
                     postDb.setLikeCount(postDb.getLikeCount() - 1);
                 } else {
                     postDb.setHeartCount(postDb.getHeartCount() - 1);
                 }
-                System.out.println(postDb.getLikeCount());
                 postReactionRepository.delete(postReaction);
                 postRepository.save(postDb);
             }else{
@@ -142,7 +143,7 @@ public class PostServiceImpl implements PostService {
                    }else{
                        postReaction.setReactionType(1);
                        postDb.setLikeCount(postDb.getLikeCount()-1);
-                       postDb.setHeartCount(postDb.getHeartCount()+1);
+                       postDb.setHeartCount(postDb.getHeartCount()==null?1: postDb.getHeartCount()+1);
                        postReactionRepository.save(postReaction);
                        userService.giveHeart();
                        postRepository.save(postDb);
@@ -163,16 +164,18 @@ public class PostServiceImpl implements PostService {
                 postReaction.setAuthor(user);
                 postReaction.setPost(postDb);
                 postReactionRepository.save(postReaction);
-                postDb.setLikeCount(postDb.getLikeCount()+1);
+                postDb.setLikeCount(postDb.getLikeCount()==null?1: postDb.getLikeCount()+1);
                 postRepository.save(postDb);
             }else{
+
                 if(userService.checkIfHeartAvailable()){
                     postReaction = new PostReaction();
                     postReaction.setReactionType(1);
                     postReaction.setAuthor(user);
                     postReaction.setPost(postDb);
                     postReactionRepository.save(postReaction);
-                    postDb.setLikeCount(postDb.getHeartCount()+1);
+                    postDb.setHeartCount(postDb.getHeartCount()+1);
+                    userService.giveHeart();
                     postRepository.save(postDb);
                 }else{
                     throw new HeartAlreadyUsed("You have already used your 1 heart reaction a day. Try again tomorrow");

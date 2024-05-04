@@ -94,6 +94,7 @@ public class UserServiceImpl implements UserService {
     public void giveHeart() {
         UserEntity user = authService.getLoggedUser();
         user.setLastGivenHeart(Timestamp.from(Instant.now()));
+        userRepository.save(user);
     }
 
     @Override
