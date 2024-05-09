@@ -35,6 +35,8 @@ public class PinController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
+    //@GetMapping("/")
+
     @PostMapping("/")
     public ResponseEntity<PinResponseDto> createPin(@RequestBody PinRequestDto pinRequestDto){
        PinResponseDto res = pinService.createPin(pinRequestDto);

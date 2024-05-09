@@ -24,6 +24,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -95,10 +96,10 @@ public class PinServiceImpl implements PinService {
 
         List<Long> friendsIds = userService.getFriendList().stream().map(UserResponseDto::getId).toList();
         ZonedDateTime cutoff = ZonedDateTime.now().minusHours(24);
-
+        Timestamp timestampCutoff = Timestamp.from(cutoff.toInstant());
 
        Page<Pin> pins = pinRepository.findAllActiveByAuthorIds(friendsIds,
-                                                cutoff,
+                                                timestampCutoff,
                                                 PageRequest.of(pageNumber,pageSize));
         return new PageImpl<>(
                 pins
