@@ -23,9 +23,15 @@ public class PinController {
 
     private final PinService pinService;
 
+//    @GetMapping("/")
+//    public ResponseEntity<List<PinResponseDto>> getAllPins(){
+//        List<PinResponseDto> res = pinService.getAllPins();
+//        return ResponseEntity.status(HttpStatus.OK).body(res);
+//    }
+
     @GetMapping("/")
-    public ResponseEntity<List<PinResponseDto>> getAllPins(){
-        List<PinResponseDto> res = pinService.getAllPins();
+    public ResponseEntity<Page<PinResponseDto>> getAllPins(@RequestParam int pageNumber, @RequestParam int pageSize){
+        Page<PinResponseDto> res = pinService.getAllPins(pageNumber,pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 

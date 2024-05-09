@@ -19,6 +19,7 @@ import org.hibernate.annotations.NotFound;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -37,10 +38,16 @@ public class PinServiceImpl implements PinService {
     private final UserService userService;
     private final UserCountryService userCountryService;
     @Override
-    public List<PinResponseDto> getAllPins() {
-        return pinRepository.findAll().stream().map(
-                PinMapper::mapToPinResponseDto
-        ).collect(Collectors.toList());
+    public Page<PinResponseDto> getAllPins(int pageNumber,int pageSize) {
+        Page<Pin> pins =  pinRepository.findAll(PageRequest.of(pageNumber,
+                pageSize,
+                Sort.by("createdAt").descending()));
+
+        return new PageImpl<>(
+                pins.getContent().stream().map(PinMapper::mapToPinResponseDto).collect(Collectors.toList()),
+                PageRequest.of(pageNumber,pageSize),
+                pins.getTotalElements());
+
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PinService {
 
-    List<PinResponseDto> getAllPins();
+    public Page<PinResponseDto> getAllPins(int pageNumber,int pageSize);
     PinResponseDto createPin(PinRequestDto pinRequestDto);
     String deletePin(Long pinId);
 
