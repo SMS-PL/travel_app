@@ -25,6 +25,14 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
@@ -39,9 +47,13 @@ function Profile() {
 	const [userData, setUserData] = useState("");
 	const [posts, setPosts] = useState([]);
 	const [friendshipStatus, setFriendshipStatus] = useState("");
+	const [userCountry, setUserCountry] = useState(null);
+
+	const [userAchievements, setUserAchievements] = useState(null);
 
 	const [refetch, setRefetch] = useState(false);
 
+	// ładowanie danych o użytkowniku
 	useEffect(() => {
 		setIsLoading(true);
 		fetch(`http://localhost:5000/api/v1/users/${userId}`, {
@@ -68,9 +80,14 @@ function Profile() {
 			console.error('Wystąpił błąd podczas wczytywania profilu użytkownika:', error);
 			navigate("/");
 		});
+		console.log(userCountry);
+
+		getUserCountries(10, 0);
+		getUserAchievements(10, 0);
 
 	}, [userId]);
 
+	// wczytywanie danych o friends
 	useEffect(() => {
 		setRefetch(false);
 		fetch(`http://localhost:5000/api/v1/friendship/status/${userId}`, {
@@ -97,33 +114,6 @@ function Profile() {
 	}, [refetch]);
 
 
-
-	// useEffect(() => {
-	// 	setIsLoading(true);
-	// 	fetch("http://localhost:5000/api/v1/posts/feed?feedType=home&pageSize=10&pageNumber=0", {
-	// 		method: 'GET',
-	// 		headers: {
-	// 			'Content-Type': 'application/json', 
-	// 			"Authorization": authHeader,
-	// 		},
-	// 	})
-	// 	.then(response => {
-	// 		if (!response.ok) {
-	// 			throw new Error('Błąd sieci!');
-	// 		}
-	// 		return response.json();
-	// 	})
-	// 	.then(data => {
-	// 		setPosts(data.content);
-	// 		setIsLoading(false);
-	// 	})
-	// 	.catch(error => {
-	// 		console.log(error.message);
-	// 		navigate("/");
-	// 	});
-
-	// }, []);
-
 	const addFriend = () => {
 		fetch(`http://localhost:5000/api/v1/friendship/${userId}`, {
 			method: 'POST',
@@ -145,7 +135,7 @@ function Profile() {
 		.catch(error => {
 			console.log(error.message);
 		});
-	}
+	};
 
 	const removeFriend = () => {
 		fetch(`http://localhost:5000/api/v1/friendship/${userId}`, {
@@ -168,7 +158,75 @@ function Profile() {
 		.catch(error => {
 			console.log(error.message);
 		});
-	}
+	};
+
+	const getUserCountries = (pageSize, pageNumber) => {
+		fetch(`http://localhost:5000/api/v1/visited-countries/${userId}?pageSize=${pageSize}&pageNumber=${pageNumber}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json', 
+				"Authorization": authHeader,
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Błąd sieci!');
+			}
+			return response.json();
+		})
+		.then(data => {
+			console.log(data);
+			setUserCountry(data);
+		})
+		.catch(error => {
+			console.log(error.message);
+		});
+	};
+
+	const getCountryById = (countryId) => {
+		fetch(`http://localhost:5000/api/v1/countries/${countryId}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json', 
+				"Authorization": authHeader,
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Błąd sieci!');
+			}
+			return response.json();
+		})
+		.then(data => {
+			console.log(data);
+		})
+		.catch(error => {
+			console.log(error.message);
+		});
+	};
+
+	const getUserAchievements = (pageSize, pageNumber) => {
+		fetch(`http://localhost:5000/api/v1/achievements/${userId}?pageSize=${pageSize}&pageNumber=${pageNumber}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json', 
+				"Authorization": authHeader,
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Błąd sieci!');
+			}
+			return response.json();
+		})
+		.then(data => {
+			console.log(data);
+			setUserAchievements(data);
+		})
+		.catch(error => {
+			console.log(error.message);
+		});
+	};
 
     return (
         <MainContainer type="profile">
@@ -249,6 +307,40 @@ function Profile() {
 					</div>
 				)}
 			</div>
+
+			<div className="max-w-full w-[700px]">
+				<Card className="mt-5 w-full">
+					<CardHeader className="flex flex-row pb-1">
+						
+					</CardHeader>
+
+					<CardContent>
+						<div className="flex flex-row">
+							<div className="flex flex-col w-[50%]">
+								<h1>Visited Countries Ids:</h1>
+							
+								{userCountry && (userCountry.content.map(country => {
+									return <div key={`userCountry${country.countryId}`}>{country.countryId} <br /></div>;
+								}))}
+							</div>
+
+							<div className="flex flex-col w-[50%]">
+							<h1>Achievements:</h1>
+								{userAchievements && (userAchievements.content.map(achievement => {
+									return <div key={`userAchievements${achievement.id}`}>{achievement.title} <br /></div>;
+								}))} 
+
+							</div>
+							
+						</div>
+
+					</CardContent>
+					
+					<CardFooter className="flex justify-between">
+					</CardFooter>
+				</Card>
+            </div>
+
         </MainContainer>
     );
 }
