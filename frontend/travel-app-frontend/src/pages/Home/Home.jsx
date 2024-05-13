@@ -57,10 +57,14 @@ const Home = () => {
 		},
 	})
 
-	if(addNewPost) {
-		setAddNewPost(false);
-		refetch({ refetchPage: (page, index) => index === 0 })
-	}
+	useEffect(() => {
+		if(addNewPost) {
+			setAddNewPost(false);
+			refetch({ refetchPage: (page, index) => index === 0 })
+		}
+	}, [addNewPost]);
+
+
 
 	return (
         <MainContainer type="homeFeed" setAddNewPost={setAddNewPost}>
@@ -104,6 +108,7 @@ const Home = () => {
 									lastUpdated={post.lastUpdated}
 									likes={post.likes}
 									hearts={post.hearts}
+									setAddNewPost={setAddNewPost}
 								/>
 							))
 						))}
