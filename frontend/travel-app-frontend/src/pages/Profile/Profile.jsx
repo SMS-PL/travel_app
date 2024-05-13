@@ -10,15 +10,37 @@ import {
     AvatarImage,
 } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 function Profile() {
 	const { userId } = useParams();
+	const auth = useAuthUser();
+	const isAuthenticated = useIsAuthenticated();
 	const authHeader = useAuthHeader();
 	const navigate = useNavigate();
 	
 	const [isLoading, setIsLoading] = useState(true);
 	const [userData, setUserData] = useState("");
 	const [posts, setPosts] = useState([]);
+	const [friendshipStatus, setFriendshipStatus] = useState("");
+
+	const [refetch, setRefetch] = useState(false);
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -36,7 +58,7 @@ function Profile() {
 			return response.json();
 		})
 		.then(data => {
-			console.log("Profil wczytano poprawnie!");
+			// console.log("Profil wczytano poprawnie!");
 			setUserData(data);
 			setIsLoading(false);
 			
@@ -48,6 +70,33 @@ function Profile() {
 		});
 
 	}, [userId]);
+
+	useEffect(() => {
+		setRefetch(false);
+		fetch(`http://localhost:5000/api/v1/friendship/status/${userId}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json', 
+				"Authorization": authHeader,
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Błąd sieci!');
+			}
+			return response.json();
+		})
+		.then(data => {
+			//console.log(data);
+			setFriendshipStatus(data.message);
+		})
+		.catch(error => {
+			console.log(error.message);
+		});
+		
+	}, [refetch]);
+
+
 
 	// useEffect(() => {
 	// 	setIsLoading(true);
@@ -75,6 +124,51 @@ function Profile() {
 
 	// }, []);
 
+	const addFriend = () => {
+		fetch(`http://localhost:5000/api/v1/friendship/${userId}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json', 
+				"Authorization": authHeader,
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Błąd sieci!');
+			}
+			return response.json();
+		})
+		.then(data => {
+			console.log(data);
+			setRefetch(true);
+		})
+		.catch(error => {
+			console.log(error.message);
+		});
+	}
+
+	const removeFriend = () => {
+		fetch(`http://localhost:5000/api/v1/friendship/${userId}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json', 
+				"Authorization": authHeader,
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Błąd sieci!');
+			}
+			return response.json();
+		})
+		.then(data => {
+			console.log(data);
+			setRefetch(true);
+		})
+		.catch(error => {
+			console.log(error.message);
+		});
+	}
 
     return (
         <MainContainer type="profile">
@@ -104,11 +198,56 @@ function Profile() {
 					<h3 className="text-center scroll-m-20 text-lg font-bold tracking-tight lg:text-xl">
 						@{userData.username}
 					</h3>
+					<p>{userData.about}</p>
 				</div>
 
+				{userId === auth.id ? null : (
+					<div className="mt-4">
+						{friendshipStatus === "STRANGER" ? (
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<Button variant="outline" onClick={addFriend}>
+										➕ Add friend
+									</Button>
+								</DropdownMenuTrigger>
+							</DropdownMenu>
+						) : null }
 
+						{ friendshipStatus === "SENT" ? (
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<Button variant="outline">
+										📩 Invitation sent
+									</Button>
+								</DropdownMenuTrigger>
+							</DropdownMenu>
+						) : null }
 
+						{ friendshipStatus === "RECEIVED" ? (
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<Button variant="outline" onClick={addFriend}>
+										✔️ Confirm the invitation
+									</Button>
+								</DropdownMenuTrigger>
+							</DropdownMenu>
+						) : null }
 
+						{ friendshipStatus === "FRIEND" ? (
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<Button variant="outline">
+										👥 Friend
+									</Button>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent className="w-full">
+									<DropdownMenuItem onClick={removeFriend} className="cursor-pointer">❌ Remove friend</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
+						) : null }
+
+					</div>
+				)}
 			</div>
         </MainContainer>
     );
