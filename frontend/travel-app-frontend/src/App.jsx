@@ -4,6 +4,10 @@ import createStore from "react-auth-kit/createStore";
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en';
+
+TimeAgo.addDefaultLocale(en);
 
 const store = createStore({
     authName: "_auth",
