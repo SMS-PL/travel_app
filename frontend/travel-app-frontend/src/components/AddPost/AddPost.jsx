@@ -104,14 +104,16 @@ function AddPost({setAddNewPost}) {
                             })}
 
                         />
-                        <p className="text-red-600">{errors.content}</p>
+                        {errors.description && errors.description.type === "required" && (
+                            <p className="text-red-500 text-sm">Description is required!</p>
+                        )}
                     </div>
                 </CardContent>
 
 
-                <CardFooter className="flex justify-between gap-5">
-                    <Button variant="secondary" className="w-full text-foreground"><Icons.imageAdd className="h-6 w-6 fill-foreground mr-1"/> Add photo</Button>
-                    <Button variant="default" type="submit" className="bg-primary w-full text-foreground"><Icons.send className="h-6 w-6 fill-foreground mr-1"/>Add post</Button>
+                <CardFooter className="flex justify-center items-center gap-4">
+                    <Button variant="secondary" className="w-fit text-foreground"><Icons.imageAdd className="h-6 w-6 fill-foreground mr-1"/>Add photo</Button>
+                    <Button variant="default" type="submit" className="w-fit bg-primary text-foreground"><Icons.send className="h-6 w-6 fill-foreground mr-1"/>Add post</Button>
                 </CardFooter>
             </form>
         </Card>
