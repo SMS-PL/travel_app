@@ -1,5 +1,6 @@
 package com.sms.travelapp.dto;
 
+import com.sms.travelapp.dto.Country.CountryResponseDto;
 import com.sms.travelapp.model.Country;
 import com.sms.travelapp.model.UserEntity;
 import jakarta.persistence.Column;
@@ -18,7 +19,7 @@ import java.sql.Timestamp;
 @Builder
 public class UserCountryResponseDto {
     private Long id;
-    private int countryId;
+    private CountryResponseDto country;
     private int count;
     private Timestamp lastVisit;
     private Timestamp firstVisit;

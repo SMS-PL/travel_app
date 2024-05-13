@@ -31,6 +31,7 @@ public class UserCountryServiceImpl implements UserCountryService {
     private final AuthService authService;
     private final UserRepository userRepository;
     private final AchievementService achievementService;
+    private final UserCountryMapper userCountryMapper;
 
     @Override
     public void updateStats(PlaceDetails placeDetails) {
@@ -73,7 +74,7 @@ public class UserCountryServiceImpl implements UserCountryService {
         return new PageImpl<>(
                 userCountries
                         .stream()
-                        .map(UserCountryMapper::mapToUserCountryResponseDto)
+                        .map(userCountryMapper::mapToUserCountryResponseDto)
                         .collect(Collectors.toList()),
                 PageRequest.of(pageNumber, pageSize),
                 userCountries.getTotalElements()
