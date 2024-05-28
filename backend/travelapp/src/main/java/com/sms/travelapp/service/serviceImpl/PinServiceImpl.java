@@ -23,10 +23,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import java.util.LinkedHashMap;
+
 
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,24 +96,30 @@ public class PinServiceImpl implements PinService {
 //PRZETESTOWAC I PUSHNAC
 
     @Override
-    public Page<PinResponseDto> getActiveFriendsPins(int pageNumber, int pageSize) {
-
+    public Page<Map.Entry<Long, List<PinResponseDto>>> getActiveFriendsPins(int pageNumber, int pageSize) {
         List<Long> friendsIds = userService.getFriendList().stream().map(UserResponseDto::getId).toList();
         ZonedDateTime cutoff = ZonedDateTime.now().minusHours(24);
         Timestamp timestampCutoff = Timestamp.from(cutoff.toInstant());
 
-       Page<Pin> pins = pinRepository.findAllActiveByAuthorIds(friendsIds,
-                                                timestampCutoff,
-                                                PageRequest.of(pageNumber,pageSize));
-        return new PageImpl<>(
-                pins
-                        .stream()
-                        .map(PinMapper::mapToPinResponseDto)
-                        .collect(Collectors.toList()),PageRequest.of(pageNumber,pageSize),
-                pins.getTotalElements()
+        List<Pin> pins = pinRepository.findAllByAuthorIds(friendsIds, timestampCutoff);
+
+        Map<Long, List<PinResponseDto>> groupedPins = pins.stream()
+                .collect(Collectors.groupingBy(
+                        pin -> pin.getAuthor().getId(),
+                        LinkedHashMap::new,
+                        Collectors.mapping(PinMapper::mapToPinResponseDto, Collectors.toList())
+                ));
+
+        List<Map.Entry<Long, List<PinResponseDto>>> entries = new ArrayList<>(groupedPins.entrySet());
+        int start = pageNumber * pageSize;
+        int end = Math.min(start + pageSize, entries.size());
+
+        Page<Map.Entry<Long, List<PinResponseDto>>> page = new PageImpl<>(
+                entries.subList(start, end),
+                PageRequest.of(pageNumber, pageSize),
+                entries.size()
         );
 
-
-
+        return page;
     }
 }

@@ -50,8 +50,8 @@ public class PinController {
     }
 
     @GetMapping("/friends")
-    public ResponseEntity<Page<PinResponseDto>> getFriendsPins(@RequestParam int pageNumber, @RequestParam int pageSize){
-        Page<PinResponseDto> pins = pinService.getActiveFriendsPins(pageNumber,pageSize);
+    public ResponseEntity<Page<Map.Entry<Long, List<PinResponseDto>>>> getFriendsPins(@RequestParam int pageNumber, @RequestParam int pageSize){
+        Page<Map.Entry<Long, List<PinResponseDto>>> pins = pinService.getActiveFriendsPins(pageNumber,pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(pins);
     }
 }

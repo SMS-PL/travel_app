@@ -6,6 +6,7 @@ import com.sms.travelapp.model.Pin;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PinService {
 
@@ -13,5 +14,5 @@ public interface PinService {
     PinResponseDto createPin(PinRequestDto pinRequestDto);
     String deletePin(Long pinId);
 
-    Page<PinResponseDto> getActiveFriendsPins(int pageNumber, int pageSize);
+    Page<Map.Entry<Long, List<PinResponseDto>>> getActiveFriendsPins(int pageNumber, int pageSize);
 }
