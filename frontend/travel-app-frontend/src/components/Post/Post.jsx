@@ -139,7 +139,7 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
                     <div className="px-2 w-fit">
                         <CardTitle className="text-nowrap">{user.firstName} {user.lastName}</CardTitle>
                         <CardDescription className="text-nowrap">
-                            <ReactTimeAgo timeStyle="round" date={createdAt} locale="en-US" className="text-sm text-gray-500"/>
+                            <ReactTimeAgo timeStyle="round" date={new Date(createdAt)} locale="en-US" className="text-sm text-gray-500"/>
                         </CardDescription>
                         
                     </div>
