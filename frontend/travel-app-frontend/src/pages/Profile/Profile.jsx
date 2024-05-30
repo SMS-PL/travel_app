@@ -35,6 +35,9 @@ import {
 } from "@/components/ui/card";
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { Link } from "react-router-dom";
+import { Icons } from "@/components/icons";
+import VectorMapDialog from "@/components/ui/VectorMapDialog";
 
 function Profile() {
 	const { userId } = useParams();
@@ -245,7 +248,7 @@ function Profile() {
 					<AvatarFallback>CN</AvatarFallback>
 				</Avatar>
 			</div>
-
+			
 
 			<div className="max-w-full w-[700px] flex flex-col justify-center items-center pt-14">
 
@@ -308,39 +311,98 @@ function Profile() {
 				)}
 			</div>
 
-			<div className="max-w-full w-[700px]">
-				<Card className="mt-5 w-full">
-					<CardHeader className="flex flex-row pb-1">
-						
-					</CardHeader>
+			
 
-					<CardContent>
-						<div className="flex flex-row">
-							<div className="flex flex-col w-[50%]">
-								<h1>Visited Countries Ids:</h1>
-							
-								{userCountry && (userCountry.content.map(country => {
-									return <div key={`userCountry${country.countryId}`}>{country.countryId} <br /></div>;
-								}))}
-							</div>
+			<div className="flex flex-col max-w-full w-[800px] gap-4 p-4 md:gap-8 md:p-8">
+                <div className="grid gap-4 grid-cols-2 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+                    <Card x-chunk="dashboard-01-chunk-2" className="col-span-1">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-md font-bold">
+                                Total visited countries
+                            </CardTitle>
+                            {/* <CreditCard className="h-4 w-4 text-muted-foreground" /> */}
+                        </CardHeader>
+                        <CardContent className="">
+                            <div className="text-4xl font-bold">{userCountry && userCountry.totalElements}</div>
+                            {/* <p className="text-xs text-muted-foreground">
+                                +19% from last month
+                            </p> */}
+                        </CardContent>
+                    </Card>
 
-							<div className="flex flex-col w-[50%]">
-							<h1>Achievements:</h1>
-								{userAchievements && (userAchievements.content.map(achievement => {
-									return <div key={`userAchievements${achievement.id}`}>{achievement.title} <br /></div>;
-								}))} 
+                    <Card x-chunk="dashboard-01-chunk-2" className="col-span-1">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+							<CardTitle className="text-md font-bold space-y-1.5 flex flex-row justify-between items-center">
+								Total achievements
+								<Icons.medalEmpty className="fill-muted-foreground w-7 h-7" /> 
 
-							</div>
-							
-						</div>
+                            </CardTitle>
+                            {/* <CreditCard className="h-4 w-4 text-muted-foreground" /> */}
+                        </CardHeader>
+                        <CardContent>
+							<div className="text-4xl font-bold">{userAchievements && userAchievements.totalElements}</div>
+                            {/* <p className="text-xs text-muted-foreground">
+                                +19% from last month
+                            </p> */}
+                        </CardContent>
+                    </Card>
+                    <Card x-chunk="dashboard-01-chunk-2" className="col-span-2">
+                        <CardHeader>
+							<CardTitle className="text-md font-bold space-y-1.5 flex flex-row justify-between items-center">
+								Interactive map
+								<Icons.mapEmpty className="fill-muted-foreground w-7 h-7" /> 
 
-					</CardContent>
-					
-					<CardFooter className="flex justify-between">
-					</CardFooter>
-				</Card>
+                            </CardTitle>
+							<CardDescription>
+								Check the world map where you can see the countries the user has visited
+							</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+							<VectorMapDialog userId={userId}/>
+                        </CardContent>
+                    </Card>
+{/* 
+					<Card className="sm:col-span-2">
+						<CardHeader className="pb-3">
+							<CardTitle>Your Orders</CardTitle>
+							<CardDescription className="max-w-lg text-balance leading-relaxed">
+							Introducing Our Dynamic Orders Dashboard for Seamless Management and
+							Insightful Analysis.
+							</CardDescription>
+						</CardHeader>
+						<CardFooter>
+							<Button>Create New Order</Button>
+						</CardFooter>
+					</Card> */}
+
+                </div>
+
+                <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
+                    <Card x-chunk="dashboard-01-chunk-5">
+                        <CardHeader>
+                            <CardTitle>Visited Countries Ids:</CardTitle>
+                        </CardHeader>
+                        <CardContent className="grid gap-8">
+							{userCountry && (userCountry.content.map((country, i) => {
+								return <div key={`userCountry${country.countryId}${i}`}>{country.countryId} <br /></div>;
+							}))}
+                        </CardContent>
+                    </Card>
+
+                    <Card x-chunk="dashboard-01-chunk-5">
+                        <CardHeader>
+                            <CardTitle>Recently Sent Invoices</CardTitle>
+                        </CardHeader>
+                        <CardContent className="grid gap-8">
+							{userAchievements && (userAchievements.content.map(achievement => {
+								return <div key={`userAchievements${achievement.id}`}>{achievement.title} <br /></div>;
+							}))} 
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
 
+			
         </MainContainer>
     );
 }
