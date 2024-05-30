@@ -13,13 +13,13 @@ export function Navbar() {
 
     return (
         <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container grid grid-cols-3 h-14 max-w-screen-2xl items-center">
+            <div className="px-3 md:container grid grid-cols-3 h-14 max-w-screen-2xl items-center">
                 
                 {/* 1 kolumna */}
                 <div className="mr-4 col-span-1 flex">
                     <Link to="/" className="mr-6 flex items-center space-x-2">
                         <Icons.logo className="h-6 w-6" />
-                        <span className="font-bold inline-block">
+                        <span className="font-bold hidden md:flex">
                             Travel App
                         </span>
                     </Link>
