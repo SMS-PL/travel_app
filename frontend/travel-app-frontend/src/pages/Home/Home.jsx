@@ -64,8 +64,6 @@ const Home = () => {
 		}
 	}, [addNewPost]);
 
-
-
 	return (
         <MainContainer type="homeFeed" setAddNewPost={setAddNewPost}>
 
@@ -109,6 +107,7 @@ const Home = () => {
 									likes={post.likes}
 									hearts={post.hearts}
 									setAddNewPost={setAddNewPost}
+									
 								/>
 							))
 						))}
