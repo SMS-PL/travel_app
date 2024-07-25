@@ -65,7 +65,7 @@ function AddPost({setAddNewPost}) {
                 reset();
 
                 setAddNewPost(true);
-                console.log(data);
+                //console.log(data);
                 
             })
             .catch(error => {
