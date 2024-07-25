@@ -6,11 +6,14 @@ import { ModeToggle } from "@/components/ui/mode-toggle";
 import { UserNav } from "./user-nav";
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import { useLocation } from 'react-router-dom';
+import { Input } from "@/components/ui/input";
+import SearchBar from "@/components/SearchBar/SearchBar";
+import { useState } from 'react';
 
 export function Navbar() {
     const isAuthenticated = useIsAuthenticated();
     const location = useLocation();
-
+    
     return (
         <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="px-3 md:container grid grid-cols-3 h-14 max-w-screen-2xl items-center">
@@ -45,6 +48,7 @@ export function Navbar() {
 
                 {/* 3 kolumna */}
                 <div className="col-span-1 flex justify-end">
+                    { isAuthenticated() ? <SearchBar /> : null }
                     <ModeToggle className="mx-3"/>
                     { isAuthenticated() ? <UserNav  /> : null }
                 </div>
