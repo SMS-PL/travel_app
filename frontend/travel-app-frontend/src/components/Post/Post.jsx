@@ -13,7 +13,7 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
@@ -34,18 +34,78 @@ import {
 } from "@/components/ui/alert-dialog";
 import ReactTimeAgo from 'react-time-ago';
 import { useToast } from "@/components/ui/use-toast";
+import CommentRowView from './../Comments/CommentRowView';
+import { useForm } from "react-hook-form";
+import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
+import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
+import { cn } from './../../lib/utils';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUpdated, setAddNewPost, likes, hearts, className}) {
-	const [user, setUser] = useState({});
-    const [countryCode, setCountryCode] = useState("");
-
-	const authHeader = useAuthHeader();
+    const authHeader = useAuthHeader();
 	const navigate = useNavigate();
     const auth = useAuthUser();
     const { toast } = useToast();
+    
+    const [user, setUser] = useState({});
+    const [countryCode, setCountryCode] = useState("");
+
+    const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+    const [commentsData, setCommentsData] = useState([[]]);
+    const [refetchComments, setRefetchComments] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pageSize, setPageSize] = useState(3);
+    const [totalPages, setTotalPages] = useState(0);
+    const [totalElements, setTotalElements] = useState(0);
+    const [isLastPage, setIsLastPage] = useState(false);
+
+    
+    const {
+        register,
+        handleSubmit,
+        // watch,
+        reset,
+        formState: { errors, isValid },
+    } = useForm();
+
 
     useEffect(() => {
-		fetch(`http://localhost:5000/api/v1/users/${authorId}`, {
+        fetchComments();
+
+	}, [currentPage]);
+
+
+    useEffect(() => {
+        fetchAuthorData();
+
+	}, [authorId]);
+
+
+    useEffect(() => {
+        fetchCountryData();
+    }, [countryId]);
+
+
+    const fetchComments = async () => {
+        setIsLoading(true);
+
+        fetch(`http://localhost:5000/api/v1/comments/${postId}?pageSize=${pageSize}&pageNumber=${currentPage}&sortBy=datedesc`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json', 
@@ -59,16 +119,45 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
 			return response.json();
 		})
 		.then(data => {
-			setUser(data);
+
+            // setCommentsData(prevPages => {
+            //     // Stwórz kopię tablicy stron
+            //     const newPages = [];
+            //     // Jeśli strona jeszcze nie istnieje, dodaj ją do tablicy
+            //     if (!newPages[currentPage]) {
+            //         newPages[currentPage] = data.content;
+            //     }
+            //     return newPages;
+            // });
+            setCommentsData(prevData => {
+                if(data.first) {
+                    return [data.content]
+                }
+                return [...prevData, data.content]
+            });
+            // console.log([data.content, data.content])
+
+            setTotalElements(data.totalElements);
+            setTotalPages(data.totalPages);
+            setIsLastPage(data.last);
+            setTotalElements(data.totalElements);
+            // console.log(data);
+
+            setIsLoading(false);
+
+            // toast({
+            //     title: "Hurrah!",
+            //     description: "Fetch comments!",
+            //     className: "bg-green-800"
+            // })
 		})
 		.catch(error => {
 			console.log(error.message);
-			navigate("/");
 		});
+    };
 
-	}, [authorId]);
-
-    useEffect(() => {
+    
+    const fetchCountryData = () => {
         fetch(`http://localhost:5000/api/v1/countries/${countryId}`, {
             method: 'GET',
             headers: {
@@ -88,14 +177,11 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
         .catch(error => {
             console.log(error.message);
         });
-    }, [countryId]);
+    };
 
-
-    const deleteOnClick = () => {
-        
-
-        fetch(`http://localhost:5000/api/v1/posts/${postId}`, {
-			method: 'DELETE',
+    const fetchAuthorData = () => {
+        fetch(`http://localhost:5000/api/v1/users/${authorId}`, {
+			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json', 
 				"Authorization": authHeader,
@@ -103,32 +189,148 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
 		})
 		.then(response => {
 			if (!response.ok) {
-                console.log(response);
-				throw new Error("Blad sieci!");
+				throw new Error('Błąd sieci!');
 			}
 			return response.json();
 		})
 		.then(data => {
-			console.log(data);
+			setUser(data);
+		})
+		.catch(error => {
+			console.log(error.message);
+			navigate("/");
+		});
+    };
+
+ 
+
+    const handlePrevPage = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+    
+    const handleNextPage = () => {
+        if (currentPage < (totalPages-1)) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    // funkcja do dodawania komentarza
+    const addNewComment = async (values) => {
+        if (isValid) {
+            fetch(`http://localhost:5000/api/v1/comments/${postId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', 
+                    "Authorization": authHeader,
+                },
+                body: JSON.stringify({
+                    "content": values.commentContent,
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Błąd sieci!');
+                }
+                return response.json();
+            })
+            .then(data => {
+                toast({
+                    title: "Hurrah!",
+                    description: "Comment added correctly!",
+                    className: "bg-green-800"
+                })
+                
+                reset();
+                // setRefetchComments(true);
+                // setCurrentPage(0); // Resetowanie do pierwszej strony
+                // console.log(commentsData);
+                // console.log(JSON.stringify(commentsData));
+                // console.log(typeof commentsData);
+                setCommentsData(prevData => {
+                    return [[data], ...commentsData]
+                });
+            })
+            .catch(error => {
+                toast({
+                    variant: "destructive",
+                    title: "Uh oh! Something went wrong.",
+                    description: error.message,
+                })
+                console.log(error.message);
+            });
+
+        } else {
+            alert("INVALID");
+        }
+    };
+
+    // funkcja do usuwania postu
+    const deletePostOnClick = () => {
+        console.log("Authorization Header: ", authHeader); // Dodaj to logowanie
+
+        fetch(`http://localhost:5000/api/v1/posts/${postId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json', 
+                "Authorization": authHeader,
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                console.log(response);
+                throw new Error("Blad sieci!");
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
             toast({
                 title: "Hurrah!",
                 description: "Post deleted successfully!",
                 className: "bg-green-800"
             })
             setAddNewPost(true);
-		})
-		.catch(error => {
-			console.log(error);
+        })
+        .catch(error => {
+            console.log(error);
             toast({
                 variant: "destructive",
                 title: "Uh oh! Failed to delete post!",
                 description: error.message,
             })
-		});
+        });
+    };
+
+    const showDialogDeletePost = () => {
+        return (
+            <AlertDialog>
+                <AlertDialogTrigger>
+                    <div className="flex flex-row items-center gap-2 cursor-pointer hover:transition-all hover:fill-secondary">
+                        Delete
+                    </div>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the post from our servers.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction type="button" onClick={deletePostOnClick} >Continue</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+        );
     };
 
     return (
         <Card className="mt-5 w-full">
+            {/* AUTOR POSTA */}
             <CardHeader className="flex flex-row pb-1">
                 <Link to={`/profile/${user.id}`} className="flex flex-row">
                     <Avatar>
@@ -150,37 +352,118 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
                     
                     {parseInt(user.id) == parseInt(auth.id) ? (
                         <>
-                            <AlertDialog>
-                                <AlertDialogTrigger>
-                                    <><Icons.trashEmpty className="h-6 w-6 fill-gray-500 cursor-pointer hover:transition-all hover:fill-secondary"/></>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            This action cannot be undone. This will permanently delete the post from our servers.
-                                        </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction onClick={deleteOnClick} >Continue</AlertDialogAction>
-                                    </AlertDialogFooter>
-                                </AlertDialogContent>
-                            </AlertDialog>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                    <Icons.dotsVertical className="fill-gray-500 w-5 h-5 cursor-pointer" />
+                                </DropdownMenuTrigger>
+
+                                <DropdownMenuContent>
+                                    <DropdownMenuItem className="cursor-pointer" onSelect={(e) => e.preventDefault()}>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger>
+                                                Delete
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This action cannot be undone. This will permanently delete the post from our servers.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction type="button" onClick={deletePostOnClick} >Continue</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                        </DropdownMenu>
                         </>
                     ) : null}
                 </div>
             </CardHeader>
+            
 
+            {/* OPIS I ZDJĘCIE */}
             <CardContent>
                 {content}
                 <Skeleton className="w-full h-[500px] mt-4" />
-                {/* <img src="https://picsum.photos/600/600" alt="" className="w-full"/> */}
+
+                {/* przycisk do włączania/wyłączania komentarzy */}
+                <div className="flex justify-between mt-5">
+                    <Reaction likes={likes} hearts={hearts} postId={postId} />
+                    <Button type="button" variant="secondary" onClick={() => {setIsCommentsOpen(!isCommentsOpen)}} className="flex flex-row items-center justify-center gap-2">
+                        
+                        {isCommentsOpen ?
+                            <Icons.commentFill className="fill-current w-6 h-6" /> :
+                            <Icons.commentEmpty className="fill-current w-6 h-6" /> 
+                        }
+
+
+                        {/* TUTAJ LICZNIK KOMENTARZY DODAĆ */}
+                        {totalElements}
+                    </Button>
+                </div>
             </CardContent>
             
-            <CardFooter className="flex justify-between">
-                <Reaction  likes={likes} hearts={hearts} postId={postId} />
+
+            {/* KOMENTARZE */}
+            <CardFooter className="w-full flex flex-col">
+                {isCommentsOpen ? (
+                    <>
+                        <Separator className="mt-2 mb-8" />
+
+                        <form onSubmit={handleSubmit(addNewComment)} className="flex flex-row gap-3 w-full items-center mb-5">
+                            <Skeleton className="h-10 w-10 rounded-full" />
+                            <div className="w-full">
+                                <Textarea
+                                    id="commentContent"
+                                    placeholder="Type your comment here."
+                                    className="resize-y"
+
+                                    {...register("commentContent", {
+                                        required: "Comment is required",
+                                    })}
+
+                                />
+                                {errors.commentContent === "required" && (
+                                    <p className="text-red-500 text-sm">Comment is required!</p>
+                                )}
+                            </div>
+
+                            <Button type="submit" variant="ghost" className="" size="icon">
+                                <Icons.sendMessageFill className="fill-primary w-5 h-5" />
+                            </Button>
+                        </form>
+                            
+                            {!isLoading && (
+                                commentsData.map((group, i) => (
+                                    group.map((commentData, j) => 
+                                        <CommentRowView 
+                                            key={`commentView${postId}${i}${j}`}
+                                            postId={postId}
+                                            commentData={commentData}
+                                            commentsData={commentsData}
+                                            setCommentsData={setCommentsData}
+                                        />
+                                    )
+
+                                ))
+                            )}
+
+                            {!isLastPage &&
+                                <Button variant="ghost" onClick={() => {handleNextPage()}}>Load more...</Button>
+                            } 
+
+                    </>
+                    
+                ) : null}
             </CardFooter>
+
+            <div>
+
+            </div>
         </Card>
     );
 }
