@@ -2,15 +2,22 @@ package com.sms.travelapp.model;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.sql.Timestamp;
 
 @Entity
 @Data
 @Table(name = "post")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Post {
 
     @Id
@@ -28,7 +35,7 @@ public class Post {
     private String imageUrl;
 
     @Column(name = "author_id")
-    private Long authorId;
+    private Long authorId = -1L;
 
     @Column(name = "like_count")
     private Long likeCount;

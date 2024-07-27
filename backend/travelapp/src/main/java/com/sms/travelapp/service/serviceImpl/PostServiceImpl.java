@@ -46,9 +46,8 @@ public class PostServiceImpl implements PostService {
         ).collect(Collectors.toList());
     }
 
-    @Override
-    public String createPost(PostRequestDto postDto) {
-        Post post = new Post();
+
+    private boolean validatePostRequest(PostRequestDto postDto) {
         if (postDto.getContent() == null || postDto.getContent().trim().isEmpty()) {
             throw new IllegalArgumentException("Content cannot be empty");
         }
@@ -59,17 +58,24 @@ public class PostServiceImpl implements PostService {
             //TODO check if country with given id exists
             throw new IllegalArgumentException("Country id cannot be empty");
         }
+        return true;
+    }
+    @Override
+    public String createPost(PostRequestDto postDto) {
+
+        if(!validatePostRequest(postDto)) return "Invalid Post Request";
 
         UserEntity user = authService.getLoggedUser();
+        Post post = Post.builder()
+                .authorId(user.getId())
+                .content(postDto.getContent())
+                .imageUrl(postDto.getImageUrl())
+                .countryId(postDto.getCountryId())
+                .likeCount(0L)
+                .heartCount(0L)
+                .build();
 
-        post.setContent(postDto.getContent());
-        post.setImageUrl(postDto.getImageUrl());
-        post.setCountryId(postDto.getCountryId());
-        post.setAuthorId(user.getId());
-        post.setHeartCount(0L);
-        post.setLikeCount(0L);
         postRepository.save(post);
-
         return "Post Created!";
     }
 
