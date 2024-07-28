@@ -45,7 +45,6 @@ const VectorMapDialog = ({userId}) => {
 			return response.json();
 		})
 		.then(data => {
-			console.log(data);
 			setUserCountry(data);
 		})
 		.catch(error => {
@@ -56,11 +55,13 @@ const VectorMapDialog = ({userId}) => {
 
     return (
         <Dialog>
-            <DialogTrigger>
-                <Button className="text-white gap-1">
-                    <Icons.mapEmpty className="fill-current w-5 h-5" /> 
-                    Open map
-                </Button>
+            <DialogTrigger className="text-white gap-1" asChild>
+                <div>
+                    <Button className="text-white gap-1">
+                        <Icons.mapEmpty className="fill-current w-5 h-5" /> 
+                        Open map
+                    </Button>
+                </div>
             </DialogTrigger>
 
             <DialogContent className="flex flex-col justify-center items-center max-w-full w-[800px] p-10">
