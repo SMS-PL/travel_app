@@ -50,7 +50,7 @@ const SearchBar = ({placeholder, ...props}) => {
     }; 
 
     return (
-        <div className="max-w-full w-[200px]">
+        <div className="max-w-full w-[300px]">
             <div className="relative ml-auto flex-1 md:grow-0" >
                 <Icons.searchEmpty className="absolute fill-current left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -67,7 +67,7 @@ const SearchBar = ({placeholder, ...props}) => {
             </div>
 
             {isOpenSearchBar && (
-                <Card className="absolute top-[50px] w-fit" {...props}>
+                <Card className="absolute top-[50px] w-fit" >
                     <CardHeader>
                         <CardTitle>Search Results</CardTitle>
                     </CardHeader>
