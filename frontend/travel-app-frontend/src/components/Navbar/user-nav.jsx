@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export function UserNav() {
     const auth = useAuthUser();
@@ -31,13 +32,17 @@ export function UserNav() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">
-                            {auth.firstName} {auth.lastName}
-                        </p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                            {auth.email}
-                        </p>
+                    <div className="flex flex-row items-center justify-between w-full">
+                        <div className="flex flex-col space-y-1">
+                            <p className="text-sm font-medium leading-none">
+                                {auth.firstName} {auth.lastName}
+                            </p>
+                            <p className="text-xs leading-none text-muted-foreground">
+                                {auth.email}
+                            </p>
+                        </div>
+
+                        <ModeToggle />
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
