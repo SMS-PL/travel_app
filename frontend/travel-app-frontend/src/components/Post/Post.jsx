@@ -345,8 +345,8 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
                             <CardTitle className="text-nowrap flex flex-row justify-center items-center gap-2">
                                 <p>{user.firstName} {user.lastName}</p>
 
-                                {friendshipStatus === "FRIEND" ? (
-                                    <Icons.userCheckFill className="h-5 w-5 fill-current" />
+                                {friendshipStatus == "FRIEND" ? (
+                                    <Icons.userCheckFill className="h-5 w-5 fill-lime-600" />
                                 ) : null }
 
                             </CardTitle>
