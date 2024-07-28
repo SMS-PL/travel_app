@@ -9,14 +9,13 @@ import Register from "./pages/Register/Register";
 import Logout from "./pages/Logout/Logout";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import FriendsFeed from "./pages/FriendsFeed/FriendsFeed";
-import ExploreFeed from "./pages/ExploreFeed/ExploreFeed";
-
-// import Secure from "./componants/Secure";
+import ScrollToTop from '@/components/ScrollToTop/ScrollToTop';
 
 const RoutesPage = () => {
 
     return (
         <BrowserRouter>
+        <ScrollToTop />
             <Routes>
                 {/* public */}
                 <Route path='/login' element={<Login/>}/>
@@ -26,7 +25,7 @@ const RoutesPage = () => {
                 <Route element={<AuthOutlet fallbackPath='/login' />}>
                     <Route path='/' element={<Home/>} />
                     <Route path='/friends-feed' element={<FriendsFeed/>} />
-                    <Route path='/explore-feed' element={<ExploreFeed/>} />
+                    {/* <Route path='/explore-feed' element={<ExploreFeed/>} /> */}
                     <Route path='/profile/:userId' element={<Profile />} />
                     <Route path='/logout' element={<Logout />} />
                 </Route>
