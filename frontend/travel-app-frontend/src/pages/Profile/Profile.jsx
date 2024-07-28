@@ -1,9 +1,7 @@
-import Navbar from "../../components/Navbar/Navbar";
-import { useParams } from 'react-router-dom';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { useState, useEffect } from 'react';
 import MainContainer from "@/components/MainContainer/MainContainer";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import {
     Avatar,
     AvatarFallback,
@@ -11,20 +9,6 @@ import {
 } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
 	Card,
 	CardContent,
@@ -34,13 +18,11 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
-import { Link } from "react-router-dom";
 import { Icons } from "@/components/icons";
 import VectorMapDialog from "@/components/ui/VectorMapDialog";
 import {useInView} from "react-intersection-observer";
-import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
+import {useInfiniteQuery} from "@tanstack/react-query";
 import Post from "@/components/Post/Post";
-import { Separator } from "@/components/ui/separator";
 import AddPost from "@/components/AddPost/AddPost";
 import FriendshipButton from '@/components/Friendships/FriendshipButton';
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
@@ -61,6 +43,10 @@ function Profile() {
 
 	const {ref, inView} = useInView();
 	const [addNewPost, setAddNewPost] = useState(false);
+	
+	// do poprawnego ładowania postów
+	const location = useLocation();
+	const key = location.pathname === "/" ? "home" : "other";
 
 	useEffect(() => {
 		if(inView) fetchNextPage();
@@ -87,7 +73,7 @@ function Profile() {
 		status,
 		refetch
 	} = useInfiniteQuery({
-		queryKey: ['posts'],
+		queryKey: ['posts', key],
 		queryFn: fetchPost,
 		initialPageParam: 0,
 		getNextPageParam: (lastPage, pages) => {
@@ -357,9 +343,7 @@ function Profile() {
 
 				) : (
 					data.pages[0].empty == true ? (
-						<div>
-							No posts
-						</div> 
+						<h1 className="text-sm font-extrabold tracking-tight lg:text-md text-center mt-8">No posts...</h1>
 					) : (
 						<>
 							{data.pages.map((group, i) => (

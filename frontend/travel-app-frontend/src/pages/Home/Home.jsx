@@ -16,6 +16,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import {useInView} from "react-intersection-observer";
 import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Home = () => {
 	const authHeader = useAuthHeader();
@@ -23,9 +24,14 @@ const Home = () => {
 
 	const [addNewPost, setAddNewPost] = useState(false);
 
+	// do poprawnego ładowania postów
+	const location = useLocation();
+	const key = location.pathname === "/" ? "home" : "other";
+
 	useEffect(() => {
 		if(inView) fetchNextPage();
 	}, [inView]);
+
 
 	const fetchPost = async (page) => {
 		const response = await fetch(`http://localhost:5000/api/v1/posts/feed?feedType=home&pageSize=5&pageNumber=${page.pageParam}`, {
@@ -48,7 +54,7 @@ const Home = () => {
 		status,
 		refetch
 	} = useInfiniteQuery({
-		queryKey: ['posts'],
+		queryKey: ['posts', key],
 		queryFn: fetchPost,
 		initialPageParam: 0,
 		getNextPageParam: (lastPage, pages) => {
@@ -87,9 +93,7 @@ const Home = () => {
 
 			) : (
 				data.pages[0].empty == true ? (
-					<div className="">
-						No posts...
-					</div> 
+					<h1 className="text-sm font-extrabold tracking-tight lg:text-md text-center mt-8">No posts...</h1>
 				) : (
 					<>
 						{data.pages.map((group, i) => (
