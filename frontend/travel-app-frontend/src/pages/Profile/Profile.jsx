@@ -34,27 +34,74 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
-import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { Link } from "react-router-dom";
 import { Icons } from "@/components/icons";
 import VectorMapDialog from "@/components/ui/VectorMapDialog";
+import {useInView} from "react-intersection-observer";
+import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
+import Post from "@/components/Post/Post";
+import { Separator } from "@/components/ui/separator";
+import AddPost from "@/components/AddPost/AddPost";
+import FriendshipButton from '@/components/Friendships/FriendshipButton';
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 function Profile() {
 	const { userId } = useParams();
-	const auth = useAuthUser();
 	const isAuthenticated = useIsAuthenticated();
 	const authHeader = useAuthHeader();
 	const navigate = useNavigate();
-	
+	const auth = useAuthUser();
+
 	const [isLoading, setIsLoading] = useState(true);
 	const [userData, setUserData] = useState("");
 	const [posts, setPosts] = useState([]);
-	const [friendshipStatus, setFriendshipStatus] = useState("");
 	const [userCountry, setUserCountry] = useState(null);
-
 	const [userAchievements, setUserAchievements] = useState(null);
 
-	const [refetch, setRefetch] = useState(false);
+
+	const {ref, inView} = useInView();
+	const [addNewPost, setAddNewPost] = useState(false);
+
+	useEffect(() => {
+		if(inView) fetchNextPage();
+	}, [inView]);
+
+	const fetchPost = async (page) => {
+		const response = await fetch(`http://localhost:5000/api/v1/posts/user/${userId}?pageSize=5&pageNumber=${page.pageParam}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json', 
+				"Authorization": authHeader,
+			},
+		});
+		return await response.json();
+	}
+
+	const {
+		data,
+		error,
+		fetchNextPage,
+		hasNextPage,
+		isFetching,
+		isFetchingNextPage,
+		status,
+		refetch
+	} = useInfiniteQuery({
+		queryKey: ['posts'],
+		queryFn: fetchPost,
+		initialPageParam: 0,
+		getNextPageParam: (lastPage, pages) => {
+			return lastPage.length === 0 ? null : pages.length + 1;
+		},
+	});
+
+	// refetch po dodaniu nowego posta
+	useEffect(() => {
+		if(addNewPost) {
+			setAddNewPost(false);
+			refetch({ refetchPage: (page, index) => index === 0 })
+		}
+	}, [addNewPost]);
 
 	// ładowanie danych o użytkowniku
 	useEffect(() => {
@@ -83,85 +130,13 @@ function Profile() {
 			console.error('Wystąpił błąd podczas wczytywania profilu użytkownika:', error);
 			navigate("/");
 		});
-		console.log(userCountry);
+		// console.log(userCountry);
 
 		getUserCountries(10, 0);
 		getUserAchievements(10, 0);
 
 	}, [userId]);
 
-	// wczytywanie danych o friends
-	useEffect(() => {
-		setRefetch(false);
-		fetch(`http://localhost:5000/api/v1/friendship/status/${userId}`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json', 
-				"Authorization": authHeader,
-			},
-		})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Błąd sieci!');
-			}
-			return response.json();
-		})
-		.then(data => {
-			//console.log(data);
-			setFriendshipStatus(data.message);
-		})
-		.catch(error => {
-			console.log(error.message);
-		});
-		
-	}, [refetch]);
-
-
-	const addFriend = () => {
-		fetch(`http://localhost:5000/api/v1/friendship/${userId}`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json', 
-				"Authorization": authHeader,
-			},
-		})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Błąd sieci!');
-			}
-			return response.json();
-		})
-		.then(data => {
-			console.log(data);
-			setRefetch(true);
-		})
-		.catch(error => {
-			console.log(error.message);
-		});
-	};
-
-	const removeFriend = () => {
-		fetch(`http://localhost:5000/api/v1/friendship/${userId}`, {
-			method: 'DELETE',
-			headers: {
-				'Content-Type': 'application/json', 
-				"Authorization": authHeader,
-			},
-		})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Błąd sieci!');
-			}
-			return response.json();
-		})
-		.then(data => {
-			console.log(data);
-			setRefetch(true);
-		})
-		.catch(error => {
-			console.log(error.message);
-		});
-	};
 
 	const getUserCountries = (pageSize, pageNumber) => {
 		fetch(`http://localhost:5000/api/v1/visited-countries/${userId}?pageSize=${pageSize}&pageNumber=${pageNumber}`, {
@@ -178,7 +153,7 @@ function Profile() {
 			return response.json();
 		})
 		.then(data => {
-			console.log(data);
+			// console.log(data);
 			setUserCountry(data);
 		})
 		.catch(error => {
@@ -235,8 +210,8 @@ function Profile() {
         <MainContainer type="profile">
 
 			<div className="relative flex flex-col justify-center items-center">
-				<Skeleton className="h-[200px] w-[2000px] " />
-
+				{/* <Skeleton className="h-[200px] w-[2000px] " /> */}
+				<div className="h-[200px] w-[98vw] bg-gray-600 "></div>
 				{/* {isLoading ? (
 					<Skeleton className="h-[200px] w-[2000px] " />
 				) : (
@@ -262,53 +237,7 @@ function Profile() {
 					<p>{userData.about}</p>
 				</div>
 
-				{userId === auth.id ? null : (
-					<div className="mt-4">
-						{friendshipStatus === "STRANGER" ? (
-							<DropdownMenu>
-								<DropdownMenuTrigger asChild>
-									<Button variant="outline" onClick={addFriend}>
-										➕ Add friend
-									</Button>
-								</DropdownMenuTrigger>
-							</DropdownMenu>
-						) : null }
-
-						{ friendshipStatus === "SENT" ? (
-							<DropdownMenu>
-								<DropdownMenuTrigger asChild>
-									<Button variant="outline">
-										📩 Invitation sent
-									</Button>
-								</DropdownMenuTrigger>
-							</DropdownMenu>
-						) : null }
-
-						{ friendshipStatus === "RECEIVED" ? (
-							<DropdownMenu>
-								<DropdownMenuTrigger asChild>
-									<Button variant="outline" onClick={addFriend}>
-										✔️ Confirm the invitation
-									</Button>
-								</DropdownMenuTrigger>
-							</DropdownMenu>
-						) : null }
-
-						{ friendshipStatus === "FRIEND" ? (
-							<DropdownMenu>
-								<DropdownMenuTrigger asChild>
-									<Button variant="outline">
-										👥 Friend
-									</Button>
-								</DropdownMenuTrigger>
-								<DropdownMenuContent className="w-full">
-									<DropdownMenuItem onClick={removeFriend} className="cursor-pointer">❌ Remove friend</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
-						) : null }
-
-					</div>
-				)}
+				<FriendshipButton userId={userId} />
 			</div>
 
 			
@@ -317,7 +246,7 @@ function Profile() {
                 <div className="grid gap-4 grid-cols-2 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
                     <Card x-chunk="dashboard-01-chunk-2" className="col-span-1">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-md font-bold">
+                            <CardTitle className="text-sm font-bold md:text-md">
                                 Total visited countries
                             </CardTitle>
                             {/* <CreditCard className="h-4 w-4 text-muted-foreground" /> */}
@@ -332,7 +261,7 @@ function Profile() {
 
                     <Card x-chunk="dashboard-01-chunk-2" className="col-span-1">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-							<CardTitle className="text-md font-bold space-y-1.5 flex flex-row justify-between items-center">
+							<CardTitle className="text-sm font-bold md:text-md space-y-1.5 flex flex-row justify-between items-center">
 								Total achievements
 								<Icons.medalEmpty className="fill-muted-foreground w-7 h-7" /> 
 
@@ -401,6 +330,62 @@ function Profile() {
                     </Card>
                 </div>
             </div>
+
+			<div className="flex flex-col max-w-full w-[800px] gap-2 p-4 md:p-8">
+				
+				<h1 className="text-2xl font-extrabold tracking-tight lg:text-2xl text-center">Posts</h1>
+				{auth.id === userId && <AddPost setAddNewPost={setAddNewPost}/> }
+				
+				{status == "pending" ? (
+					<Card className="mt-5 w-full">
+						<CardHeader className="flex flex-row">
+							<Skeleton className="h-12 w-12 rounded-full" />
+							<div className="px-2 w-fit">
+								<Skeleton className="h-4 w-[250px]" />
+								<Skeleton className="h-4 w-[200px] mt-2" />
+							</div>
+						</CardHeader>
+						<CardContent>
+							<Skeleton className="h-14 w-full mb-5" />
+							<Skeleton className="w-full h-[500px]" />
+						</CardContent>
+						<CardFooter className="flex justify-between">
+							<Button variant="outline">Likes</Button>
+							<Button variant="outline">Comments</Button>
+						</CardFooter>
+					</Card>
+
+				) : (
+					data.pages[0].empty == true ? (
+						<div>
+							No posts
+						</div> 
+					) : (
+						<>
+							{data.pages.map((group, i) => (
+								group.content.map((post) => (
+									<Post
+										key={post.id}
+										postId={post.id}
+										content={post.content}
+										countryId={post.countryId}
+										imageUrl={post.imageUrl}
+										authorId={post.authorId}
+										createdAt={post.createdAt}
+										lastUpdated={post.lastUpdated}
+										likes={post.likes}
+										hearts={post.hearts}
+										setAddNewPost={setAddNewPost}
+										
+									/>
+								))
+							))}
+						</>
+					)
+				)}
+
+				{hasNextPage && <div ref={ref} className=""></div>}
+			</div>
 
 			
         </MainContainer>
