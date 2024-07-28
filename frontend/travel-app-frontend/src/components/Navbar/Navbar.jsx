@@ -16,16 +16,23 @@ export function Navbar() {
     
     return (
         <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="px-3 md:container grid grid-cols-3 h-14 max-w-screen-2xl items-center">
-                
+            <div className="px-3 grid grid-cols-3 h-14 items-center">
+            {/* "px-3 md:container grid grid-cols-3 h-14 max-w-screen-2xl items-center" */}
                 {/* 1 kolumna */}
-                <div className="mr-4 col-span-1 flex">
-                    <Link to="/" className="mr-6 flex items-center space-x-2">
-                        <Icons.logo className="h-6 w-6" />
-                        <span className="font-bold hidden md:flex">
-                            Travel App
-                        </span>
+                <div className="col-span-1 flex flex-row gap-3">
+                    <Link to="/" className="flex items-center space-x-2">
+                        <span className="text-xl font-normal hidden md:flex">Trav<span className="font-bold text-primary">Share</span></span>
+                        <span className="text-xl font-normal flex justify-center items-center md:hidden">T<span className=" font-bold text-primary">S</span></span>
                     </Link>
+                    
+                    { isAuthenticated() ? (
+                        <>
+                            <SearchBar className="" placeholder="Search users on TravShare"/>
+                            {/* <Icons.searchEmpty className="flex fill-current h-10 w-10 text-muted-foreground" /> */}
+                        </>
+                    ) : null }
+
+
                 </div>
 
                 {/* 2 kolumna */}
@@ -48,7 +55,6 @@ export function Navbar() {
 
                 {/* 3 kolumna */}
                 <div className="col-span-1 flex justify-end gap-3">
-                    { isAuthenticated() ? <SearchBar placeholder="Search users..."/> : null }
                     { isAuthenticated() ? null : <ModeToggle className="mx-3"/> }
                     { isAuthenticated() ? <UserNav  /> : null }
                 </div>
