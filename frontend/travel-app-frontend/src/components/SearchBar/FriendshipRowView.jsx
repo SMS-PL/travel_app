@@ -1,0 +1,79 @@
+import React from 'react';
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar";
+import { Link } from "react-router-dom";
+import { Icons } from "@/components/icons";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import { useState, useEffect } from 'react';
+
+const FriendshipRowView = ({user}) => {
+    const authHeader = useAuthHeader();
+
+    const [friendshipStatus, setFriendshipStatus] = useState("");
+
+    useEffect(() => {
+		getStatusOfFriendship();
+	}, []);
+
+    const getStatusOfFriendship = () => {
+        fetch(`http://localhost:5000/api/v1/friendship/status/${user.id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json', 
+                "Authorization": authHeader,
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Błąd sieci!');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // console.log(data.message);
+            setFriendshipStatus(data.message);
+        })
+        .catch(error => {
+            console.log(error.message);
+        });
+    };
+
+    return (
+        <div className="w-full flex flex-row items-center mb-2 hover:bg-secondary p-1 rounded-md">
+            <Avatar>
+                <AvatarImage src={user.profilePicture || "https://picsum.photos/200/200"} alt={`${user.firstName} ${user.lastName}`} />
+                <AvatarFallback>{`${user.firstName[0]}${user.lastName[0]}`}</AvatarFallback>
+            </Avatar>
+        
+            <div className="px-2">
+                <CardTitle className="text-sm">{user.firstName} {user.lastName}</CardTitle>
+            </div>
+
+            <div>
+                {friendshipStatus === "FRIEND" ? (
+                    <Icons.userCheckFill className="h-6 w-6 fill-current" />
+
+                ) : null }
+
+                {friendshipStatus === "SENT" ? (
+                    <Icons.envelopeCheckFill className="h-6 w-6 fill-current" />
+
+                ) : null }
+
+            </div>
+        </div>
+    );
+};
+
+export default FriendshipRowView;
