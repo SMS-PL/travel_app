@@ -10,16 +10,12 @@ import {
 } from "@/components/ui/card";
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { Skeleton } from "@/components/ui/skeleton";
-import { Link } from "react-router-dom";
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "@/components/ui/avatar";
 import { Icons } from "@/components/icons";
 import { Input } from "@/components/ui/input";
+import FriendshipRowView from "@/components/SearchBar/FriendshipRowView";
+import HoverUserInfo from "@/components/ui/HoverUserInfo";
 
-const SearchBar = ({...props}) => {
+const SearchBar = ({placeholder, ...props}) => {
     const authHeader = useAuthHeader();
 
     const [isLoading, setIsLoading] = useState(true);
@@ -45,22 +41,21 @@ const SearchBar = ({...props}) => {
             })
             .then(data => {
                 setUsersData(data);
-                console.log(data);
                 setIsLoading(false);
             })
             .catch(error => {
                 console.log(error.message);
             });
         }
-    };
+    }; 
 
     return (
-        <div className="max-w-full w-[250px]">
+        <div className="max-w-full w-[200px]">
             <div className="relative ml-auto flex-1 md:grow-0" >
                 <Icons.searchEmpty className="absolute fill-current left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                     type="search"
-                    placeholder="Search..."
+                    placeholder={placeholder}
                     className="rounded-lg bg-background pl-8 w-full"
                     onChange={(e) => {
                         e.target.value.length == 0 ? setIsOpenSearchBar(false) : setIsOpenSearchBar(true);
@@ -71,7 +66,7 @@ const SearchBar = ({...props}) => {
                 />
             </div>
 
-            {isOpenSearchBar &&  
+            {isOpenSearchBar && (
                 <Card className="absolute top-[50px] w-fit" {...props}>
                     <CardHeader>
                         <CardTitle>Search Results</CardTitle>
@@ -79,18 +74,9 @@ const SearchBar = ({...props}) => {
 
                     <CardContent>
                         {!isLoading && usersData.content && usersData.content.map((user, i) => (
-                                <div key={`userSearched${user.id}${i}`} className="flex flex-row mb-2 hover:bg-secondary p-1 rounded-md">
-                                    <Link to={`/profile/${user.id}`} className="flex flex-row items-center" >
-                                        <Avatar>
-                                            <AvatarImage src={user.profilePicture || "https://picsum.photos/200/200"} alt={`${user.firstName} ${user.lastName}`} />
-                                            <AvatarFallback>{`${user.firstName[0]}${user.lastName[0]}`}</AvatarFallback>
-                                        </Avatar>
-                                    
-                                        <div className="px-2">
-                                            <CardTitle className="text-sm">{user.firstName} {user.lastName}</CardTitle>
-                                        </div>
-                                    </Link>
-                                </div>
+                                <HoverUserInfo userData={user} key={`userSearched${user.id}${i}`}>
+                                    <FriendshipRowView user={user} />
+                                </HoverUserInfo>
                             ))
                         }
                         {!isLoading && usersData.content && usersData.content.length === 0 && (
@@ -103,7 +89,7 @@ const SearchBar = ({...props}) => {
 
                     </CardFooter> */}
                 </Card>
-            }
+            )}
         </div>
     );
 };
