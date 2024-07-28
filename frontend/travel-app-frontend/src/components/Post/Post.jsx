@@ -54,6 +54,8 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useImperativeHandle } from 'react';
+import HoverUserInfo from "@/components/ui/HoverUserInfo";
 
 function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUpdated, setAddNewPost, likes, hearts, className}) {
     const authHeader = useAuthHeader();
@@ -75,7 +77,8 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
     const [totalElements, setTotalElements] = useState(0);
     const [isLastPage, setIsLastPage] = useState(false);
 
-    
+    const [friendshipStatus, setFriendshipStatus] = useState(null);
+
     const {
         register,
         handleSubmit,
@@ -90,6 +93,9 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
 
 	}, [currentPage]);
 
+    useEffect(() => {
+		getStatusOfFriendship();
+	}, []);
 
     useEffect(() => {
         fetchAuthorData();
@@ -100,6 +106,31 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
     useEffect(() => {
         fetchCountryData();
     }, [countryId]);
+
+    const getStatusOfFriendship = () => {
+        if(user.id !== undefined) {
+            fetch(`http://localhost:5000/api/v1/friendship/status/${user.id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json', 
+                    "Authorization": authHeader,
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Błąd sieci!');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // console.log(data.message);
+                setFriendshipStatus(data.message);
+            })
+            .catch(error => {
+                console.log(error.message);
+            });
+        }
+    };
 
 
     const fetchComments = async () => {
@@ -243,11 +274,6 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
                 })
                 
                 reset();
-                // setRefetchComments(true);
-                // setCurrentPage(0); // Resetowanie do pierwszej strony
-                // console.log(commentsData);
-                // console.log(JSON.stringify(commentsData));
-                // console.log(typeof commentsData);
                 setCommentsData(prevData => {
                     return [[data], ...commentsData]
                 });
@@ -303,50 +329,35 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
         });
     };
 
-    const showDialogDeletePost = () => {
-        return (
-            <AlertDialog>
-                <AlertDialogTrigger>
-                    <div className="flex flex-row items-center gap-2 cursor-pointer hover:transition-all hover:fill-secondary">
-                        Delete
-                    </div>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete the post from our servers.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction type="button" onClick={deletePostOnClick} >Continue</AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
-
-        );
-    };
-
     return (
         <Card className="mt-5 w-full">
             {/* AUTOR POSTA */}
-            <CardHeader className="flex flex-row pb-1">
-                <Link to={`/profile/${user.id}`} className="flex flex-row">
-                    <Avatar>
-                        <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
-                        <AvatarFallback>CN</AvatarFallback>
-                    </Avatar>
-                
-                    <div className="px-2 w-fit">
-                        <CardTitle className="text-nowrap">{user.firstName} {user.lastName}</CardTitle>
-                        <CardDescription className="text-nowrap">
-                            <ReactTimeAgo timeStyle="round" date={new Date(createdAt)} locale="en-US" className="text-sm text-gray-500"/>
-                        </CardDescription>
-                        
-                    </div>
-                </Link>
+            <CardHeader className="flex flex-row pb-1 cursor-pointer">
+                {/* <Link to={`/profile/${user.id}`} className="flex flex-row"> */}
+                <HoverUserInfo userData={user} >
+                    <div className="flex flex-row items-center justify-center">
+                        <Avatar>
+                            <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
+                    
+                        <div className="px-2 w-fit">
+                            <CardTitle className="text-nowrap flex flex-row justify-center items-center gap-2">
+                                <p>{user.firstName} {user.lastName}</p>
 
+                                {friendshipStatus === "FRIEND" ? (
+                                    <Icons.userCheckFill className="h-5 w-5 fill-current" />
+                                ) : null }
+
+                            </CardTitle>
+                            <CardDescription className="text-nowrap">
+                                <ReactTimeAgo timeStyle="round" date={new Date(createdAt)} locale="en-US" className="text-sm text-gray-500"/>
+                            </CardDescription>
+                            
+                        </div>
+                    </div>
+                </HoverUserInfo>
+                {/* </Link> */}
                 <div className="w-full flex flex-row justify-end">
                     <img src={`https://flagsapi.com/${countryCode}/flat/64.png`} alt="" className="w-[40px] cursor-pointer" />
                     
