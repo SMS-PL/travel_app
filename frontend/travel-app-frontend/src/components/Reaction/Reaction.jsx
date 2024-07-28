@@ -5,18 +5,22 @@ import { cn } from "@/lib/utils";
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { useState, useEffect } from 'react';
 import { useToast } from "@/components/ui/use-toast";
+import ConfettiExplosion from 'react-confetti-explosion';
 
 function Reaction({postId, likes, hearts}) {
+    const [isExploding, setIsExploding] = useState(false);
+
 	const authHeader = useAuthHeader();
     const { toast } = useToast();
 
     const [isLiked, setIsLiked] = useState(false);              // tutaj wstaw czy polubiony
-    const [isHearted, setIsHearted] = useState(0);          // tutaj wstaw czy posercowany
+    const [isHearted, setIsHearted] = useState(false);          // tutaj wstaw czy posercowany
 
     const [likesCounter, setLikesCounter] = useState(likes);
     const [heartsCounter, setHeartsCounter] = useState(hearts);
 
     useEffect(() => {
+        
         fetch(`http://localhost:5000/api/v1/posts/${postId}/userReaction`, {
 			method: 'GET',
 			headers: {
@@ -68,10 +72,10 @@ function Reaction({postId, likes, hearts}) {
             if(reactionType == 0) {             // like
                 setIsLiked(like => !like);
                 setIsHearted(false);
-
-            } else if(reactionType == 1) {
+            } else if(reactionType == 1) {      // heart
                 setIsLiked(false);
                 setIsHearted(heart => !heart);
+                setIsExploding(explode => !explode);
             }
 
             setLikesCounter(data.like);
@@ -87,7 +91,6 @@ function Reaction({postId, likes, hearts}) {
 		});
     };
 
-
     return (
         <div className="flex flex-row gap-3">
             <Button variant="secondary" onClick={() => {onClickLike(0)}}>
@@ -96,14 +99,16 @@ function Reaction({postId, likes, hearts}) {
                     {likesCounter}
                 </div>
             </Button>
-        
-            <Button variant="secondary" onClick={() => {onClickLike(1)}}>
-                <div className="flex flex-row justify-center items-center gap-2">
-                    {isHearted ?  <Icons.heartFill className="h-6 w-6 fill-red-500" /> : <Icons.heartEmpty className="h-6 w-6 fill-red-500" />}
+            
+            <Button variant="secondary" className="w-max-full w-[75px]" onClick={() => { onClickLike(1) }}>
+                <div className="flex flex-row justify-center items-center gap-1">
+                    {isHearted ? <Icons.heartFill className="h-6 w-6 fill-red-500" /> : <Icons.heartEmpty className="h-6 w-6 fill-red-500" />}
                     {heartsCounter}
                 </div>
             </Button>
-            
+
+            {isExploding && <ConfettiExplosion force={0.4} duration={2000} particleCount={30} height={500} width={300} className="relative left-[-49px]"/>}
+
         </div>
     )
 }
