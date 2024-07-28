@@ -22,6 +22,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import HoverUserInfo from "@/components/ui/HoverUserInfo";
 
 function CommentRowView({postId, commentData, commentsData, setCommentsData}) {
 	const authHeader = useAuthHeader();
@@ -105,10 +106,12 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData}) {
 
             <div className="flex flex-col w-full">
                 <div className="flex flex-row items-center gap-3">
-                    <p className="font-bold">{commentData !== null && commentData.author.firstName} {commentData.author.lastName}</p> 
+                    <HoverUserInfo userData={commentData.author} >
+                        <p className="font-bold">{commentData !== null && commentData.author.firstName} {commentData.author.lastName}</p> 
+                    </HoverUserInfo>
                     <p className=" text-sm">{commentData !== null && commentData.content}</p>
                 </div>
-
+                
                 <div className="flex flex-row gap-2">
                     <ReactTimeAgo timeStyle="round" date={new Date(commentData !== null && commentData.createdAt)} locale="en-US" className="text-sm text-gray-500"/>
                     {auth.id == commentData.author.id && (

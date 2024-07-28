@@ -13,13 +13,13 @@ import {
 import { Link } from "react-router-dom";
 import FriendshipButton from '@/components/Friendships/FriendshipButton';
 
-const HoverUserInfo = ({children, userData}) => {
+const HoverUserInfo = ({children, userData, ...props}) => {
 
     return (
         
-        <HoverCard>
+        <HoverCard >
             <HoverCardTrigger asChild>
-                <Link to={`/profile/${userData.id}`} className="flex flex-row">
+                <Link to={`/profile/${userData.id}`} className="flex flex-row" {...props}>
                     {children}
                 </Link>
             </HoverCardTrigger>
