@@ -14,7 +14,6 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-
 import {useInView} from "react-intersection-observer";
 import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
 
@@ -88,8 +87,8 @@ const Home = () => {
 
 			) : (
 				data.pages[0].empty == true ? (
-					<div>
-						Brak postów do wyświetlenia
+					<div className="">
+						No posts...
 					</div> 
 				) : (
 					<>
