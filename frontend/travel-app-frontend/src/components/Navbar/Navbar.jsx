@@ -30,7 +30,7 @@ export function Navbar() {
 
                 {/* 2 kolumna */}
                 <div className="col-span-1 flex justify-center">
-                    <div className="flex flex-row w-[200px] justify-around">
+                    <div className="flex flex-row w-[120px] justify-around">
                     { isAuthenticated() ?
                         <>
                             <Link to="/">
@@ -39,17 +39,17 @@ export function Navbar() {
                             <Link to="/friends-feed">
                                 {location.pathname == "/friends-feed" ? <Icons.friendsFeedFill className="h-7 w-7 fill-primary" /> : <Icons.friendsFeedEmpty className="h-7 w-7 fill-foreground" />}
                             </Link>
-                            <Link to="/explore-feed">
+                            {/* <Link to="/explore-feed">
                                 {location.pathname == "/explore-feed" ? <Icons.locationFeedFill className="h-7 w-7 fill-primary" /> : <Icons.locationFeedEmpty className="h-7 w-7 fill-foreground" />}
-                            </Link>
+                            </Link> */}
                         </> : null }
                     </div>
                 </div>
 
                 {/* 3 kolumna */}
-                <div className="col-span-1 flex justify-end">
-                    { isAuthenticated() ? <SearchBar /> : null }
-                    <ModeToggle className="mx-3"/>
+                <div className="col-span-1 flex justify-end gap-3">
+                    { isAuthenticated() ? <SearchBar placeholder="Search users..."/> : null }
+                    { isAuthenticated() ? null : <ModeToggle className="mx-3"/> }
                     { isAuthenticated() ? <UserNav  /> : null }
                 </div>
 
