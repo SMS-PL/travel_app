@@ -19,7 +19,6 @@ import { useNavigate } from 'react-router-dom';
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
-
 import { Icons } from "@/components/icons";
 
 function AddPost({setAddNewPost}) {
