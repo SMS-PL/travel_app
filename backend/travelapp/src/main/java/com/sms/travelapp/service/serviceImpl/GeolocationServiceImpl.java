@@ -3,7 +3,9 @@ package com.sms.travelapp.service.serviceImpl;
 import com.opencagedata.jopencage.JOpenCageGeocoder;
 import com.opencagedata.jopencage.model.JOpenCageResponse;
 import com.opencagedata.jopencage.model.JOpenCageReverseRequest;
+import com.sms.travelapp.dto.Country.CountryResponseDto;
 import com.sms.travelapp.dto.PlaceDetails;
+import com.sms.travelapp.exception.CountryNotFound;
 import com.sms.travelapp.exception.PlaceNotFound;
 import com.sms.travelapp.mapper.CountryMapper;
 import com.sms.travelapp.model.Country;
@@ -13,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.data.geo.Point;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class GeolocationServiceImpl implements GeolocationService {
@@ -20,6 +24,7 @@ public class GeolocationServiceImpl implements GeolocationService {
     private final CountryService countryService;
     @Override
     public PlaceDetails getInfo(Point localization) {
+
         String apiKey = System.getProperty("GEO_API_KEY");
         JOpenCageGeocoder jOpenCageGeocoder = new JOpenCageGeocoder(apiKey);
         JOpenCageReverseRequest request = new JOpenCageReverseRequest(localization.getX(), localization.getY());
@@ -50,5 +55,16 @@ public class GeolocationServiceImpl implements GeolocationService {
         }
 
         return placeDetails;
+    }
+
+    @Override
+    public CountryResponseDto getCountryByCoordinates(double lat, double lon) {
+        Point point = new Point(lat,lon);
+        PlaceDetails placeDetails = this.getInfo(point);
+        Country country = countryService.getCountryByIso3(placeDetails.getIso3());
+        if(Objects.isNull(country)){
+            throw new CountryNotFound("Country not found based on given coordinates");
+        }
+        return CountryMapper.mapToCountryResponseDto(country);
     }
 }

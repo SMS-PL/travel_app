@@ -1,16 +1,19 @@
 package com.sms.travelapp.service.serviceImpl;
 
 import com.sms.travelapp.dto.Country.CountryResponseDto;
+import com.sms.travelapp.dto.PlaceDetails;
 import com.sms.travelapp.exception.CountryNotFound;
 import com.sms.travelapp.mapper.CountryMapper;
 import com.sms.travelapp.model.Country;
 import com.sms.travelapp.repository.CountryRepository;
 import com.sms.travelapp.service.CountryService;
+import com.sms.travelapp.service.GeolocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
 public class CountryServiceImpl implements CountryService {
 
     private final CountryRepository countryRepository;
+
     @Override
     public List<CountryResponseDto> getAllCountries() {
        List<Country> countries =  countryRepository.findAll();
@@ -71,4 +75,6 @@ public class CountryServiceImpl implements CountryService {
     public Country getCountryByIso3(String iso3) {
         return countryRepository.findByIso3(iso3);
     }
+
+
 }

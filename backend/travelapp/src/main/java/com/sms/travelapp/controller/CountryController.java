@@ -3,6 +3,7 @@ package com.sms.travelapp.controller;
 
 import com.sms.travelapp.dto.Country.CountryResponseDto;
 import com.sms.travelapp.service.CountryService;
+import com.sms.travelapp.service.GeolocationService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import java.util.List;
 public class CountryController {
 
     private final CountryService countryService;
+    private final GeolocationService geoLocationService;
 
     @GetMapping("/")
     public ResponseEntity<List<CountryResponseDto>> getAllCountries(){
@@ -38,5 +40,11 @@ public class CountryController {
                                                                        @RequestParam int pageNumber, @RequestParam int pageSize){
         Page<CountryResponseDto> res = countryService.searchForCountry(queryCountry,pageNumber,pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @GetMapping("/cord/{lat}/{lon}")
+    public ResponseEntity<CountryResponseDto> getCountryByCoordinates(@PathVariable double lat, @PathVariable double lon){
+        CountryResponseDto country = geoLocationService.getCountryByCoordinates(lat,lon);
+        return ResponseEntity.status(HttpStatus.OK).body(country);
     }
 }
