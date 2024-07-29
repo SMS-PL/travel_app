@@ -134,4 +134,17 @@ public class CommentServiceImpl implements CommentService {
         return CommentMapper.MapToCommentReactionCountResponseDto(comment);
         
     }
+
+    @Override
+    public Map<String, Boolean> checkUserReaction(Long commentId) {
+        UserEntity user = authService.getLoggedUser();
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new CommentNotFound("Comment not found!")
+        );
+
+        if(commentReactionRepository.existsByAuthorAndComment(user,comment)){
+            return Map.of("reacted",true);
+        }
+        return Map.of("reacted",false);
+    }
 }

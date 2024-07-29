@@ -17,4 +17,6 @@ public interface CommentService {
     CommentResponseDto editComment(Long commentId, CommentRequestDto commentRequestDto);
 
     CommentReactionCountResponseDto reactToComment(Long commentId);
+
+    Map<String, Boolean> checkUserReaction(Long commentId);
 }

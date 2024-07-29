@@ -59,4 +59,11 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
+    @GetMapping("{commentId}/reacted")
+    public ResponseEntity<Map<String,Boolean>> checkUserReaction(@PathVariable Long commentId){
+        Map<String,Boolean> res = commentService.checkUserReaction(commentId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
 }
