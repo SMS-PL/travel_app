@@ -15,4 +15,7 @@ public interface PinService {
     String deletePin(Long pinId);
 
     Page<Map.Entry<Long, List<PinResponseDto>>> getActiveFriendsPins(int pageNumber, int pageSize);
+
+    List<PinResponseDto> getMyActivePins();
+
 }

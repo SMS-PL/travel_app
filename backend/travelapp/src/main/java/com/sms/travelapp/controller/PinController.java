@@ -23,11 +23,6 @@ public class PinController {
 
     private final PinService pinService;
 
-//    @GetMapping("/")
-//    public ResponseEntity<List<PinResponseDto>> getAllPins(){
-//        List<PinResponseDto> res = pinService.getAllPins();
-//        return ResponseEntity.status(HttpStatus.OK).body(res);
-//    }
 
     @GetMapping("/")
     public ResponseEntity<Page<PinResponseDto>> getAllPins(@RequestParam int pageNumber, @RequestParam int pageSize){
@@ -52,6 +47,12 @@ public class PinController {
     @GetMapping("/friends")
     public ResponseEntity<Page<Map.Entry<Long, List<PinResponseDto>>>> getFriendsPins(@RequestParam int pageNumber, @RequestParam int pageSize){
         Page<Map.Entry<Long, List<PinResponseDto>>> pins = pinService.getActiveFriendsPins(pageNumber,pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(pins);
+    }
+
+    @GetMapping("my/active")
+    public ResponseEntity<List<PinResponseDto>> getMyActivePins(){
+        List<PinResponseDto> pins = pinService.getMyActivePins();
         return ResponseEntity.status(HttpStatus.OK).body(pins);
     }
 }

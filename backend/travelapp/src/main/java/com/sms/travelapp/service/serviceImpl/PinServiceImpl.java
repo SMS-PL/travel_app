@@ -122,4 +122,14 @@ public class PinServiceImpl implements PinService {
 
         return page;
     }
+
+    @Override
+    public List<PinResponseDto> getMyActivePins() {
+        UserEntity user = authService.getLoggedUser();
+        ZonedDateTime cutoff = ZonedDateTime.now().minusHours(24);
+        Timestamp timestampCutoff = Timestamp.from(cutoff.toInstant());
+        List<Pin> pins = pinRepository.findAllByAuthorIdAndCreatedAtAfter(user.getId(), timestampCutoff);
+        return pins.stream().map(PinMapper::mapToPinResponseDto).collect(Collectors.toList());
+
+    }
 }

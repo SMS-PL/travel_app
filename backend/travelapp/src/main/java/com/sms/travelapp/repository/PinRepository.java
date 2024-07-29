@@ -15,4 +15,6 @@ public interface PinRepository extends JpaRepository<Pin,Long> {
 
     @Query("SELECT p FROM Pin p WHERE p.author.id IN :friendsIds AND p.createdAt > :cutoff ORDER BY p.author.id, p.createdAt DESC")
     List<Pin> findAllByAuthorIds(@Param("friendsIds") List<Long> friendsIds, @Param("cutoff") Timestamp cutoff);
+
+    List<Pin> findAllByAuthorIdAndCreatedAtAfter(Long id, Timestamp timestampCutoff);
 }
