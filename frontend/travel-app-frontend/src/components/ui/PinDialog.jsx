@@ -109,14 +109,16 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
 
                 {/* STRZAŁKI MAPA */}
                 <div className="flex flex-row justify-center items-center">
-                    <Button 
-                        variant="ghost" 
-                        className="p-2"
-                        onClick={() => prevPin()}
-                    >
-                        <ChevronLeftIcon className="h-6 w-6 cursor-pointer hover:bg-secondary rounded-md" />
-                    </Button>
-
+                    {howMuchPins > 1 && (
+                        <Button 
+                            variant="ghost" 
+                            className="p-2"
+                            onClick={() => prevPin()}
+                        >
+                            <ChevronLeftIcon className="h-6 w-6 cursor-pointer hover:bg-secondary rounded-md" />
+                        </Button>
+                    )}  
+                    
                     <div className="w-full rounded-xl border bg-card text-card-foreground shadow">
                         {/* <img className="w-full rounded-md" src="https://lh3.googleusercontent.com/ILV2_Xm--SVih4MElRmFeu6k6YIdxD72ic7a3-qWJgGgDcyU_UzIPOTg8vEr4zjH5UhYlmFKpVV2ukBJOz_I_d24vlS96b2dE2873T53=rw-e365-w900" alt="" srcset="" /> */}
                         <MapComponent 
@@ -124,14 +126,16 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
                             lng={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].localization.y}
                         />
                     </div>
-                    
-                    <Button 
-                        variant="ghost" 
-                        className="p-2"
-                        onClick={() => nextPin()}
-                    >
-                        <ChevronRightIcon className="h-6 w-6 cursor-pointer hover:bg-secondary rounded-md" />
-                    </Button>                
+
+                    {howMuchPins > 1 && (
+                        <Button 
+                            variant="ghost" 
+                            className="p-2"
+                            onClick={() => nextPin()}
+                        >
+                            <ChevronRightIcon className="h-6 w-6 cursor-pointer hover:bg-secondary rounded-md" />
+                        </Button> 
+                    )}
                 </div>
 
                 {/* TEKST LOKALIZACJA */}
