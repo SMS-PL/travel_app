@@ -74,7 +74,7 @@ const SearchBar = ({placeholder, ...props}) => {
 
                     <CardContent>
                         {!isLoading && usersData.content && usersData.content.map((user, i) => (
-                                <HoverUserInfo userData={user} key={`userSearched${user.id}${i}`}>
+                                <HoverUserInfo userData={user} key={`userSearched${user.id}${i}`} className="flex">
                                     <FriendshipRowView user={user} />
                                 </HoverUserInfo>
                             ))
