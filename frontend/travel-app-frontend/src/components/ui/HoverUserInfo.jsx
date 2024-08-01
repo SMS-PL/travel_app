@@ -32,8 +32,8 @@ const HoverUserInfo = ({children, userData, ...props}) => {
                                 <AvatarFallback>VC</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col justify-center items-start">
-                                <h4 className="text-xl font-bold">{userData.firstName} {userData.lastName}</h4>
-                                <h3 className="text-md font-semibold text-gray-500">@{userData.username}</h3>
+                                <span className="text-xl font-bold">{userData.firstName} {userData.lastName}</span>
+                                <span className="text-md font-semibold text-gray-500">@{userData.username}</span>
                             </div>
                         </div>
                     </Link>
