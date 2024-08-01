@@ -76,6 +76,7 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [isLastPage, setIsLastPage] = useState(false);
+    const [refetch, setRefetch] = useState(false);
 
     const [friendshipStatus, setFriendshipStatus] = useState(null);
 
@@ -88,20 +89,23 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
     } = useForm();
 
 
+
     useEffect(() => {
         fetchComments();
+        setRefetch(false);
+        
+	}, [currentPage, refetch]);
 
-	}, [currentPage]);
-
-    useEffect(() => {
-		getStatusOfFriendship();
-	}, []);
+    
 
     useEffect(() => {
         fetchAuthorData();
 
 	}, [authorId]);
-
+    
+    useEffect(() => {
+		getStatusOfFriendship();
+	}, [user]);
 
     useEffect(() => {
         fetchCountryData();
@@ -123,7 +127,7 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
                 return response.json();
             })
             .then(data => {
-                // console.log(data.message);
+                console.log(data.message);
                 setFriendshipStatus(data.message);
             })
             .catch(error => {
@@ -263,6 +267,8 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
                 setCommentsData(prevData => {
                     return [[data], ...commentsData]
                 });
+                setCurrentPage(0);
+                setRefetch(true);
             })
             .catch(error => {
                 toast({
@@ -458,6 +464,7 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
                                             commentData={commentData}
                                             commentsData={commentsData}
                                             setCommentsData={setCommentsData}
+                                            setRefetch={setRefetch}
                                         />
                                     )
 
