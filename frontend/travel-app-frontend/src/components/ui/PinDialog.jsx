@@ -22,12 +22,18 @@ import { Button } from "@/components/ui/button";
 import MapComponent from "@/components/MapComponent/MapComponent";
 import PinSettingsButton from "@/components/ui/PinSettingsButton";
 import { Icons } from "@/components/icons";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
-const PinDialog = ({userPinsArray, setRefetch}) => {
-    
-    const [howMuchPins, setHowMuchPins] = useState(userPinsArray[Object.keys(userPinsArray)].length);
+const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
+    const auth = useAuthUser();
+
+    const [howMuchPins, setHowMuchPins] = useState(0);
 
     const [currentPinIndex, setCurrentPinIndex] = useState(0);
+
+    useEffect(() => {
+        setHowMuchPins(+userPinsArray[Object.keys(userPinsArray)].length)
+    }, [refetch, userPinsArray]);
 
 
     const nextPin = () => {
@@ -88,11 +94,14 @@ const PinDialog = ({userPinsArray, setRefetch}) => {
                     </div>
 
                     <div className="w-full flex justify-end items-center">
-                        <PinSettingsButton 
-                            pinId={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].id}
-                            userId={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.id}
-                            setRefetch={setRefetch}
-                        />
+                        {auth.id == userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.id &&
+                            <PinSettingsButton 
+                                pinId={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].id}
+                                userId={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.id}
+                                setRefetch={setRefetch}
+                                setCurrentPinIndex={setCurrentPinIndex}
+                            />
+                        }
                         {/* <AlertDialogCancel className="p-3 rounded-full"><Cross1Icon /></AlertDialogCancel> */}
 
                     </div>

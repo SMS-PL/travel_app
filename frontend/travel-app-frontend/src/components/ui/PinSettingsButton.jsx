@@ -14,7 +14,7 @@ import {
 } from "@radix-ui/react-icons";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
-function PinSettingsButton({userId, pinId, setRefetch}) {
+function PinSettingsButton({userId, pinId, setRefetch, setCurrentPinIndex}) {
     const authHeader = useAuthHeader();
     const { toast } = useToast();
     const auth = useAuthUser();
@@ -38,7 +38,7 @@ function PinSettingsButton({userId, pinId, setRefetch}) {
         .then(data => {
             console.log(data);
             setRefetch(true);
-
+            setCurrentPinIndex(0);
             toast({
                 title: "Hurrah!",
                 description: "Pin deleted successfully!",

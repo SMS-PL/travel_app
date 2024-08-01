@@ -41,21 +41,27 @@ function Pins() {
     const navigate = useNavigate();
 
     const [pinsData, setPinsData] = useState(null);
+    const [myPinsData, setMyPinsData] = useState(null);
 	const [refetch, setRefetch] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
     
     useEffect(() => {
-        setIsLoading(true);
+        const loadPins = async () => {
+            await setIsLoading(true);
+            await fetchPins(0, 9);
+            await fetchOnlyMyPins();
+            await setRefetch(false);
+            await setIsLoading(false);
+        };
 
-        fetchPins(0, 9);
-        setRefetch(false);
+        loadPins();
+        
 
-        setIsLoading(false);
     }, [refetch]);
 
 
-    const fetchPins = (pageNumber, pageSize) => {
+    const fetchPins = async (pageNumber, pageSize) => {
         fetch(`http://localhost:5000/api/v1/pins/friends?pageNumber=${pageNumber}&pageSize=${pageSize}`, {
 			method: 'GET',
 			headers: {
@@ -70,13 +76,46 @@ function Pins() {
 			return response.json();
 		})
 		.then(data => {
-			// console.log(data);
+			console.log("Wykryto odświeżenie wszystkich pinów");
             setPinsData(data);
 		})
 		.catch(error => {
 			console.log(error.message);
 		});
-	}
+	};
+
+    const fetchOnlyMyPins = async () => {
+        fetch(`http://localhost:5000/api/v1/pins/my/active`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json', 
+				"Authorization": authHeader,
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Błąd sieci!');
+			}
+			return response.json();
+		})
+		.then(data => {
+            console.log("Wykryto odświeżenie tylko moich pinów");
+
+            setMyPinsData([data]);
+            // console.log([data]);
+            // console.log([[...pinsData], [data]]);
+            // console.log({
+            //     ...pinsData,
+            //     content: data[0],
+            //     totalElements: +pinsData.totalElements + 1,
+            //     numberOfElements: +pinsData.numberOfElements + 1
+            // });
+            // console.log(pinsData);
+		})
+		.catch(error => {
+			console.log(error.message);
+		});
+    };
 
     const onCreate = async () => {
         if (navigator.geolocation) {
@@ -150,6 +189,15 @@ function Pins() {
                     <p className="mt-1 text-gray-500 text-sm">Check-in</p>
                 </div>
 
+                {(!isLoading && (myPinsData !== null)) && 
+                    <PinDialog
+                        userPinsArray={myPinsData}
+                        setRefetch={setRefetch}
+                        refetch={refetch}
+                    />
+                    // console.log(myPinsData)
+                }
+
                 {(isLoading || !pinsData) ? (
                     <>
                         <Skeleton className="w-[50px] h-[50px] rounded-full"/>
@@ -166,10 +214,10 @@ function Pins() {
                             key={`userPin-${userPinsArray[Object.keys(userPinsArray)][0].id}`}
                             userPinsArray={userPinsArray}
                             setRefetch={setRefetch}
+                            refetch={refetch}
                         />
                     );
                 })}
-
             </CardContent>
         </Card>
     )
