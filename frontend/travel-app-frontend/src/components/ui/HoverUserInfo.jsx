@@ -17,9 +17,9 @@ const HoverUserInfo = ({children, userData, ...props}) => {
 
     return (
         
-        <HoverCard >
+        <HoverCard>
             <HoverCardTrigger asChild>
-                <Link to={`/profile/${userData.id}`} className="flex flex-row" {...props}>
+                <Link to={`/profile/${userData.id}`} className="inline-flex items-center" {...props}>
                     {children}
                 </Link>
             </HoverCardTrigger>

@@ -132,7 +132,6 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
         }
     };
 
-
     const fetchComments = async () => {
         setIsLoading(true);
 
@@ -150,30 +149,17 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
 			return response.json();
 		})
 		.then(data => {
-
-            // setCommentsData(prevPages => {
-            //     // Stwórz kopię tablicy stron
-            //     const newPages = [];
-            //     // Jeśli strona jeszcze nie istnieje, dodaj ją do tablicy
-            //     if (!newPages[currentPage]) {
-            //         newPages[currentPage] = data.content;
-            //     }
-            //     return newPages;
-            // });
             setCommentsData(prevData => {
                 if(data.first) {
                     return [data.content]
                 }
                 return [...prevData, data.content]
             });
-            // console.log([data.content, data.content])
 
             setTotalElements(data.totalElements);
             setTotalPages(data.totalPages);
             setIsLastPage(data.last);
             setTotalElements(data.totalElements);
-            // console.log(data);
-
             setIsLoading(false);
 
             // toast({
@@ -448,7 +434,22 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
                             </Button>
                         </form>
                             
-                            {!isLoading && (
+                            {isLoading ? (
+                                <div className="flex flex-row items-center gap-3 w-full my-3">
+                                    <Skeleton className="h-10 w-10 rounded-full flex-none" />
+                        
+                                    <div className="flex flex-col items-start gap-2 w-full">
+                                        <div className="flex flex-row items-center gap-3 w-full">
+                                            <Skeleton className="w-[100px] h-[20px] flex-none" />
+                                            <Skeleton className="max-w-full w-[50%] h-[20px]" />
+                                        </div>
+                                        
+                                        <Skeleton className="w-[60px] h-[15px] flex-none" />
+                                    </div>          
+                                </div>
+
+
+                            ) : (
                                 commentsData.map((group, i) => (
                                     group.map((commentData, j) => 
                                         <CommentRowView 

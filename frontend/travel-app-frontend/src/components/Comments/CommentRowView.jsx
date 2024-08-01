@@ -101,15 +101,19 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData}) {
     };
 
     return (
-        <div className="flex flex-row items-center gap-5 w-full my-3">
-            <Skeleton className="h-10 w-10 rounded-full" />
+        <div className="flex flex-row gap-5 w-full my-3">
+            <div className="flex justify-center items-start">
+                <Skeleton className="h-10 w-10 rounded-full " />
+            </div>
 
             <div className="flex flex-col w-full">
-                <div className="flex flex-row items-center gap-3">
-                    <HoverUserInfo userData={commentData.author} >
-                        <p className="font-bold">{commentData !== null && commentData.author.firstName} {commentData.author.lastName}</p> 
-                    </HoverUserInfo>
-                    <p className=" text-sm">{commentData !== null && commentData.content}</p>
+                <div className="flex flex-row items-baseline gap-3">
+                    <p className="text-sm">
+                        <HoverUserInfo userData={commentData.author}>
+                            <span className="font-bold">{commentData !== null && commentData.author.firstName} {commentData.author.lastName}</span> 
+                        </HoverUserInfo>
+                        <span> {commentData !== null && commentData.content}</span>
+                    </p>
                 </div>
                 
                 <div className="flex flex-row gap-2">
@@ -141,3 +145,39 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData}) {
 }
 
 export default CommentRowView;
+
+{/* <div className="flex flex-row items-center gap-5 w-full my-3">
+    <Skeleton className="h-10 w-10 rounded-full" />
+
+    <div className="flex flex-col w-full">
+        <div className="flex flex-row items-baseline gap-3">
+            <HoverUserInfo userData={commentData.author} >
+                <p className="font-bold text-nowrap">{commentData !== null && commentData.author.firstName} {commentData.author.lastName}</p> 
+            </HoverUserInfo>
+            <p className=" text-sm">{commentData !== null && commentData.content}</p>
+        </div>
+        
+        <div className="flex flex-row gap-2">
+            <ReactTimeAgo timeStyle="round" date={new Date(commentData !== null && commentData.createdAt)} locale="en-US" className="text-sm text-gray-500"/>
+            {auth.id == commentData.author.id && (
+                <DropdownMenu>
+                    <DropdownMenuTrigger>
+                        <Icons.dotsVertical className="fill-gray-500 w-5 h-5 cursor-pointer" />
+                    </DropdownMenuTrigger>
+                    
+                    <DropdownMenuContent>
+                        <DropdownMenuItem className="cursor-pointer" onClick={() => {deleteComment()}}>Delete</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+                )
+            }
+        </div>
+
+    </div>
+
+    <div className="flex flex-row items-center gap-2">
+        <p className="text-sm font-thin">{commentData !== null && commentData.reactionCounter}</p>
+        <Icons.heartEmpty className="fill-white w-4 h-4 cursor-pointer" />
+    </div>
+    
+</div> */}
