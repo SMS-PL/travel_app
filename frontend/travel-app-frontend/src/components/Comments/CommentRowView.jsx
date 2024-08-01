@@ -24,15 +24,23 @@ import {
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import HoverUserInfo from "@/components/ui/HoverUserInfo";
 
-function CommentRowView({postId, commentData, commentsData, setCommentsData}) {
+function CommentRowView({postId, commentData, commentsData, setCommentsData, setRefetch}) {
 	const authHeader = useAuthHeader();
     const auth = useAuthUser();
     const { toast } = useToast();
 
-    const [reactionCounter, setReactionCounter] = useState(commentData.reactionCount);
+    const [reactionCount, setReactionCount] = useState(0);
+    const [isReacted, setIsReacted] = useState(false);
+
+    
+    useEffect(() => {
+        setReactionCount(commentData.reactionCount);
+        checkIsReacted();
+
+        
+    }, [isReacted, commentsData]);
 
     const deleteComment = () => {
-        // console.log(commentData.id);
 		fetch(`http://localhost:5000/api/v1/comments/${commentData.id}`, {
 			method: 'DELETE',
 			headers: {
@@ -47,26 +55,12 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData}) {
 			return response.json();
 		})
 		.then(data => {
-            //console.log("Komentarz usunięty pomyślnie!");
-            //setResetCommentsData(true);
-            //setRefetchComments(true);
-            // setCommentsData(prevComments => prevComments.filter(comment => comment.content.id !== commentData.id));
-            
             setCommentsData(
                 commentsData.map((group, i) => (
                     group.filter(comment => comment.id !== commentData.id)
                 ))
             );
-            // queryClient.setQueryData(['comments', postId], oldData => {
-            //     if (!oldData) return oldData;
-            //     return {
-            //         ...oldData,
-            //         pages: oldData.pages.map(page => ({
-            //             ...page,
-            //             content: page.content.filter(comment => comment.id !== commentData.id),
-            //         })),
-            //     };
-            // });
+            setRefetch(true);
             toast({
                 title: "Hurrah!",
                 description: "Comment deleted correctly!",
@@ -78,7 +72,30 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData}) {
 		});
     };
 
-    const reactionComment = () => {
+    const checkIsReacted = () => {
+        fetch(`http://localhost:5000/api/v1/comments/${commentData.id}/reacted`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json', 
+				"Authorization": authHeader,
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Błąd sieci!');
+			}
+			return response.json();
+		})
+		.then(data => {
+            setIsReacted(data.reacted);
+		})
+		.catch(error => {
+			console.log(error.message);
+		});
+
+    };
+
+    const reactToComment = () => {
         fetch(`http://localhost:5000/api/v1/comments/${commentData.id}/react`, {
 			method: 'POST',
 			headers: {
@@ -94,6 +111,38 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData}) {
 		})
 		.then(data => {
             console.log("Reakcja zarejestrowana pomyślnie!");
+            setIsReacted(prevReact => !prevReact);
+            // setReactionCount(data.reactionCount);
+            // console.log(data);
+           
+            // Zaktualizuj `commentsData`, aby zwiększyć `reactionCount` odpowiedniego komentarza
+            // setCommentsData(
+            //     commentsData.map((group) => 
+            //         group.map(comment => 
+            //             comment.id === commentData.id 
+            //                 ? { ...comment, reactionCount: comment.reactionCount + 1 }
+            //                 : comment
+            //         )
+            //     )
+            // );
+
+            setCommentsData(prevCommentsData => 
+                prevCommentsData.map(group => 
+                    group.map(comment => {
+                        if (comment.id === commentData.id) {
+                            return {
+                                ...comment,
+                                reactionCount: isReacted ? comment.reactionCount - 1 : comment.reactionCount + 1
+                            };
+                        }
+                        return comment;
+                    })
+                )
+            );
+
+            setReactionCount(prevCount => isReacted ? prevCount - 1 : prevCount + 1);
+
+            console.log(commentsData);
 		})
 		.catch(error => {
 			console.log(error.message);
@@ -108,12 +157,12 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData}) {
 
             <div className="flex flex-col w-full">
                 <div className="flex flex-row items-baseline gap-3">
-                    <p className="text-sm">
+                    <div className="text-sm">
                         <HoverUserInfo userData={commentData.author}>
                             <span className="font-bold">{commentData !== null && commentData.author.firstName} {commentData.author.lastName}</span> 
                         </HoverUserInfo>
                         <span> {commentData !== null && commentData.content}</span>
-                    </p>
+                    </div>
                 </div>
                 
                 <div className="flex flex-row gap-2">
@@ -135,49 +184,18 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData}) {
             </div>
 
             <div className="flex flex-row items-center gap-2">
-                <p className="text-sm font-thin">{commentData !== null && commentData.reactionCounter}</p>
-                <Icons.heartEmpty className="fill-white w-4 h-4 cursor-pointer" />
+
+                {isReacted ? (
+                    <Icons.heartFill className="fill-white w-4 h-4 cursor-pointer" onClick={() => reactToComment()} />
+                ) : (
+                    <Icons.heartEmpty className="fill-white w-4 h-4 cursor-pointer" onClick={() => reactToComment()} />
+                )}
+                
+                <span className="text-sm font-thin">{reactionCount}</span>
             </div>
-            {/* <div>{commentData.content}</div> */}
             
         </div>
     )
 }
 
 export default CommentRowView;
-
-{/* <div className="flex flex-row items-center gap-5 w-full my-3">
-    <Skeleton className="h-10 w-10 rounded-full" />
-
-    <div className="flex flex-col w-full">
-        <div className="flex flex-row items-baseline gap-3">
-            <HoverUserInfo userData={commentData.author} >
-                <p className="font-bold text-nowrap">{commentData !== null && commentData.author.firstName} {commentData.author.lastName}</p> 
-            </HoverUserInfo>
-            <p className=" text-sm">{commentData !== null && commentData.content}</p>
-        </div>
-        
-        <div className="flex flex-row gap-2">
-            <ReactTimeAgo timeStyle="round" date={new Date(commentData !== null && commentData.createdAt)} locale="en-US" className="text-sm text-gray-500"/>
-            {auth.id == commentData.author.id && (
-                <DropdownMenu>
-                    <DropdownMenuTrigger>
-                        <Icons.dotsVertical className="fill-gray-500 w-5 h-5 cursor-pointer" />
-                    </DropdownMenuTrigger>
-                    
-                    <DropdownMenuContent>
-                        <DropdownMenuItem className="cursor-pointer" onClick={() => {deleteComment()}}>Delete</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                )
-            }
-        </div>
-
-    </div>
-
-    <div className="flex flex-row items-center gap-2">
-        <p className="text-sm font-thin">{commentData !== null && commentData.reactionCounter}</p>
-        <Icons.heartEmpty className="fill-white w-4 h-4 cursor-pointer" />
-    </div>
-    
-</div> */}
