@@ -32,7 +32,7 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
     const [currentPinIndex, setCurrentPinIndex] = useState(0);
 
     useEffect(() => {
-        setHowMuchPins(+userPinsArray[Object.keys(userPinsArray)].length)
+        setHowMuchPins(+userPinsArray[Object.keys(userPinsArray)].length);
     }, [refetch, userPinsArray]);
 
 
