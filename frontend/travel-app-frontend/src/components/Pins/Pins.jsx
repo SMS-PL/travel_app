@@ -45,7 +45,6 @@ function Pins() {
 	const [refetch, setRefetch] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
-    
     useEffect(() => {
         const loadPins = async () => {
             await setIsLoading(true);
@@ -189,16 +188,15 @@ function Pins() {
                     <p className="mt-1 text-gray-500 text-sm">Check-in</p>
                 </div>
 
-                {(!isLoading && (myPinsData !== null)) && 
+                {(!isLoading && (myPinsData !== null)) && (myPinsData[0].length > 0) && 
                     <PinDialog
                         userPinsArray={myPinsData}
                         setRefetch={setRefetch}
                         refetch={refetch}
                     />
-                    // console.log(myPinsData)
                 }
 
-                {(isLoading || !pinsData) ? (
+                {(isLoading || pinsData == null) ? (
                     <>
                         <Skeleton className="w-[50px] h-[50px] rounded-full"/>
                         <Skeleton className="w-[50px] h-[50px] rounded-full"/>
