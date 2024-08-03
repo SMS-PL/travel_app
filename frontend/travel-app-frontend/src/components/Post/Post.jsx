@@ -127,7 +127,7 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
                 return response.json();
             })
             .then(data => {
-                console.log(data.message);
+                // console.log(data.message);
                 setFriendshipStatus(data.message);
             })
             .catch(error => {
@@ -334,7 +334,7 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
                         </Avatar>
                     
                         <div className="px-2 w-fit">
-                            <CardTitle className="text-nowrap flex flex-row justify-center items-center gap-2">
+                            <CardTitle className="text-nowrap flex flex-row justify-start items-center gap-2">
                                 <p>{user.firstName} {user.lastName}</p>
 
                                 {friendshipStatus == "FRIEND" ? (
