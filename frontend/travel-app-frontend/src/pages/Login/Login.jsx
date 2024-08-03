@@ -141,7 +141,7 @@ const Login = () => {
                             </CardContent>
                             
                             <CardFooter className="flex flex-col">
-                                <Button className="w-full" type="submit" >Login</Button>
+                                <Button className="w-full text-white" type="submit" >Login</Button>
                             </CardFooter>
                         </form>
                     </Card>
