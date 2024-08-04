@@ -57,7 +57,8 @@ import {
 import { useImperativeHandle } from 'react';
 import HoverUserInfo from "@/components/ui/HoverUserInfo";
 
-function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUpdated, setAddNewPost, likes, hearts, className}) {
+function Post({postData, setAddNewPost}) {    
+
     const authHeader = useAuthHeader();
 	const navigate = useNavigate();
     const auth = useAuthUser();
@@ -101,7 +102,7 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
     useEffect(() => {
         fetchAuthorData();
 
-	}, [authorId]);
+	}, [postData.authorId]);
     
     useEffect(() => {
 		getStatusOfFriendship();
@@ -109,7 +110,7 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
 
     useEffect(() => {
         fetchCountryData();
-    }, [countryId]);
+    }, [postData.countryId]);
 
     const getStatusOfFriendship = () => {
         if(user.id !== undefined) {
@@ -139,7 +140,7 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
     const fetchComments = async () => {
         setIsLoading(true);
 
-        fetch(`http://localhost:5000/api/v1/comments/${postId}?pageSize=${pageSize}&pageNumber=${currentPage}&sortBy=datedesc`, {
+        fetch(`http://localhost:5000/api/v1/comments/${postData.id}?pageSize=${pageSize}&pageNumber=${currentPage}&sortBy=datedesc`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json', 
@@ -179,29 +180,31 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
 
     
     const fetchCountryData = () => {
-        fetch(`http://localhost:5000/api/v1/countries/${countryId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json', 
-                "Authorization": authHeader,
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Błąd sieci!');
-            }
-            return response.json();
-        })
-        .then(data => {
-            setCountryCode(data.iso);
-        })
-        .catch(error => {
-            console.log(error.message);
-        });
+        if(postData.countryId != -1) {
+            fetch(`http://localhost:5000/api/v1/countries/${postData.countryId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json', 
+                    "Authorization": authHeader,
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Błąd sieci!');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setCountryCode(data.iso);
+            })
+            .catch(error => {
+                console.log(error.message);
+            });
+        }
     };
 
     const fetchAuthorData = () => {
-        fetch(`http://localhost:5000/api/v1/users/${authorId}`, {
+        fetch(`http://localhost:5000/api/v1/users/${postData.authorId}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json', 
@@ -240,7 +243,7 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
     // funkcja do dodawania komentarza
     const addNewComment = async (values) => {
         if (isValid) {
-            fetch(`http://localhost:5000/api/v1/comments/${postId}`, {
+            fetch(`http://localhost:5000/api/v1/comments/${postData.id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json', 
@@ -286,9 +289,7 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
 
     // funkcja do usuwania postu
     const deletePostOnClick = () => {
-        console.log("Authorization Header: ", authHeader); // Dodaj to logowanie
-
-        fetch(`http://localhost:5000/api/v1/posts/${postId}`, {
+        fetch(`http://localhost:5000/api/v1/posts/${postData.id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json', 
@@ -343,15 +344,19 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
 
                             </CardTitle>
                             <CardDescription className="text-nowrap">
-                                <ReactTimeAgo timeStyle="round" date={new Date(createdAt)} locale="en-US" className="text-sm text-gray-500"/>
+                                <ReactTimeAgo timeStyle="round" date={new Date(postData.createdAt)} locale="en-US" className="text-sm text-gray-500"/>
                             </CardDescription>
                             
                         </div>
                     </div>
                 </HoverUserInfo>
                 {/* </Link> */}
-                <div className="w-full flex flex-row justify-end">
-                    <img src={`https://flagsapi.com/${countryCode}/flat/64.png`} alt="" className="w-[40px] cursor-pointer" />
+                <div className="w-full flex flex-row justify-end items-center">
+                    {postData.countryId == -1 ? (
+                        <div className="w-[40px] h-[25px] bg-gray-700 flex justify-center items-center text-xl font-bold rounded-[1px]">?</div>
+                    ) :
+                        <img src={`https://flagsapi.com/${countryCode}/flat/64.png`} alt="" className="w-[40px] cursor-pointer" />
+                    }
                     
                     {parseInt(user.id) == parseInt(auth.id) ? (
                         <>
@@ -390,12 +395,12 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
 
             {/* OPIS I ZDJĘCIE */}
             <CardContent>
-                {content}
+                {postData.content}
                 <Skeleton className="w-full h-[500px] mt-4" />
 
                 {/* przycisk do włączania/wyłączania komentarzy */}
                 <div className="flex justify-between mt-5">
-                    <Reaction likes={likes} hearts={hearts} postId={postId} />
+                    <Reaction likes={postData.likes} hearts={postData.hearts} postId={postData.id} />
                     <Button type="button" variant="secondary" onClick={() => {setIsCommentsOpen(!isCommentsOpen)}} className="flex flex-row items-center justify-center gap-2">
                         
                         {isCommentsOpen ?
@@ -459,8 +464,8 @@ function Post({postId, content, countryId, imageUrl, authorId, createdAt, lastUp
                                 commentsData.map((group, i) => (
                                     group.map((commentData, j) => 
                                         <CommentRowView 
-                                            key={`commentView${postId}${i}${j}`}
-                                            postId={postId}
+                                            key={`commentView${postData.id}${i}${j}`}
+                                            postId={postData.id}
                                             commentData={commentData}
                                             commentsData={commentsData}
                                             setCommentsData={setCommentsData}
