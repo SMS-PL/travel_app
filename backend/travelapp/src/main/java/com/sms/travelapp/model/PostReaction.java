@@ -2,6 +2,7 @@ package com.sms.travelapp.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @Data
@@ -16,11 +17,11 @@ public class PostReaction {
     @Column(name = "type")
     private int reactionType; // 0 - like 1 - heart
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "author_id")
     private UserEntity author;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id")
     private Post post;
 }

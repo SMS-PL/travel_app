@@ -17,6 +17,7 @@ import com.sms.travelapp.repository.CommentRepository;
 import com.sms.travelapp.repository.PostRepository;
 import com.sms.travelapp.service.AuthService;
 import com.sms.travelapp.service.CommentService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -79,6 +80,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public Map<String, String> removeComment(Long commentId) {
         UserEntity user = authService.getLoggedUser();
         Comment comment = commentRepository.findById(commentId).orElseThrow(
@@ -88,6 +90,7 @@ public class CommentServiceImpl implements CommentService {
             throw new AccessDenied("This is not your comment!");
         }
 
+        commentReactionRepository.deleteByCommentId(commentId);
         commentRepository.delete(comment);
         return StringResponseMapper.mapToMap("Comment id-" + commentId + " deleted successfully");
 

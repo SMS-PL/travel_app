@@ -18,6 +18,7 @@ import com.sms.travelapp.repository.UserRepository;
 import com.sms.travelapp.service.AuthService;
 import com.sms.travelapp.service.PostService;
 import com.sms.travelapp.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -80,6 +81,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public String deletePost(Long id) {
         Post post = postRepository.findById(id).orElseThrow(
                 ()-> new PostNotFound("Post id-"+id+" not found"));
@@ -89,6 +91,8 @@ public class PostServiceImpl implements PostService {
         if(!Objects.equals(post.getAuthorId(), user.getId())){
             throw new AccessDenied("You are not authorized to delete this post!");
         }
+
+        postReactionRepository.deleteByPostId(id);
         postRepository.deleteById(post.getId());
         return "Post id-"+ id +" deleted";
     }

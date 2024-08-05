@@ -4,6 +4,7 @@ package com.sms.travelapp.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @Data

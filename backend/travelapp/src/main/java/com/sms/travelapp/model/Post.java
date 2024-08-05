@@ -25,8 +25,10 @@ public class Post {
     @Column(name="id")
     private Long id;
 
+    @Lob
     @Column(name = "description")
     private String content;
+
 
     @Column(name = "country_id")
     private Long countryId;
