@@ -15,12 +15,22 @@ import { Button } from "@/components/ui/button";
 import MainContainer from "@/components/MainContainer/MainContainer";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
+import { useState, useEffect } from 'react';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import { Icons } from "@/components/icons";
+import HoverPopoverInputInfo from "@/components/Register/HoverPopoverInputInfo";
 
-function Register() {
+const Register = () => {
 
     const isAuthenticated = useIsAuthenticated();
     const navigate = useNavigate();
     const { toast } = useToast();
+
+    const [emailAvailabilityInfo, setEmailAvailabilityInfo] = useState(null);
 
     const {
 		register,
@@ -29,6 +39,7 @@ function Register() {
 		reset,
 		formState: {errors, isValid}
 	} = useForm();
+
 
     const onSubmit = async (values) => {
         if(isValid) {
@@ -75,6 +86,35 @@ function Register() {
 
     };
 
+    const checkEmailAvailability = (emailValue) => {
+        if(emailValue) {
+            fetch(`http://localhost:5000/api/v1/auth/email/${emailValue}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json', 
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Błąd sieci!');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if(data.available == true) {
+                    setEmailAvailabilityInfo(null);
+                } else {
+                    setEmailAvailabilityInfo("Email is taken");
+                }
+            })
+            .catch(error => {
+                console.log(error.message);
+            });
+        } else {
+            setEmailAvailabilityInfo(null);
+        }
+    }
+
 
     if (isAuthenticated()) {
         // If authenticated user, then redirect to secure dashboard
@@ -95,8 +135,9 @@ function Register() {
                                 <div className="grid w-full items-center gap-4">
                                     {/* USERNAME */}
                                     <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="username" className={cn(errors.username ? "text-red-500" : "text-foreground")}>
+                                        <Label htmlFor="username" className={cn(errors.username ? "text-red-500" : "text-foreground", "flex flex-row justify-start items-center gap-1")} >
                                             Username
+                                            <HoverPopoverInputInfo content={"Username must be between 6 and 16 characters long. Must consist of lowercase letters and may contain numbers (e.g. josh23, emily421 etc)."}/>
                                         </Label>
                                         <Input
                                             id="username"
@@ -104,18 +145,22 @@ function Register() {
                                             {...register("username", {
                                                 required: "Username is required",
                                                 pattern: {
-                                                    value: /^[0-9A-Za-z]{6,16}$/,
+                                                    value: /^[0-9a-z]{6,16}$/,
                                                     message: "Username is not validated",
                                                 },
                                             })}
-                                            classname="m-0"
+                                            className="m-0"
                                         />
-                                        <p className="text-red-500 h-2 text-xs">{errors.username && errors.username.message}</p>
+                                        <p className={cn(errors.username == null ? "hidden" : "flex" ,"text-red-500 text-xs h-5")}>{errors.username && errors.username.message}</p>
                                     </div>
 
                                     {/* FIRST NAME */}
                                     <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="firstName" className={cn(errors.firstName ? "text-red-500" : "text-foreground")}>First name</Label>
+                                        <Label htmlFor="firstName" className={cn(errors.firstName ? "text-red-500" : "text-foreground", "flex flex-row justify-start items-center gap-1")}>
+                                            First name
+                                            <HoverPopoverInputInfo content={"First name must start with a capital letter and can only consist of letters of the Polish alphabet (e.g. Josh, Emily etc)."}/>
+                                        </Label>
+
                                         <Input
                                             id="firstName"
                                             placeholder="Nowak"
@@ -127,12 +172,15 @@ function Register() {
                                                 },
                                             })}
                                         />
-                                        <p className="text-red-500 h-2 text-xs">{errors.firstName && errors.firstName.message}</p>
+                                        <p className={cn(errors.firstName == null ? "hidden" : "flex" ,"text-red-500 h-5 text-xs")}>{errors.firstName && errors.firstName.message}</p>
                                     </div>
 
                                     {/* LAST NAME */}
                                     <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="lastName" className={cn(errors.lastName ? "text-red-500" : "text-foreground")}>Last name</Label>
+                                        <Label htmlFor="lastName" className={cn(errors.lastName ? "text-red-500" : "text-foreground", "flex flex-row justify-start items-center gap-1")}>
+                                            Last name
+                                            <HoverPopoverInputInfo content={"Last name must start with a capital letter and can only consist of letters of the Polish alphabet (e.g. Brown, Smith etc)."}/>
+                                        </Label>
                                         <Input
                                             id="lastName"
                                             placeholder="Jan"
@@ -144,15 +192,19 @@ function Register() {
                                                 },
                                             })}
                                         />
-                                        <p className="text-red-500 h-2 text-xs">{errors.lastName && errors.lastName.message}</p>
+                                        <p className={cn(errors.lastName == null ? "hidden" : "flex" ,"text-red-500 h-5 text-xs")}>{errors.lastName && errors.lastName.message}</p>
                                     </div>
                                     
                                     {/* EMAIL */}
                                     <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="email" className={cn(errors.email ? "text-red-500" : "text-foreground")}>Email</Label>
+                                        <Label htmlFor="email" className={cn(errors.email ? "text-red-500" : "text-foreground")}>
+                                            Email
+                                        </Label>
                                         <Input 
-                                            id="email" 
-                                            placeholder="example@gmail.com" 
+                                            id="email"
+                                            placeholder="example@gmail.com"
+                                            onChange={(e) => checkEmailAvailability(e.target.value)}
+
                                             {...register("email", {
                                                 required: "Email is required",
                                                 pattern: {
@@ -161,12 +213,17 @@ function Register() {
                                                 },
                                             })}
                                         />
-                                        <p className="text-red-500 h-2 text-xs">{errors.email && errors.email.message}</p>
+                                        <p className={cn(emailAvailabilityInfo === null ? "hidden" : "flex" ,"text-red-500 h-2 text-xs")} >{emailAvailabilityInfo !== null && emailAvailabilityInfo}</p>
+                                        <p className={cn(errors.email == null ? "hidden" : "flex" ,"text-red-500 h-5 text-xs")} >{errors.email && errors.email.message}</p>
+
                                     </div>
 
                                     {/* PASSWORD */}
                                     <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="password" className={cn(errors.password ? "text-red-500" : "text-foreground")}>Password</Label>
+                                        <Label htmlFor="password" className={cn(errors.password ? "text-red-500" : "text-foreground", "flex flex-row justify-start items-center gap-1")}>
+                                            Password
+                                            <HoverPopoverInputInfo content={"Password must be between 8 and 32 characters long. Must contain upper and lower case letters and at least one number (e.g. J0shBr0wn33, Em11y555 etc)."}/>
+                                        </Label>
                                         <Input 
                                             id="password" 
                                             type="password"
@@ -189,7 +246,7 @@ function Register() {
                                                 },
                                             })}
                                         />
-                                        <p className="text-red-500 h-fit text-xs">{errors.password && errors.password.message}</p>
+                                        <p className={cn(errors.password == null ? "hidden" : "flex" ,"text-red-500 h-5 text-xs")}>{errors.password && errors.password.message}</p>
                                     </div>
 
                                     {/* REPEATED PASSWORD */}
@@ -204,7 +261,7 @@ function Register() {
                                                 validate: value =>value === watch("password") || "The passwords do not match"
                                             })}
                                         />
-                                        <p className="text-red-500 h-2 text-xs">{errors.passwordRepeated && errors.passwordRepeated.message}</p>
+                                        <p className={cn(errors.passwordRepeated == null ? "hidden" : "flex" ,"text-red-500 h-5 text-xs")}>{errors.passwordRepeated && errors.passwordRepeated.message}</p>
                                     </div>
 
                                     <p className="text-sm font-light text-gray-500 dark:text-gray-400">
@@ -215,7 +272,7 @@ function Register() {
                             </CardContent>
 
                             <CardFooter className="flex">
-                                <Button className="w-full" type="submit" >Register</Button>
+                                <Button className="w-full text-white" type="submit" >Register</Button>
                             </CardFooter>
                         </form>
                     </Card>

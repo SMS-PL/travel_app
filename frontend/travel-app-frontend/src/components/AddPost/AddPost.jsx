@@ -20,11 +20,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
+import { useState, useEffect } from 'react';
 
 function AddPost({setAddNewPost}) {
 	const authHeader = useAuthHeader();
 	const navigate = useNavigate();
     const { toast } = useToast();
+
+    const [postCountryId, setPostCountryId] = useState(null);
 
     const {
         register,
@@ -35,6 +38,8 @@ function AddPost({setAddNewPost}) {
     } = useForm();
 
     const onSubmit = async (values) => {
+        await getCountryByCoordinates();
+
         if (isValid) {
             fetch("http://localhost:5000/api/v1/posts/", {
                 method: 'POST',
@@ -44,7 +49,7 @@ function AddPost({setAddNewPost}) {
                 },
                 body: JSON.stringify({
                     "content": values.description,
-                    "countryId": 1,                  // na razie jest na sztywno
+                    "countryId": +postCountryId,
                     "imageUrl": "image.pl/image"     // na razie jest na sztywno
                 })
             })
@@ -62,10 +67,7 @@ function AddPost({setAddNewPost}) {
                 })
                 
                 reset();
-
                 setAddNewPost(true);
-                //console.log(data);
-                
             })
             .catch(error => {
                 toast({
@@ -78,6 +80,45 @@ function AddPost({setAddNewPost}) {
 
         } else {
             alert("INVALID");
+        }
+    };
+
+    const getCountryByCoordinates = async () => {
+
+        if (navigator.geolocation) {
+            const position = await new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject);
+            });
+            const xCoordinate = position.coords.latitude;
+            const yCoordinate = position.coords.longitude;
+
+            fetch(`http://localhost:5000/api/v1/countries/cord/${xCoordinate}/${yCoordinate}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json', 
+                    "Authorization": authHeader,
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.log(response);
+                    throw new Error("Blad sieci!");
+                }
+                return response.json();
+            })
+            .then(data => {
+                setPostCountryId(data.id);
+            })
+            .catch(error => {
+                console.log(error);
+                toast({
+                    variant: "destructive",
+                    title: "Uh oh! Failed to get location!",
+                    description: error.message,
+                })
+            });
+        } else {
+            setPostCountryId(-1);
         }
     };
 
@@ -109,10 +150,15 @@ function AddPost({setAddNewPost}) {
                     </div>
                 </CardContent>
 
-
                 <CardFooter className="flex justify-center items-center gap-4">
-                    <Button variant="secondary" className="w-fit text-foreground"><Icons.imageAdd className="h-6 w-6 fill-foreground mr-1"/>Add photo</Button>
-                    <Button variant="default" type="submit" className="w-fit bg-primary text-foreground"><Icons.send className="h-6 w-6 fill-foreground mr-1"/>Add post</Button>
+                    <Button variant="secondary" className="w-fit text-foreground">
+                        <Icons.imageAdd className="h-6 w-6 fill-foreground mr-1"/>
+                        Add photo
+                    </Button>
+                    <Button variant="default" type="submit" className="w-fit bg-primary text-foreground">
+                        <Icons.send className="h-6 w-6 fill-foreground mr-1"/>
+                        Add post
+                    </Button>
                 </CardFooter>
             </form>
         </Card>
