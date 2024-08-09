@@ -17,11 +17,11 @@ public class PostReaction {
     @Column(name = "type")
     private int reactionType; // 0 - like 1 - heart
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "author_id")
     private UserEntity author;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "post_id")
     private Post post;
 }
