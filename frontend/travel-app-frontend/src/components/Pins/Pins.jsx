@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Card,
     CardContent,
@@ -7,32 +7,13 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "@/components/ui/avatar";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { Skeleton } from "@/components/ui/skeleton";
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { Icons } from "@/components/icons";
-import { useState, useEffect } from 'react';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import ReactTimeAgo from 'react-time-ago';
-import PinDialog from "../ui/PinDialog";
+import PinDialog from "@/components/Pins/PinDialog";
 
 function Pins() {
     const authHeader = useAuthHeader();
@@ -75,7 +56,7 @@ function Pins() {
 			return response.json();
 		})
 		.then(data => {
-			console.log("Wykryto odświeżenie wszystkich pinów");
+			// console.log("Wykryto odświeżenie wszystkich pinów");
             setPinsData(data);
 		})
 		.catch(error => {
@@ -98,7 +79,7 @@ function Pins() {
 			return response.json();
 		})
 		.then(data => {
-            console.log("Wykryto odświeżenie tylko moich pinów");
+            // console.log("Wykryto odświeżenie tylko moich pinów");
 
             setMyPinsData([data]);
             // console.log([data]);
