@@ -26,6 +26,7 @@ import Post from "@/components/Post/Post";
 import AddPost from "@/components/AddPost/AddPost";
 import FriendshipButton from '@/components/Friendships/FriendshipButton';
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import AchievementView from "@/components/Achievements/AchievementView";
 
 function Profile() {
 	const { userId } = useParams();
@@ -40,13 +41,13 @@ function Profile() {
 	const [userCountry, setUserCountry] = useState(null);
 	const [userAchievements, setUserAchievements] = useState(null);
 
-
 	const {ref, inView} = useInView();
 	const [addNewPost, setAddNewPost] = useState(false);
 	
 	// do poprawnego ładowania postów
 	const location = useLocation();
-	const key = location.pathname === "/" ? "home" : "other";
+	const key = location.pathname;
+
 
 	useEffect(() => {
 		if(inView) fetchNextPage();
@@ -85,7 +86,7 @@ function Profile() {
 	useEffect(() => {
 		if(addNewPost) {
 			setAddNewPost(false);
-			refetch({ refetchPage: (page, index) => index === 0 })
+			refetch({ refetchPage: (page, index) => index === 0 });
 		}
 	}, [addNewPost]);
 
@@ -211,7 +212,7 @@ function Profile() {
 			</div>
 			
 
-			<div className="max-w-full w-[700px] flex flex-col justify-center items-center pt-14">
+			<div className="max-w-full w-[800px] flex flex-col justify-center items-center pt-14">
 
 				<div className="flex flex-col justify-center items-center">
 					<h2 className="text-center scroll-m-20 text-lg font-extrabold tracking-tight lg:text-2xl pt-1">
@@ -228,45 +229,46 @@ function Profile() {
 
 			
 
-			<div className="flex flex-col max-w-full w-[800px] gap-4 p-4 md:gap-8 md:p-8">
+			<div className="flex flex-col max-w-full w-[800px] gap-4 pt-4 md:gap-8 md:pt-8">
                 <div className="grid gap-4 grid-cols-2 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
                     <Card x-chunk="dashboard-01-chunk-2" className="col-span-1">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-bold md:text-md">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                            <CardTitle className="text-base font-bold">
                                 Total visited countries
                             </CardTitle>
                             {/* <CreditCard className="h-4 w-4 text-muted-foreground" /> */}
                         </CardHeader>
-                        <CardContent className="">
-                            <div className="text-4xl font-bold">{userCountry && userCountry.totalElements}</div>
-                            {/* <p className="text-xs text-muted-foreground">
-                                +19% from last month
-                            </p> */}
+                        <CardContent>
+                            <div className="flex flex-row gap-1 justify-start items-end">
+								<span className="text-5xl font-bold">
+									{userCountry && userCountry.totalElements}
+								</span>
+								<span className="text-sm font-normal text-muted-foreground">
+									/239
+								</span>
+							</div>
                         </CardContent>
                     </Card>
 
                     <Card x-chunk="dashboard-01-chunk-2" className="col-span-1">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-							<CardTitle className="text-sm font-bold md:text-md space-y-1.5 flex flex-row justify-between items-center">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+							<CardTitle className="text-base font-bold">
 								Total achievements
-								<Icons.medalEmpty className="fill-muted-foreground w-7 h-7" /> 
-
                             </CardTitle>
-                            {/* <CreditCard className="h-4 w-4 text-muted-foreground" /> */}
                         </CardHeader>
                         <CardContent>
-							<div className="text-4xl font-bold">{userAchievements && userAchievements.totalElements}</div>
-                            {/* <p className="text-xs text-muted-foreground">
-                                +19% from last month
-                            </p> */}
+							<div className="flex flex-row gap-1 justify-start items-end text-5xl font-bold">
+								{userAchievements && userAchievements.totalElements}
+							</div>
+
                         </CardContent>
                     </Card>
-                    <Card x-chunk="dashboard-01-chunk-2" className="col-span-2">
-                        <CardHeader>
-							<CardTitle className="text-md font-bold space-y-1.5 flex flex-row justify-between items-center">
-								Interactive map
-								<Icons.mapEmpty className="fill-muted-foreground w-7 h-7" /> 
 
+                    <Card x-chunk="dashboard-01-chunk-2" className="col-span-2">
+                        <CardHeader className="pb-3">
+							<CardTitle className="text-base font-bold">
+								Interactive map
+								{/* <Icons.mapEmpty className="fill-muted-foreground w-7 h-7" />  */}
                             </CardTitle>
 							<CardDescription>
 								Check the world map where you can see the countries the user has visited
@@ -276,50 +278,54 @@ function Profile() {
 							<VectorMapDialog userId={userId}/>
                         </CardContent>
                     </Card>
-{/* 
-					<Card className="sm:col-span-2">
-						<CardHeader className="pb-3">
-							<CardTitle>Your Orders</CardTitle>
-							<CardDescription className="max-w-lg text-balance leading-relaxed">
-							Introducing Our Dynamic Orders Dashboard for Seamless Management and
-							Insightful Analysis.
-							</CardDescription>
-						</CardHeader>
-						<CardFooter>
-							<Button>Create New Order</Button>
-						</CardFooter>
-					</Card> */}
-
                 </div>
 
                 <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
                     <Card x-chunk="dashboard-01-chunk-5">
                         <CardHeader>
-                            <CardTitle>Visited Countries Ids:</CardTitle>
+                            <CardTitle className="text-base font-bold">Recent visited countries</CardTitle>
                         </CardHeader>
                         <CardContent className="grid gap-8">
 							{userCountry && (userCountry.content.map((country, i) => {
-								return <div key={`userCountry${country.countryId}${i}`}>{country.countryId} <br /></div>;
+								// const countryISO = getCountryById(country.id);
+
+								// console.log(countryISO);
+
+								// if(countryISO) {
+								// 	return (
+								// 		// <div key={`userCountry${country.countryId}${i}`}>
+								// 		// 	{country.countryId} <br />
+								// 		// </div>
+								// 		<img key={`userCountry${country.countryId}${i}`} src={`https://flagsapi.com/${countryISO}/flat/64.png`} alt="" className="w-[20px] cursor-pointer" />
+								// 	);
+								// } else null;
+								
 							}))}
                         </CardContent>
                     </Card>
 
                     <Card x-chunk="dashboard-01-chunk-5">
                         <CardHeader>
-                            <CardTitle>Recently Sent Invoices</CardTitle>
+                            <CardTitle className="text-base font-bold">Recent achievements</CardTitle>
                         </CardHeader>
-                        <CardContent className="grid gap-8">
-							{userAchievements && (userAchievements.content.map(achievement => {
-								return <div key={`userAchievements${achievement.id}`}>{achievement.title} <br /></div>;
-							}))} 
+                        <CardContent className="grid gap-4">
+							<div className="flex flex-row justify-center items-center gap-3">
+								{userAchievements && (userAchievements.content.map((achievement, i) => {
+									console.log(i);
+									// return <div key={`userAchievements${achievement.id}`}>{achievement.title} <br /></div>;
+									return (
+										<AchievementView key={`userAchievements${achievement.id}`} achievement={achievement}/>
+									)
+								}))}
+							</div>
                         </CardContent>
                     </Card>
                 </div>
             </div>
 
-			<div className="flex flex-col max-w-full w-[800px] gap-2 p-4 md:p-8">
+			<div className="flex flex-col max-w-full w-[800px] gap-2 pt-5 md:pt-8 ">
 				
-				<h1 className="text-2xl font-extrabold tracking-tight lg:text-2xl text-center">Posts</h1>
+				<h1 className="text-2xl font-extrabold tracking-tight lg:text-2xl text-center pb-0 md:pb-2">Posts</h1>
 				{auth.id === userId && <AddPost setAddNewPost={setAddNewPost}/> }
 				
 				{status == "pending" ? (
@@ -350,17 +356,8 @@ function Profile() {
 								group.content.map((post) => (
 									<Post
 										key={post.id}
-										postId={post.id}
-										content={post.content}
-										countryId={post.countryId}
-										imageUrl={post.imageUrl}
-										authorId={post.authorId}
-										createdAt={post.createdAt}
-										lastUpdated={post.lastUpdated}
-										likes={post.likes}
-										hearts={post.hearts}
+										postData={post}
 										setAddNewPost={setAddNewPost}
-										
 									/>
 								))
 							))}

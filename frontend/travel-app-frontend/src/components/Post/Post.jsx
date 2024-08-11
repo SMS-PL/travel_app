@@ -57,7 +57,7 @@ import {
 import { useImperativeHandle } from 'react';
 import HoverUserInfo from "@/components/ui/HoverUserInfo";
 
-function Post({postData, setAddNewPost}) {    
+function Post({postData, setAddNewPost, refetch}) {    
 
     const authHeader = useAuthHeader();
 	const navigate = useNavigate();
@@ -65,7 +65,7 @@ function Post({postData, setAddNewPost}) {
     const { toast } = useToast();
     
     const [user, setUser] = useState({});
-    const [countryCode, setCountryCode] = useState("");
+    const [countryISO, setCountryISO] = useState(null);
 
     const [isCommentsOpen, setIsCommentsOpen] = useState(false);
     const [commentsData, setCommentsData] = useState([[]]);
@@ -77,7 +77,7 @@ function Post({postData, setAddNewPost}) {
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [isLastPage, setIsLastPage] = useState(false);
-    const [refetch, setRefetch] = useState(false);
+    const [refetchData, setRefetchData] = useState(false);
 
     const [friendshipStatus, setFriendshipStatus] = useState(null);
 
@@ -90,15 +90,12 @@ function Post({postData, setAddNewPost}) {
     } = useForm();
 
 
-
     useEffect(() => {
         fetchComments();
-        setRefetch(false);
-        
-	}, [currentPage, refetch]);
+        setRefetchData(false);
+	}, [currentPage, refetchData]);
 
     
-
     useEffect(() => {
         fetchAuthorData();
 
@@ -180,7 +177,7 @@ function Post({postData, setAddNewPost}) {
 
     
     const fetchCountryData = () => {
-        if(postData.countryId != -1) {
+        if(postData.countryId > 0) {
             fetch(`http://localhost:5000/api/v1/countries/${postData.countryId}`, {
                 method: 'GET',
                 headers: {
@@ -195,11 +192,13 @@ function Post({postData, setAddNewPost}) {
                 return response.json();
             })
             .then(data => {
-                setCountryCode(data.iso);
+                setCountryISO(data.iso);
             })
             .catch(error => {
                 console.log(error.message);
             });
+        } else {
+            setCountryISO(null);
         }
     };
 
@@ -271,7 +270,7 @@ function Post({postData, setAddNewPost}) {
                     return [[data], ...commentsData]
                 });
                 setCurrentPage(0);
-                setRefetch(true);
+                setRefetchData(true);
             })
             .catch(error => {
                 toast({
@@ -352,10 +351,10 @@ function Post({postData, setAddNewPost}) {
                 </HoverUserInfo>
                 {/* </Link> */}
                 <div className="w-full flex flex-row justify-end items-center">
-                    {postData.countryId == -1 ? (
+                    {countryISO === null ? (
                         <div className="w-[40px] h-[25px] bg-gray-700 flex justify-center items-center text-xl font-bold rounded-[1px]">?</div>
                     ) :
-                        <img src={`https://flagsapi.com/${countryCode}/flat/64.png`} alt="" className="w-[40px] cursor-pointer" />
+                        <img src={`https://flagsapi.com/${countryISO}/flat/64.png`} alt="" className="w-[40px] cursor-pointer" />
                     }
                     
                     {parseInt(user.id) == parseInt(auth.id) ? (
@@ -368,7 +367,7 @@ function Post({postData, setAddNewPost}) {
                                 <DropdownMenuContent>
                                     <DropdownMenuItem className="cursor-pointer" onSelect={(e) => e.preventDefault()}>
                                         <AlertDialog>
-                                            <AlertDialogTrigger>
+                                            <AlertDialogTrigger className="w-full flex justify-start">
                                                 Delete
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>
@@ -397,7 +396,6 @@ function Post({postData, setAddNewPost}) {
             <CardContent>
                 {postData.content}
                 <Skeleton className="w-full h-[500px] mt-4" />
-
                 {/* przycisk do włączania/wyłączania komentarzy */}
                 <div className="flex justify-between mt-5">
                     <Reaction likes={postData.likes} hearts={postData.hearts} postId={postData.id} />
@@ -469,7 +467,7 @@ function Post({postData, setAddNewPost}) {
                                             commentData={commentData}
                                             commentsData={commentsData}
                                             setCommentsData={setCommentsData}
-                                            setRefetch={setRefetch}
+                                            setRefetch={setRefetchData}
                                         />
                                     )
 

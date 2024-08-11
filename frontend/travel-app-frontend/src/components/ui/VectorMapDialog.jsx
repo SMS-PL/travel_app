@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Dialog,
     DialogClose,
@@ -9,17 +9,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState, useEffect } from 'react';
-import { cn } from './../../lib/utils';
-import {
-    Cross1Icon,
-    ChevronLeftIcon,
-    ChevronRightIcon,
-    DotsHorizontalIcon
-} from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
-import MapComponent from "@/components/MapComponent/MapComponent";
-import PinSettingsButton from "@/components/ui/PinSettingsButton";
 import { Icons } from "@/components/icons";
 import VectorWorldMap from '@/components/VectorWorldMap/VectorWorldMap';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';

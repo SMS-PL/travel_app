@@ -6,6 +6,8 @@ import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { useState, useEffect } from 'react';
 import { useToast } from "@/components/ui/use-toast";
 import ConfettiExplosion from 'react-confetti-explosion';
+import { useNavigate, useLocation } from 'react-router-dom';
+import {useInfiniteQuery } from "@tanstack/react-query";
 
 function Reaction({postId, likes, hearts}) {
     const [isExploding, setIsExploding] = useState(false);
@@ -16,11 +18,40 @@ function Reaction({postId, likes, hearts}) {
     const [isLiked, setIsLiked] = useState(false);              // tutaj wstaw czy polubiony
     const [isHearted, setIsHearted] = useState(false);          // tutaj wstaw czy posercowany
 
-    const [likesCounter, setLikesCounter] = useState(likes);
-    const [heartsCounter, setHeartsCounter] = useState(hearts);
+    const [likesCounter, setLikesCounter] = useState(0);
+    const [heartsCounter, setHeartsCounter] = useState(0);
 
+    // do poprawnego ładowania postów
+    
     useEffect(() => {
-        
+        fetchReactionsStatus();
+        fetchReactionCounter();
+	}, []);
+
+    const fetchReactionCounter = () => {
+        fetch(`http://localhost:5000/api/v1/posts/${postId}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json', 
+				"Authorization": authHeader,
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Błąd sieci!');
+			}
+			return response.json();
+		})
+		.then(data => {
+            setLikesCounter(data.likes);
+            setHeartsCounter(data.hearts);
+		})
+		.catch(error => {
+			console.log(error.message);
+		});
+    };
+
+    const fetchReactionsStatus = () => {
         fetch(`http://localhost:5000/api/v1/posts/${postId}/userReaction`, {
 			method: 'GET',
 			headers: {
@@ -45,13 +76,12 @@ function Reaction({postId, likes, hearts}) {
                 setIsLiked(false);              // ustawia że nie dał like
                 setIsHearted(false);            // ustawia że nie dał serce
             }
-            
 		})
 		.catch(error => {
 			console.log(error.message);
 		});
+    };
 
-	}, []);
 
     const onClickLike = (reactionType) => {
         fetch(`http://localhost:5000/api/v1/posts/${postId}/${reactionType}`, {
@@ -72,12 +102,12 @@ function Reaction({postId, likes, hearts}) {
             if(reactionType == 0) {             // like
                 setIsLiked(like => !like);
                 setIsHearted(false);
+                
             } else if(reactionType == 1) {      // heart
                 setIsLiked(false);
                 setIsHearted(heart => !heart);
                 setIsExploding(explode => !explode);
             }
-
             setLikesCounter(data.like);
             setHeartsCounter(data.heart);
 		})

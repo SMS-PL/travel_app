@@ -1,10 +1,8 @@
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import MainContainer from "@/components/MainContainer/MainContainer";
 import { useState, useEffect } from 'react';
-
 import { Button } from "@/components/ui/button";
 import Post from "@/components/Post/Post";
-
 import {
 	Card,
 	CardContent,
@@ -15,18 +13,20 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {useInView} from "react-intersection-observer";
-import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
+import {useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Icons } from "@/components/icons";
 
 const Home = () => {
 	const authHeader = useAuthHeader();
 	const {ref, inView} = useInView();
+    const queryClient = useQueryClient();
 
 	const [addNewPost, setAddNewPost] = useState(false);
 
 	// do poprawnego ładowania postów
-	const location = useLocation();
-	const key = location.pathname === "/" ? "home" : "other";
+    const location = useLocation().pathname;	
+	const key = "home";
 
 	useEffect(() => {
 		if(inView) fetchNextPage();
@@ -42,7 +42,7 @@ const Home = () => {
 			},
 		});
 		return await response.json();
-	}
+	};
 
 	const {
 		data,
@@ -69,25 +69,41 @@ const Home = () => {
 		}
 	}, [addNewPost]);
 
+
 	return (
         <MainContainer type="homeFeed" setAddNewPost={setAddNewPost}>
-
 			{status == "pending" ? (
 				<Card className="mt-5 w-full">
 					<CardHeader className="flex flex-row">
 						<Skeleton className="h-12 w-12 rounded-full" />
 						<div className="px-2 w-fit">
 							<Skeleton className="h-4 w-[250px]" />
-                            <Skeleton className="h-4 w-[200px] mt-2" />
+							<Skeleton className="h-4 w-[200px] mt-2" />
 						</div>
 					</CardHeader>
 					<CardContent>
-						<Skeleton className="h-14 w-full mb-5" />
+						<Skeleton className="h-8 w-full mb-5" />
 						<Skeleton className="w-full h-[500px]" />
 					</CardContent>
 					<CardFooter className="flex justify-between">
-						<Button variant="outline">Likes</Button>
-						<Button variant="outline">Comments</Button>
+						<div className="flex flex-row gap-3">
+							<Button variant="secondary" >
+								<div className="flex flex-row justify-center items-center gap-2">
+									<Icons.likeEmpty className="h-6 w-6 fill-primary" />
+									0
+								</div>
+							</Button>
+							<Button variant="secondary" className="w-max-full w-[75px]" >
+								<div className="flex flex-row justify-center items-center gap-1">
+									<Icons.heartEmpty className="h-6 w-6 fill-red-500" />
+									0
+								</div>
+							</Button>
+						</div>
+						<Button type="button" variant="secondary" className="flex flex-row items-center justify-center gap-2">
+							<Icons.commentEmpty className="fill-current w-6 h-6" /> 
+							0
+						</Button>
 					</CardFooter>
 				</Card>
 
@@ -100,17 +116,9 @@ const Home = () => {
 							group.content.map((post) => (
 								<Post
 									key={post.id}
-									postId={post.id}
-									content={post.content}
-									countryId={post.countryId}
-									imageUrl={post.imageUrl}
-									authorId={post.authorId}
-									createdAt={post.createdAt}
-									lastUpdated={post.lastUpdated}
-									likes={post.likes}
-									hearts={post.hearts}
+									postData={post}
 									setAddNewPost={setAddNewPost}
-									
+									refetch={refetch}
 								/>
 							))
 						))}

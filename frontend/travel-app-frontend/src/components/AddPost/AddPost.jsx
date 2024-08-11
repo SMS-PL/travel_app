@@ -39,9 +39,9 @@ function AddPost({setAddNewPost}) {
 
     const onSubmit = async (values) => {
         await getCountryByCoordinates();
-
+        
         if (isValid) {
-            fetch("http://localhost:5000/api/v1/posts/", {
+            await fetch("http://localhost:5000/api/v1/posts/", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json', 
@@ -108,6 +108,8 @@ function AddPost({setAddNewPost}) {
             })
             .then(data => {
                 setPostCountryId(data.id);
+                console.log("!!!", data.id);
+                console.log(`xCoordinate = ${xCoordinate}, yCoordinate = ${yCoordinate}`);
             })
             .catch(error => {
                 console.log(error);
@@ -155,8 +157,8 @@ function AddPost({setAddNewPost}) {
                         <Icons.imageAdd className="h-6 w-6 fill-foreground mr-1"/>
                         Add photo
                     </Button>
-                    <Button variant="default" type="submit" className="w-fit bg-primary text-foreground">
-                        <Icons.send className="h-6 w-6 fill-foreground mr-1"/>
+                    <Button variant="default" type="submit" className="w-fit bg-primary text-white">
+                        <Icons.send className="h-6 w-6 fill-white mr-1"/>
                         Add post
                     </Button>
                 </CardFooter>
