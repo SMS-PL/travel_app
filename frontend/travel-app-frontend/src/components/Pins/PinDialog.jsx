@@ -82,7 +82,7 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
                         <div className="w-[50px] h-[50px] rounded-full bg-secondary border-solid border-2 border-primary">
                         </div>
 
-                        <p className="text-white font-bold text-md flex justify-center items-center h-full">
+                        <p className="text-current font-bold text-md flex justify-center items-center h-full">
                             {userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.firstName} {userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.lastName}
                         </p>
 
