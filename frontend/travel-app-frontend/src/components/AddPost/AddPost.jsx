@@ -89,10 +89,10 @@ function AddPost({setAddNewPost}) {
             const position = await new Promise((resolve, reject) => {
                 navigator.geolocation.getCurrentPosition(resolve, reject);
             });
-            const xCoordinate = position.coords.latitude;
-            const yCoordinate = position.coords.longitude;
+            const xCoordinate = await position.coords.latitude;
+            const yCoordinate = await position.coords.longitude;
 
-            fetch(`http://localhost:5000/api/v1/countries/cord/${xCoordinate}/${yCoordinate}`, {
+            await fetch(`http://localhost:5000/api/v1/countries/cord/${xCoordinate}/${yCoordinate}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json', 
@@ -120,6 +120,7 @@ function AddPost({setAddNewPost}) {
                 })
             });
         } else {
+            console.log("navigator.geolocation nie działa");
             setPostCountryId(-1);
         }
     };

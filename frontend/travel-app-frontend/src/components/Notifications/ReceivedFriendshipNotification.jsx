@@ -25,6 +25,8 @@ const ReceivedFriendshipNotification = () => {
     const [notificationCounter, setNotificationCounter] = useState(true);
 
 	useEffect(() => {
+		console.log("Refetch state changed:", refetch);
+
 		fetchReceivedFriendship();
 		setRefetch(false);
 
@@ -111,10 +113,13 @@ const ReceivedFriendshipNotification = () => {
 
     return (
 		<DropdownMenu className="mx-5">
-			<DropdownMenuTrigger className="bg-secondary p-[4px] flex items-center justify-center rounded-full cursor-pointer">
+			<DropdownMenuTrigger 
+				className="bg-secondary p-[4px] flex items-center justify-center rounded-full cursor-pointer" 
+				onPointerDown={() => setRefetch(true)}
+			>
 				<Icons.userCheckFill className="fill-current w-[25px] h-[25px]" /> 
-
 			</DropdownMenuTrigger>
+
 			<DropdownMenuContent className="max-w-full w-fit p-3" align="end" forceMount>
 				<DropdownMenuLabel className="font-bold pb-3">
 					<p className="text-base font-bold leading-none">
@@ -126,9 +131,9 @@ const ReceivedFriendshipNotification = () => {
 				
 				<DropdownMenuGroup className="pt-2">
 					{!isLoading && dataFriendship && (
-						dataFriendship.map((user, i) => (
+						dataFriendship.slice().reverse().map((user, i) => (
 							<div key={`userFriendship${user.id}${i}`} className="flex flex-row items-center justify-between py-2">
-								<HoverUserInfo userData={user} className="flex">
+								<HoverUserInfo userData={user} className="flex w-full">
 									<UserRowViewNotification user={user} />
 								</HoverUserInfo>
 

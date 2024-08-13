@@ -31,7 +31,11 @@ const FriendshipButton = ({userId}) => {
 	// wczytywanie danych o friends
 	useEffect(() => {
 		setRefetchFriend(false);
+		fetchFriendshipStatus();
 
+	}, [refetchFriend, userId]);
+
+	const fetchFriendshipStatus = () => {
 		fetch(`http://localhost:5000/api/v1/friendship/status/${userId}`, {
 			method: 'GET',
 			headers: {
@@ -52,9 +56,7 @@ const FriendshipButton = ({userId}) => {
 		.catch(error => {
 			console.log(error.message);
 		});
-		
-		
-	}, [refetchFriend]);
+	};
 
 
 	const addFriend = () => {

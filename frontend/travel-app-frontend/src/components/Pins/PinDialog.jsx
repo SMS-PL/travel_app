@@ -19,7 +19,7 @@ import {
     DotsHorizontalIcon
 } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
-import MapComponent from "@/components/MapComponent/MapComponent";
+import MapComponent from "@/components/Pins/MapComponent";
 import PinSettingsButton from "@/components/Pins/PinSettingsButton";
 import { Icons } from "@/components/icons";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
@@ -30,6 +30,7 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
     const [howMuchPins, setHowMuchPins] = useState(0);
 
     const [currentPinIndex, setCurrentPinIndex] = useState(0);
+    const [animating, setAnimating] = useState(false); // Nowy stan animacji
 
     useEffect(() => {
         setHowMuchPins(+userPinsArray[Object.keys(userPinsArray)].length);
@@ -38,17 +39,33 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
 
     const nextPin = () => {
         if(currentPinIndex < (howMuchPins-1)) {
-            setCurrentPinIndex(currentPinIndex + 1);
+            setAnimating(true);
+            setTimeout(() => {
+                setCurrentPinIndex(currentPinIndex + 1);
+                setAnimating(false);
+            }, 200);
         } else if(currentPinIndex === (howMuchPins-1)) {
-            setCurrentPinIndex(0);
+            setAnimating(true);
+            setTimeout(() => {
+                setCurrentPinIndex(0);
+                setAnimating(false);
+            }, 200);
         }
     }
 
     const prevPin = () => {
         if(currentPinIndex > 0) {
-            setCurrentPinIndex(currentPinIndex - 1);
+            setAnimating(true);
+            setTimeout(() => {
+                setCurrentPinIndex(currentPinIndex - 1);
+                setAnimating(false);
+            }, 200);
         } else if(currentPinIndex === 0) {
-            setCurrentPinIndex(howMuchPins-1);
+            setAnimating(true);
+            setTimeout(() => {
+                setCurrentPinIndex(howMuchPins-1);
+                setAnimating(false);
+            }, 200);
         }
     }
 
@@ -66,10 +83,9 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
                 </div>
             </DialogTrigger>
 
-            <DialogContent className="flex flex-col justify-center items-center max-w-full w-[800px]">
-  
+            <DialogContent className={cn("flex flex-col justify-center items-center max-w-full w-[800px] max-h-full", animating ? "opacity-0" : "opacity-100")}>
                 {/* PASECZKI NA GÓRZE */}
-                <div className={cn(" grid-flow-col grid gap-2 mt-5 w-full h-1", howMuchPins > 0 ? `grid-cols-${howMuchPins}` : null)}>
+                <div className={cn(" grid-flow-col grid gap-2 mt-2 w-full h-1", howMuchPins > 0 ? `grid-cols-${howMuchPins}` : null)}>
                     {Array.from({ length: howMuchPins }).map((_, i) => (
                         <div key={`howMuchPins-${i}`} className={cn(`h-full rounded-lg`, currentPinIndex === i ? "bg-primary" : "bg-secondary")}></div>
                     ))}
@@ -79,17 +95,17 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
                 <div className="flex flex-row justify-between items-center w-full">
                         {/* <p>{userPinsArray[Object.keys(userPinsArray)][0].author.firstName}</p> */}
                     <div className="flex flex-row justify-center items-center gap-3 text-nowrap w-fit">
-                        <div className="w-[50px] h-[50px] rounded-full bg-secondary border-solid border-2 border-primary">
+                        <div className="w-[40px] h-[40px] rounded-full bg-secondary border-solid border-2 border-primary">
                         </div>
 
-                        <p className="text-current font-bold text-md flex justify-center items-center h-full">
+                        <p className="text-current font-bold text-base flex flex-col justify-center items-start h-full">
                             {userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.firstName} {userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.lastName}
+                            <ReactTimeAgo timeStyle="round" date={new Date(userPinsArray[Object.keys(userPinsArray)][currentPinIndex].createdAt)} locale="en-US" className="mt-[-3px] font-normal text-sm text-gray-500"/>
                         </p>
 
-                        <div className="flex justify-center items-center w-fit h-full">
+                        {/* <div className="flex justify-center items-center w-fit h-full">
                             <ReactTimeAgo timeStyle="round" date={new Date(userPinsArray[Object.keys(userPinsArray)][currentPinIndex].createdAt)} locale="en-US" className="text-sm text-gray-500"/>
-                            {/* {console.log(typeof new Date(userPinsArray[Object.keys(userPinsArray)][currentPinIndex].createdAt))} */}
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className="w-full flex justify-end items-center">
@@ -109,12 +125,12 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
                     </div>
                 </div>
 
-                {/* STRZAŁKI MAPA */}
-                <div className="flex flex-row justify-center items-center">
+                {/* STRZAŁKI I MAPA */}
+                <div className="relative flex flex-row justify-center items-center">
                     {howMuchPins > 1 && (
                         <Button 
                             variant="ghost" 
-                            className="p-2"
+                            className="p-1 absolute bg-secondary left-5 rounded-full"
                             onClick={() => prevPin()}
                         >
                             <ChevronLeftIcon className="h-6 w-6 cursor-pointer hover:bg-secondary rounded-md" />
@@ -132,7 +148,7 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
                     {howMuchPins > 1 && (
                         <Button 
                             variant="ghost" 
-                            className="p-2"
+                            className="p-1 absolute bg-secondary right-5 rounded-full"
                             onClick={() => nextPin()}
                         >
                             <ChevronRightIcon className="h-6 w-6 cursor-pointer hover:bg-secondary rounded-md" />
@@ -142,10 +158,11 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
 
                 {/* TEKST LOKALIZACJA */}
                 <div className="w-full flex flex-row justify-center items-center gap-1">
-                    <Icons.mapEmpty className="fill-current w-5 h-5" /> 
+                    <Icons.mapEmpty className="fill-current w-4 h-4" /> 
 
-                    <p className="text-md font-bold text-center">
-                        {userPinsArray[Object.keys(userPinsArray)][currentPinIndex].city}, {userPinsArray[Object.keys(userPinsArray)][currentPinIndex].countryName}
+                    <p className="text-sm font-bold text-center">
+                        {userPinsArray[Object.keys(userPinsArray)][currentPinIndex].city !== null && `${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].city}, `}
+                        {userPinsArray[Object.keys(userPinsArray)][currentPinIndex].countryName}
                     </p>
                 </div>
 
