@@ -159,7 +159,7 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData, set
                 <div className="flex flex-row items-baseline gap-3">
                     <div className="text-sm">
                         <HoverUserInfo userData={commentData.author}>
-                            <span className="font-bold">{commentData !== null && commentData.author.firstName} {commentData.author.lastName}</span> 
+                            <span className="font-bold hover:underline">{commentData !== null && commentData.author.firstName} {commentData.author.lastName}</span> 
                         </HoverUserInfo>
                         <span> {commentData !== null && commentData.content}</span>
                     </div>
@@ -183,15 +183,15 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData, set
 
             </div>
 
-            <div className="flex flex-row items-center gap-2">
+            <div className="flex flex-row items-center gap-1">
 
                 {isReacted ? (
-                    <Icons.heartFill className="fill-white w-4 h-4 cursor-pointer" onClick={() => reactToComment()} />
+                    <Icons.heartFill className=" fill-red-600 w-4 h-4 cursor-pointer" onClick={() => reactToComment()} />
                 ) : (
-                    <Icons.heartEmpty className="fill-white w-4 h-4 cursor-pointer" onClick={() => reactToComment()} />
+                    <Icons.heartEmpty className="fill-current w-4 h-4 cursor-pointer" onClick={() => reactToComment()} />
                 )}
                 
-                <span className="text-sm font-thin">{reactionCount}</span>
+                <span className="text-sm font-base text-current">{reactionCount}</span>
             </div>
             
         </div>

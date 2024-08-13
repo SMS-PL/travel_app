@@ -56,7 +56,7 @@ const SearchBar = ({placeholder, ...props}) => {
                 <Input
                     type="search"
                     placeholder={placeholder}
-                    className="rounded-lg bg-background pl-8 w-full"
+                    className="rounded-lg backdrop-blur pl-8 w-full "
                     onChange={(e) => {
                         e.target.value.length == 0 ? setIsOpenSearchBar(false) : setIsOpenSearchBar(true);
                         // setUsersData(e.target.value);

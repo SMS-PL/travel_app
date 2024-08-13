@@ -50,25 +50,23 @@ const FriendshipRowView = ({user}) => {
     };
 
     return (
-        <div className="w-full flex flex-row items-center mb-2 hover:bg-secondary p-1 rounded-md">
+        <div className="w-full flex flex-row items-center mb-2 hover:bg-secondary p-2 rounded-md hover:underline">
             <Avatar>
                 <AvatarImage src={user.profilePicture || "https://picsum.photos/200/200"} alt={`${user.firstName} ${user.lastName}`} />
                 <AvatarFallback>{`${user.firstName[0]}${user.lastName[0]}`}</AvatarFallback>
             </Avatar>
         
             <div className="px-2">
-                <CardTitle className="text-sm">{user.firstName} {user.lastName}</CardTitle>
+                <CardTitle className="text-sm ">{user.firstName} {user.lastName}</CardTitle>
             </div>
 
             <div>
                 {friendshipStatus === "FRIEND" ? (
-                    <Icons.userCheckFill className="h-6 w-6 fill-current" />
-
+                    <Icons.userCheckFill className="h-5 w-5 fill-current" />
                 ) : null }
 
                 {friendshipStatus === "SENT" ? (
-                    <Icons.envelopeCheckFill className="h-6 w-6 fill-current" />
-
+                    <Icons.envelopeCheckFill className="h-5 w-5 fill-current" />
                 ) : null }
 
             </div>

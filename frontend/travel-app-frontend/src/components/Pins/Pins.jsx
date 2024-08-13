@@ -181,10 +181,6 @@ function Pins() {
                     <>
                         <Skeleton className="w-[50px] h-[50px] rounded-full"/>
                         <Skeleton className="w-[50px] h-[50px] rounded-full"/>
-                        <Skeleton className="w-[50px] h-[50px] rounded-full"/>
-                        <Skeleton className="w-[50px] h-[50px] rounded-full"/>
-                        <Skeleton className="w-[50px] h-[50px] rounded-full"/>
-                        <Skeleton className="w-[50px] h-[50px] rounded-full"/>
                     </>
 
                 ) : pinsData.content.map(userPinsArray => {

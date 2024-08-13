@@ -334,7 +334,7 @@ function Post({postData, setAddNewPost, refetch}) {
                         </Avatar>
                     
                         <div className="px-2 w-fit">
-                            <CardTitle className="text-nowrap flex flex-row justify-start items-center gap-2">
+                            <CardTitle className="text-nowrap flex flex-row justify-start items-center gap-2 hover:underline">
                                 <p>{user.firstName} {user.lastName}</p>
 
                                 {friendshipStatus == "FRIEND" ? (
@@ -352,7 +352,7 @@ function Post({postData, setAddNewPost, refetch}) {
                 {/* </Link> */}
                 <div className="w-full flex flex-row justify-end items-center">
                     {countryISO === null ? (
-                        <div className="w-[40px] h-[25px] bg-gray-700 flex justify-center items-center text-xl font-bold rounded-[1px]">?</div>
+                        <div className="w-[40px] h-[25px] bg-gray-700 flex justify-center items-center text-xl text-white font-bold rounded-[1px]">?</div>
                     ) :
                         <img src={`https://flagsapi.com/${countryISO}/flat/64.png`} alt="" className="w-[40px] cursor-pointer" />
                     }
