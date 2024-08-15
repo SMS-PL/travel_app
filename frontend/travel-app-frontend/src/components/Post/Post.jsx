@@ -399,11 +399,11 @@ function Post({postData, setAddNewPost, refetch}) {
                 {/* przycisk do włączania/wyłączania komentarzy */}
                 <div className="flex justify-between mt-5">
                     <Reaction likes={postData.likes} hearts={postData.hearts} postId={postData.id} />
-                    <Button type="button" variant="secondary" onClick={() => {setIsCommentsOpen(!isCommentsOpen)}} className="flex flex-row items-center justify-center gap-2">
+                    <Button type="button" variant="ghost" onClick={() => {setIsCommentsOpen(!isCommentsOpen)}} className="flex flex-row items-center justify-center gap-2">
                         
                         {isCommentsOpen ?
-                            <Icons.commentFill className="fill-current w-6 h-6" /> :
-                            <Icons.commentEmpty className="fill-current w-6 h-6" /> 
+                            <Icons.commentFill className="fill-current w-5 h-5" /> :
+                            <Icons.commentEmpty className="fill-gray-500 w-5 h-5" /> 
                         }
 
 
@@ -426,7 +426,7 @@ function Post({postData, setAddNewPost, refetch}) {
                                 <Textarea
                                     id="commentContent"
                                     placeholder="Type your comment here."
-                                    className="resize-y"
+                                    className="resize-y bg-secondary border-0"
 
                                     {...register("commentContent", {
                                         required: "Comment is required",

@@ -215,7 +215,7 @@ function Profile() {
 			</div>
 			
 
-			<div className="max-w-full w-[800px] flex flex-col justify-center items-center pt-14">
+			<div className="max-w-full w-[700px] flex flex-col justify-center items-center pt-14">
 
 				<div className="flex flex-col justify-center items-center">
 					<h2 className="text-center scroll-m-20 text-lg font-extrabold tracking-tight lg:text-2xl pt-1">
@@ -230,7 +230,7 @@ function Profile() {
 				<FriendshipButton userId={userId} />
 			</div>
 
-			<div className="flex flex-col max-w-full w-[800px] gap-4 pt-4 md:gap-8 md:pt-8">
+			<div className="flex flex-col max-w-full w-[700px] gap-4 pt-4 md:gap-8 md:pt-8">
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6 ">
                     <Card x-chunk="dashboard-01-chunk-2" className="col-span-1">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0">
@@ -315,7 +315,7 @@ function Profile() {
             </div>
 			
 
-			<div className="flex flex-col max-w-full w-[800px] gap-2 pt-5 md:pt-8 ">
+			<div className="flex flex-col max-w-full w-[700px] gap-2 pt-5 md:pt-8 ">
 				
 				<h1 className="text-2xl font-extrabold tracking-tight lg:text-2xl text-center pb-0 md:pb-2">Posts</h1>
 				{auth.id === userId && <AddPost setAddNewPost={setAddNewPost}/> }

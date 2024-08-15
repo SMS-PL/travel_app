@@ -21,24 +21,28 @@ import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
 import { useState, useEffect } from 'react';
+import SelectCountry from "@/components/AddPost/SelectCountry";
+import { Separator } from "@/components/ui/separator";
 
 function AddPost({setAddNewPost}) {
 	const authHeader = useAuthHeader();
 	const navigate = useNavigate();
     const { toast } = useToast();
 
-    const [postCountryId, setPostCountryId] = useState(null);
+    // zmienne do SelectCountry
+    const [countryId, setCountryId] = useState(""); // id kraju wybranego w SelectCountry
+    const [value, setValue] = React.useState("");  // nazwa kraju wybranego w SelectCountry
+    const [countryError, setCountryError] = useState(""); // wiadomość o błędzie z SelectCountry
 
     const {
         register,
         handleSubmit,
-        // watch,
+        watch,
         reset,
         formState: { errors, isValid },
     } = useForm();
 
     const onSubmit = async (values) => {
-        await getCountryByCoordinates();
         
         if (isValid) {
             await fetch("http://localhost:5000/api/v1/posts/", {
@@ -49,7 +53,7 @@ function AddPost({setAddNewPost}) {
                 },
                 body: JSON.stringify({
                     "content": values.description,
-                    "countryId": +postCountryId,
+                    "countryId": +countryId,
                     "imageUrl": "image.pl/image"     // na razie jest na sztywno
                 })
             })
@@ -65,7 +69,10 @@ function AddPost({setAddNewPost}) {
                     description: "Post added correctly!",
                     className: "bg-green-800"
                 })
-                
+
+                setValue("");
+                setCountryId("");
+
                 reset();
                 setAddNewPost(true);
             })
@@ -80,48 +87,6 @@ function AddPost({setAddNewPost}) {
 
         } else {
             alert("INVALID");
-        }
-    };
-
-    const getCountryByCoordinates = async () => {
-
-        if (navigator.geolocation) {
-            const position = await new Promise((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(resolve, reject);
-            });
-            const xCoordinate = await position.coords.latitude;
-            const yCoordinate = await position.coords.longitude;
-
-            await fetch(`http://localhost:5000/api/v1/countries/cord/${xCoordinate}/${yCoordinate}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json', 
-                    "Authorization": authHeader,
-                },
-            })
-            .then(response => {
-                if (!response.ok) {
-                    console.log(response);
-                    throw new Error("Blad sieci!");
-                }
-                return response.json();
-            })
-            .then(data => {
-                setPostCountryId(data.id);
-                console.log("!!!", data.id);
-                console.log(`xCoordinate = ${xCoordinate}, yCoordinate = ${yCoordinate}`);
-            })
-            .catch(error => {
-                console.log(error);
-                toast({
-                    variant: "destructive",
-                    title: "Uh oh! Failed to get location!",
-                    description: error.message,
-                })
-            });
-        } else {
-            console.log("navigator.geolocation nie działa");
-            setPostCountryId(-1);
         }
     };
 
@@ -140,7 +105,7 @@ function AddPost({setAddNewPost}) {
                         <Textarea
                             id="description"
                             placeholder="Tell us a little bit about yourself"
-                            className="resize-y"
+                            className="resize-y rounded-2xl bg-secondary border-0"
 
                             {...register("description", {
                                 required: "Description is required",
@@ -151,14 +116,28 @@ function AddPost({setAddNewPost}) {
                             <p className="text-red-500 text-sm">Description is required!</p>
                         )}
                     </div>
+
+                    
                 </CardContent>
 
-                <CardFooter className="flex justify-center items-center gap-4">
-                    <Button variant="secondary" className="w-fit text-foreground">
-                        <Icons.imageAdd className="h-6 w-6 fill-foreground mr-1"/>
-                        Add photo
-                    </Button>
-                    <Button variant="default" type="submit" className="w-fit bg-primary text-white">
+                <CardFooter className="flex flex-row justify-between items-start gap-4">
+                    
+                    <div className="flex flex-row justify-center items-start gap-1">
+                        <Button variant="ghost" className="w-fit text-foreground p-2" type="button">
+                            <Icons.imageAdd className="h-7 w-7 fill-primary"/>
+                        </Button>
+
+                        <div className="flex flex-col justify-center items-center">
+                            <SelectCountry value={value} setValue={setValue} setCountryId={setCountryId} />
+                            {/* <p className=" text-red-500 text-sm">{countryError}</p> */}
+                        </div>
+                    </div>
+                    <Button
+                        disabled={!isValid || value == ''}
+                        variant="default" 
+                        type="submit" 
+                        className="w-fit bg-primary text-white "
+                    >
                         <Icons.send className="h-6 w-6 fill-white mr-1"/>
                         Add post
                     </Button>

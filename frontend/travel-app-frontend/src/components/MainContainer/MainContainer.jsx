@@ -11,7 +11,7 @@ function MainContainer({children, type = "default", setAddNewPost}) {
 
             <main className="w-full flex flex-col justify-center items-center">
                 {type == "homeFeed" ? (
-                    <div className="max-w-full w-[800px]">
+                    <div className="max-w-full w-[700px]">
                         <h2 className="text-center text-2xl font-extrabold tracking-tight md:text-5xl lg:leading-[1.1] py-4 md:py-8 [text-shadow:_0_0_5px_rgb(255_255_255_/_100%)]">
                             Home
                         </h2>
@@ -23,7 +23,7 @@ function MainContainer({children, type = "default", setAddNewPost}) {
                 ) : null}
 
                 {type == "friendsFeed" ? (
-                    <div className="max-w-full w-[800px]">
+                    <div className="max-w-full w-[700px]">
                         <h2 className="text-center text-2xl font-extrabold tracking-tight md:text-5xl lg:leading-[1.1] py-4 md:py-8 [text-shadow:_0_0_5px_rgb(255_255_255_/_100%)]">
                             Friends
                         </h2>
@@ -35,7 +35,7 @@ function MainContainer({children, type = "default", setAddNewPost}) {
                 ) : null}
 
                 {type == "exploreFeed" ? (
-                    <div className="max-w-full w-[800px]">
+                    <div className="max-w-full w-[700px]">
                         <h2 className="text-center text-2xl font-extrabold tracking-tight md:text-5xl lg:leading-[1.1] py-4 md:py-8 [text-shadow:_0_0_5px_rgb(255_255_255_/_100%)]">
                             Explore
                         </h2>
@@ -56,7 +56,7 @@ function MainContainer({children, type = "default", setAddNewPost}) {
                 ) : null}
 
                 {type == "default" ? (
-                    <div className="max-w-full w-[800px] flex flex-col justify-center items-center">
+                    <div className="max-w-full w-[700px] flex flex-col justify-center items-center">
                         {children}
                     </div>
                 ) : null}
