@@ -396,33 +396,43 @@ function Post({postData, setAddNewPost, refetch}) {
             <CardContent>
                 {postData.content}
                 <Skeleton className="w-full h-[500px] mt-4" />
+
                 {/* przycisk do włączania/wyłączania komentarzy */}
-                <div className="flex justify-between mt-5">
+                <div className="flex justify-between h-fit mt-5">
                     <Reaction likes={postData.likes} hearts={postData.hearts} postId={postData.id} />
-                    <Button type="button" variant="ghost" onClick={() => {setIsCommentsOpen(!isCommentsOpen)}} className="flex flex-row items-center justify-center gap-2">
-                        
+                    
+                    <Button 
+                        type="button" 
+                        variant="ghost" 
+                        onClick={() => {setIsCommentsOpen(!isCommentsOpen)}} 
+                        className="hover:bg-transparent flex flex-row items-center justify-center gap-2 p-2 group"
+                    >
                         {isCommentsOpen ?
-                            <Icons.commentFill className="fill-current w-5 h-5" /> :
-                            <Icons.commentEmpty className="fill-gray-500 w-5 h-5" /> 
+                            <Icons.commentFill className="fill-primary w-5 h-5 group-hover:fill-primary" /> :
+                            <Icons.commentEmpty className="fill-gray-500 w-5 h-5 group-hover:fill-primary" /> 
                         }
-
-
-                        {/* TUTAJ LICZNIK KOMENTARZY DODAĆ */}
-                        {totalElements}
+                        <span className="group-hover:text-primary">
+                            {totalElements}
+                        </span>
                     </Button>
+
                 </div>
             </CardContent>
             
 
             {/* KOMENTARZE */}
-            <CardFooter className="w-full flex flex-col">
+            <CardFooter className="p-0">
                 {isCommentsOpen ? (
-                    <>
-                        <Separator className="mt-2 mb-8" />
+                    <div className="w-full flex flex-col h-fit p-6 pt-0">
+                        <Separator className="mt-0 mb-8" />
 
-                        <form onSubmit={handleSubmit(addNewComment)} className="flex flex-row gap-3 w-full items-center mb-5">
+                        <form 
+                            onSubmit={handleSubmit(addNewComment)} 
+                            className="flex flex-row gap-3 w-full items-center pb-3 box-content"
+                        >
                             <Skeleton className="h-10 w-10 rounded-full" />
-                            <div className="w-full">
+
+                            <div className="w-full ">
                                 <Textarea
                                     id="commentContent"
                                     placeholder="Type your comment here."
@@ -438,7 +448,7 @@ function Post({postData, setAddNewPost, refetch}) {
                                 )}
                             </div>
 
-                            <Button type="submit" variant="ghost" className="" size="icon">
+                            <Button type="submit" variant="ghost" className="p-0" size="icon">
                                 <Icons.sendMessageFill className="fill-primary w-5 h-5" />
                             </Button>
                         </form>
@@ -478,7 +488,7 @@ function Post({postData, setAddNewPost, refetch}) {
                                 <Button variant="ghost" onClick={() => {handleNextPage()}}>Load more...</Button>
                             } 
 
-                    </>
+                    </div>
                     
                 ) : null}
             </CardFooter>

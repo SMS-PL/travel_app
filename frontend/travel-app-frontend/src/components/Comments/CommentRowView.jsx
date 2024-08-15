@@ -183,15 +183,15 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData, set
 
             </div>
 
-            <div className="flex flex-row items-center gap-1">
+            <div className="flex flex-row items-center gap-1 group cursor-pointer" onClick={() => reactToComment()}>
 
                 {isReacted ? (
-                    <Icons.heartFill className=" fill-red-600 w-4 h-4 cursor-pointer" onClick={() => reactToComment()} />
+                    <Icons.heartFill className=" fill-red-500 w-4 h-4 cursor-pointer" />
                 ) : (
-                    <Icons.heartEmpty className="fill-current w-4 h-4 cursor-pointer" onClick={() => reactToComment()} />
+                    <Icons.heartEmpty className="fill-current w-4 h-4 cursor-pointer group-hover:fill-red-500" />
                 )}
                 
-                <span className="text-sm font-base text-current">{reactionCount}</span>
+                <span className="text-sm font-base text-current group-hover:text-red-500">{reactionCount}</span>
             </div>
             
         </div>
