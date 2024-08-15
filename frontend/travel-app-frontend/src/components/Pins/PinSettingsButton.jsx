@@ -12,7 +12,7 @@ import {
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
-function PinSettingsButton({userId, pinId, setRefetch, userPinsArray, howMuchPins, setCurrentPinIndex, currentPinIndex}) {
+function PinSettingsButton({userId, setOpenDialog, pinId, setRefetch}) {
     const authHeader = useAuthHeader();
     const { toast } = useToast();
     const auth = useAuthUser();
@@ -34,27 +34,8 @@ function PinSettingsButton({userId, pinId, setRefetch, userPinsArray, howMuchPin
             return response.json();
         })
         .then(data => {
-            console.log(data);
-
-
-            if(currentPinIndex > 0) {
-                console.log("currentPinIndex > 0, Current -> ", currentPinIndex);
-                setCurrentPinIndex(currentPinIndex - 1);
-            } else if(currentPinIndex == 0 && howMuchPins > 1) {
-                console.log("currentPinIndex === 0, Current -> ", currentPinIndex);
-                setCurrentPinIndex(currentPinIndex + 1);
-            } else if(currentPinIndex == 0 && howMuchPins == 0) {
-                setCurrentPinIndex(null);
-            }
-
-                // if(howMuchPins == 1) {  // tylko index 0
-                //     console.log("null");
-                //     return null;
-                // } else { // index 0, 1, 2, 3...
-                //     return howMuchPins + 2;
-                // }
-            // });
-
+            setOpenDialog(false);
+            setRefetch(true);
 
             setRefetch(true);
             toast({

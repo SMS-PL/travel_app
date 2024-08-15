@@ -30,10 +30,14 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
     const [howMuchPins, setHowMuchPins] = useState(0);
 
     const [currentPinIndex, setCurrentPinIndex] = useState(0);
+    const [openDialog, setOpenDialog] = useState(false);
     const [animating, setAnimating] = useState(false); // Nowy stan animacji
 
     useEffect(() => {
         setHowMuchPins(+userPinsArray[Object.keys(userPinsArray)].length);
+        if(+userPinsArray[Object.keys(userPinsArray)].length >= 1 ){
+            setCurrentPinIndex(0);
+        }
     }, [refetch, userPinsArray]);
 
 
@@ -71,7 +75,7 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
 
 
     return (
-        <Dialog key={`userPin-${userPinsArray[Object.keys(userPinsArray)][0].id}`} > 
+        <Dialog key={`userPin-${userPinsArray[Object.keys(userPinsArray)][0].id}`} onOpenChange={setOpenDialog} open={openDialog}> 
             <DialogTrigger>
                 <div  className="flex flex-col justify-center items-center ">
                     <div className="w-[50px] h-[50px] rounded-full bg-secondary flex justify-center items-center border-solid border-2 border-primary cursor-pointer">
@@ -84,8 +88,11 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
             </DialogTrigger>
 
             <DialogContent className={cn("flex flex-col justify-center items-center max-w-full w-[800px] max-h-full", animating ? "opacity-0" : "opacity-100")}>
+                <DialogTitle className="hidden"></DialogTitle>
+                <DialogDescription className="hidden"></DialogDescription>
+
                 {/* PASECZKI NA GÓRZE */}
-                <div className={cn(" grid-flow-col grid gap-2 mt-2 w-full h-1", howMuchPins > 0 ? `grid-cols-${howMuchPins}` : null)}>
+                <div className={cn(" grid-flow-col grid gap-2 mt-3 w-full h-1", howMuchPins > 0 ? `grid-cols-${howMuchPins}` : null)}>
                     {Array.from({ length: howMuchPins }).map((_, i) => (
                         <div key={`howMuchPins-${i}`} className={cn(`h-full rounded-lg`, currentPinIndex === i ? "bg-primary" : "bg-secondary")}></div>
                     ))}
@@ -103,9 +110,6 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
                             <ReactTimeAgo timeStyle="round" date={new Date(userPinsArray[Object.keys(userPinsArray)][currentPinIndex].createdAt)} locale="en-US" className="mt-[-3px] font-normal text-sm text-gray-500"/>
                         </p>
 
-                        {/* <div className="flex justify-center items-center w-fit h-full">
-                            <ReactTimeAgo timeStyle="round" date={new Date(userPinsArray[Object.keys(userPinsArray)][currentPinIndex].createdAt)} locale="en-US" className="text-sm text-gray-500"/>
-                        </div> */}
                     </div>
 
                     <div className="w-full flex justify-end items-center">
@@ -113,15 +117,10 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
                             <PinSettingsButton 
                                 pinId={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].id}
                                 userId={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.id}
-                                userPinsArray={userPinsArray}
                                 setRefetch={setRefetch}
-                                howMuchPins={howMuchPins}
-                                setCurrentPinIndex={setCurrentPinIndex}
-                                currentPinIndex={currentPinIndex}
+                                setOpenDialog={setOpenDialog}
                             />
                         }
-                        {/* <AlertDialogCancel className="p-3 rounded-full"><Cross1Icon /></AlertDialogCancel> */}
-
                     </div>
                 </div>
 
