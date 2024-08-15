@@ -120,9 +120,9 @@ const ReceivedFriendshipNotification = () => {
 				<Icons.userCheckFill className="fill-current w-[25px] h-[25px]" /> 
 			</DropdownMenuTrigger>
 
-			<DropdownMenuContent className="max-w-full w-fit p-3" align="end" forceMount>
-				<DropdownMenuLabel className="font-bold pb-3">
-					<p className="text-base font-bold leading-none">
+			<DropdownMenuContent className="max-w-full w-fit p-2" align="end" forceMount>
+				<DropdownMenuLabel className="font-bold pb-2">
+					<p className="text-sm font-bold leading-none">
 						Invitations to friends
 					</p>
 				</DropdownMenuLabel>
@@ -132,7 +132,7 @@ const ReceivedFriendshipNotification = () => {
 				<DropdownMenuGroup className="pt-2">
 					{!isLoading && dataFriendship && (
 						dataFriendship.slice().reverse().map((user, i) => (
-							<div key={`userFriendship${user.id}${i}`} className="flex flex-row items-center justify-between py-2">
+							<div key={`userFriendship${user.id}${i}`} className="flex flex-row items-center justify-between py-1">
 								<HoverUserInfo userData={user} className="flex w-full">
 									<UserRowViewNotification user={user} />
 								</HoverUserInfo>

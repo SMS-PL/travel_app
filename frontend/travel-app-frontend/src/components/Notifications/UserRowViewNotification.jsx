@@ -20,9 +20,12 @@ import { useState, useEffect } from 'react';
 const UserRowViewNotification = ({user, ...props}) => {
 
     return (
-        <div className="w-full flex flex-row items-center hover:bg-secondary rounded-md p-1 hover:underline" {...props} >
-            <Avatar>
-                <AvatarImage src={user.profilePicture || "https://picsum.photos/200/200"} alt={`${user.firstName} ${user.lastName}`} />
+        <div className="w-full flex flex-row items-center hover:bg-secondary rounded-md pl-[4px] pt-[2px] hover:underline" {...props} >
+            <Avatar className="w-[30px] h-[30px]">
+                <AvatarImage 
+                    src={user.profilePicture || "https://picsum.photos/200/200"} 
+                    alt={`${user.firstName} ${user.lastName}`}
+                />
                 <AvatarFallback>{`${user.firstName[0]}${user.lastName[0]}`}</AvatarFallback>
             </Avatar>
         
