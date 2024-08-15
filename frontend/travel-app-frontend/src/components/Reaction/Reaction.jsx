@@ -123,16 +123,16 @@ function Reaction({postId, likes, hearts}) {
 
     return (
         <div className="flex flex-row gap-3">
-            <Button variant="secondary" onClick={() => {onClickLike(0)}}>
-                <div className="flex flex-row justify-center items-center gap-2">
-                    {isLiked ? <Icons.likeFill className="h-6 w-6 fill-primary" /> : <Icons.likeEmpty className="h-6 w-6 fill-primary" />}
+            <Button variant="ghost" className="p-2" onClick={() => {onClickLike(0)}}>
+                <div className="flex flex-row justify-center items-center gap-2 text-current ">
+                    {isLiked ? <Icons.likeFill className="h-5 w-5 fill-primary" /> : <Icons.likeEmpty className="h-5 w-5 fill-gray-500" />}
                     {likesCounter}
                 </div>
             </Button>
             
-            <Button variant="secondary" className="w-max-full w-[75px]" onClick={() => { onClickLike(1) }}>
+            <Button variant="ghost" className="p-2" onClick={() => { onClickLike(1) }}>
                 <div className="flex flex-row justify-center items-center gap-1">
-                    {isHearted ? <Icons.heartFill className="h-6 w-6 fill-red-500" /> : <Icons.heartEmpty className="h-6 w-6 fill-red-500" />}
+                    {isHearted ? <Icons.heartFill className="h-5 w-5 fill-red-500" /> : <Icons.heartEmpty className="h-5 w-5 fill-gray-500" />}
                     {heartsCounter}
                 </div>
             </Button>
