@@ -33,7 +33,7 @@ const AchievementsDialog = ({userAchievements}) => {
                         Here you will find all achievements earned by this user.
                     </DialogDescription>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 overflow-y-scroll max-h-[70vh] items-start pt-5 gap-5">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 overflow-y-scroll max-h-[70vh] pt-2 items-start gap-5">
                         {userAchievements && (userAchievements.content.slice().map((achievement, i) => {
                             console.log(i);
                             return (
@@ -41,6 +41,13 @@ const AchievementsDialog = ({userAchievements}) => {
                             )
                         }))}
                     </div>
+
+                    {userAchievements && userAchievements.totalElements == 0 && (
+                        <div className="text-gray-400 flex flex-col justify-center items-center leading-[140px]">
+                            <span className="text-[120px] font-bold">?</span>
+                            <span className="italic text-sm">Here you will find achievements earned by the user.</span>
+                        </div>
+                    )}
 
                 </DialogHeader>
             </DialogContent>
