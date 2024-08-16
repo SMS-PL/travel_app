@@ -25,6 +25,7 @@ const SearchBar = ({placeholder, ...props}) => {
 
     const searchDiv = useRef();
     const deskoptInput = useRef();
+    const mobileInput = useRef();
 
     const [isLoading, setIsLoading] = useState(true);
     const [usersData, setUsersData] = useState([]);
@@ -62,7 +63,7 @@ const SearchBar = ({placeholder, ...props}) => {
 
 
     return (
-        <div className="max-w-full w-[300px] flex justify-start items-center">
+        <div className="max-w-full w-[300px] flex justify-start items-center relative">
             <div className="flex flex-row justify-start items-center">
                 {/* DESKOPT */}
                 <div className="relative md:grow-0 hidden md:flex" >
@@ -77,32 +78,32 @@ const SearchBar = ({placeholder, ...props}) => {
                             fetchUsers(e.target.value);
                             setValue(e.target.value);
                             e.target.value == "" ? setIsOpenSearchBar(false) : setIsOpenSearchBar(true);
-                            console.log(e.target.value)
                         }}
                         value={value}
-                        // onBlur={(e) => {
-                        //     setValue("");
-                        //     setIsOpenSearchBar(false);
-                            
-                        // }}
-
-                        // onBlur={() => {
-                        //     setValue("");
-                        //     setIsOpenSearchBar(false);
-                        // }}
                     />
                 </div>
                 
                 {/* MOBILE */}
                 <div className="flex md:hidden">
                     <Popover>
-                        <PopoverTrigger className="flex justify-center items-center">
+                        <PopoverTrigger 
+                            className="flex justify-center items-center" 
+                            ref={mobileInput} 
+                            onClick={() => {
+                                setValue("");
+                                setIsOpenSearchBar(false);
+                            }}
+                        >
                             <Icons.searchEmpty className="fill-current h-5 w-5 text-muted-foreground" />
                         </PopoverTrigger>
 
                         <PopoverContent 
                             className="absolute top-[-30px] left-[15px] p-0 border-0 w-0"
-                            
+                            onInteractOutside={(e) => {
+                                e.preventDefault();
+                                // setIsOpenSearchBar(false);
+                                // setValue("");
+                            }}
                         >
                             {/* <Icons.searchEmpty className="absolute fill-current left-[20px] top-[26px] z-20 h-4 w-4 text-muted-foreground" /> */}
 
@@ -110,6 +111,7 @@ const SearchBar = ({placeholder, ...props}) => {
                                 type="search"
                                 placeholder={placeholder}
                                 className="rounded-lg backdrop-blur block md:hidden w-[215px]"
+                                
                                 onChange={(e) => {
                                     setIsOpenSearchBar(true)
                                     fetchUsers(e.target.value);
@@ -126,18 +128,10 @@ const SearchBar = ({placeholder, ...props}) => {
 
             {isOpenSearchBar && (
                 <Card 
-                    className="absolute top-[47px] p-0 m-0" 
-                    tabIndex="0"
+                    className="absolute top-[35px] left-[25px] p-0 m-0 md:left-[0px] md:top-[37px] w-[215px] md:w-[220px]" 
+                    // tabIndex="0"
                     ref={searchDiv}
-                    // onBlur={() => {
-                    //     setValue("");
-                    //     setIsOpenSearchBar(false);
-                    // }}
                 >
-                    {/* <CardHeader>
-                        <CardTitle>Search Results</CardTitle>
-                    </CardHeader> */}
-
                     <CardContent className="p-0 m-0">
                         {!isLoading && usersData.content && usersData.content.map((user, i) => (
                                 <HoverUserInfo 
@@ -146,6 +140,10 @@ const SearchBar = ({placeholder, ...props}) => {
                                     className="flex " 
                                     onClick={() => {
                                         deskoptInput.current.focus();
+                                        mobileInput.current.focus();
+                                        
+                                        mobileInput.current.click();
+
                                         setValue("");
                                         setIsOpenSearchBar(false);
                                         
@@ -156,10 +154,9 @@ const SearchBar = ({placeholder, ...props}) => {
                             ))
                         }
                         {!isLoading && usersData.content && usersData.content.length === 0 && (
-                            <h1 className="italic text-gray-500 ">No results...</h1>
+                            <h1 className="italic text-center py-2 text-gray-500 ">No results...</h1>
                         )}
                     </CardContent>
-
                 </Card>
             )}
         </div>
