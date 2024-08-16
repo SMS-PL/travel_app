@@ -71,7 +71,7 @@ const SearchBar = ({placeholder, ...props}) => {
                     <Input
                         type="search"
                         placeholder={placeholder}
-                        className="rounded-lg backdrop-blur pl-8 w-[225px]"
+                        className="rounded-lg backdrop-blur pl-8 w-[220px]"
                         ref={deskoptInput}
                         onChange={(e) => {
                             setIsOpenSearchBar(true)
