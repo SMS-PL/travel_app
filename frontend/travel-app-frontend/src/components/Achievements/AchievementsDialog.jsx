@@ -19,7 +19,7 @@ const AchievementsDialog = ({userAchievements}) => {
         <Dialog>
             <DialogTrigger asChild>
                 <div>
-                    <Button className="text-white gap-1 text-sm" >
+                    <Button className="text-white gap-[2px] px-[10px] text-sm" >
                         <Icons.medal2Fill className="h-5 w-5 fill-white" />
                         Show all
                     </Button>
@@ -27,7 +27,7 @@ const AchievementsDialog = ({userAchievements}) => {
             </DialogTrigger>
 
             <DialogContent className="flex flex-col justify-center items-center max-w-full w-[800px] p-10">
-                <DialogHeader>
+                <DialogHeader className="w-full">
                     <DialogTitle className="font-extrabold">All achievements</DialogTitle>
                     <DialogDescription>
                         Here you will find all achievements earned by this user.
@@ -35,7 +35,6 @@ const AchievementsDialog = ({userAchievements}) => {
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 overflow-y-scroll max-h-[70vh] pt-2 items-start gap-5">
                         {userAchievements && (userAchievements.content.slice().map((achievement, i) => {
-                            console.log(i);
                             return (
                                 <AchievementView key={`userAchievements${achievement.id}`} achievement={achievement}/>
                             )
@@ -43,9 +42,9 @@ const AchievementsDialog = ({userAchievements}) => {
                     </div>
 
                     {userAchievements && userAchievements.totalElements == 0 && (
-                        <div className="text-gray-400 flex flex-col justify-center items-center leading-[140px]">
-                            <span className="text-[120px] font-bold">?</span>
-                            <span className="italic text-sm">Here you will find achievements earned by the user.</span>
+                        <div className="text-gray-400 flex flex-col justify-center items-center leading-[140px] pt-2 relative">
+                            <img src="/medals/silver_medal.png" alt="" className="w-[170px] h-[170px] opacity-20" />
+                            <span className="text-sm absolute bottom-[-7px]">The user has not earned any achievements yet.</span>
                         </div>
                     )}
 

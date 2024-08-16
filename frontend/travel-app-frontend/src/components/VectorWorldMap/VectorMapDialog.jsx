@@ -47,15 +47,15 @@ const VectorMapDialog = ({userId}) => {
         <Dialog>
             <DialogTrigger className="text-white gap-1" asChild>
                 <div>
-                    <Button className="text-white gap-1 ">
+                    <Button className="text-white gap-[2px] px-[10px]">
                         <Icons.mapEmpty className="fill-current w-5 h-5" /> 
                         Open map
                     </Button>
                 </div>
             </DialogTrigger>
 
-            <DialogContent className="flex flex-col justify-center items-center max-w-full w-[800px] p-10">
-                <DialogHeader>
+            <DialogContent className="max-w-full w-[800px] p-10 flex flex-col justify-center items-center">
+                <DialogHeader className="w-full flex flex-col justify-center items-start">
                     <DialogTitle className="font-extrabold">Interactive map</DialogTitle>
                     <DialogDescription>
                         The countries visited by the user are marked in <span className="text-primary font-bold">blue</span>.

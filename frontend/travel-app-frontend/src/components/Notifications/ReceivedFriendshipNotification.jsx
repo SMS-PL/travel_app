@@ -25,8 +25,6 @@ const ReceivedFriendshipNotification = () => {
     const [notificationCounter, setNotificationCounter] = useState(true);
 
 	useEffect(() => {
-		console.log("Refetch state changed:", refetch);
-
 		fetchReceivedFriendship();
 		setRefetch(false);
 
@@ -129,8 +127,8 @@ const ReceivedFriendshipNotification = () => {
 
 				<DropdownMenuSeparator />
 				
-				<DropdownMenuGroup className="pt-2">
-					{!isLoading && dataFriendship && (
+				<DropdownMenuGroup className="py-2">
+					{(!isLoading && dataFriendship && dataFriendship.length != 0) ? (
 						dataFriendship.slice().reverse().map((user, i) => (
 							<div key={`userFriendship${user.id}${i}`} className="flex flex-row items-center justify-between py-1">
 								<HoverUserInfo userData={user} className="flex w-full">
@@ -150,7 +148,13 @@ const ReceivedFriendshipNotification = () => {
 
 							</div>
 						))
+					) : (
+						<div className="flex flex-col justify-center items-center">
+							<Icons.userPlusFill className="fill-current w-20 h-20 cursor-pointer opacity-20" />
+							<p className="text-sm text-gray-400">No friend requests</p>
+						</div>
 					)}
+
 					
 				</DropdownMenuGroup>
 

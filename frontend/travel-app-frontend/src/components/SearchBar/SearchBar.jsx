@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
     Card,
     CardContent,
@@ -23,8 +23,13 @@ import {
 const SearchBar = ({placeholder, ...props}) => {
     const authHeader = useAuthHeader();
 
+    const searchDiv = useRef();
+    const deskoptInput = useRef();
+
     const [isLoading, setIsLoading] = useState(true);
     const [usersData, setUsersData] = useState([]);
+
+    const [value, setValue] = useState("");
 
     const [isOpenSearchBar, setIsOpenSearchBar] = useState(false);
 
@@ -54,6 +59,8 @@ const SearchBar = ({placeholder, ...props}) => {
         }
     }; 
 
+
+
     return (
         <div className="max-w-full w-[300px] flex justify-start items-center">
             <div className="flex flex-row justify-start items-center">
@@ -64,14 +71,25 @@ const SearchBar = ({placeholder, ...props}) => {
                         type="search"
                         placeholder={placeholder}
                         className="rounded-lg backdrop-blur pl-8 w-[225px]"
+                        ref={deskoptInput}
                         onChange={(e) => {
-                            e.target.value.length == 0 ? setIsOpenSearchBar(false) : setIsOpenSearchBar(true);
+                            setIsOpenSearchBar(true)
                             fetchUsers(e.target.value);
+                            setValue(e.target.value);
+                            e.target.value == "" ? setIsOpenSearchBar(false) : setIsOpenSearchBar(true);
+                            console.log(e.target.value)
                         }}
-                        onBlur={(e) => {
-                            e.target.value = "";
-                            setIsOpenSearchBar(false);
-                        }}
+                        value={value}
+                        // onBlur={(e) => {
+                        //     setValue("");
+                        //     setIsOpenSearchBar(false);
+                            
+                        // }}
+
+                        // onBlur={() => {
+                        //     setValue("");
+                        //     setIsOpenSearchBar(false);
+                        // }}
                     />
                 </div>
                 
@@ -93,56 +111,55 @@ const SearchBar = ({placeholder, ...props}) => {
                                 placeholder={placeholder}
                                 className="rounded-lg backdrop-blur block md:hidden w-[215px]"
                                 onChange={(e) => {
-                                    e.target.value.length == 0 ? setIsOpenSearchBar(false) : setIsOpenSearchBar(true);
+                                    setIsOpenSearchBar(true)
                                     fetchUsers(e.target.value);
+                                    setValue(e.target.value);
+                                    e.target.value == "" ? setIsOpenSearchBar(false) : setIsOpenSearchBar(true);
+                                    
                                 }}
-                                onBlur={(e) => {
-                                    setIsOpenSearchBar(false);
-                                    e.target.value = "";
-                                }}
+                                value={value}
                             />
                         </PopoverContent>
                     </Popover>    
                 </div>
             </div>
 
-
-            {/* <div className="relative ml-auto flex-1 md:grow-0" >
-                <Icons.searchEmpty className="absolute fill-current left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                    type="search"
-                    placeholder={placeholder}
-                    className="rounded-lg backdrop-blur pl-8 w-full "
-                    onChange={(e) => {
-                        e.target.value.length == 0 ? setIsOpenSearchBar(false) : setIsOpenSearchBar(true);
-                        fetchUsers(e.target.value);
-                    }}
-                />
-
-            </div> */}
-
             {isOpenSearchBar && (
-                <Card className="absolute top-[50px] w-fit" >
-                    <CardHeader>
+                <Card 
+                    className="absolute top-[47px] p-0 m-0" 
+                    tabIndex="0"
+                    ref={searchDiv}
+                    // onBlur={() => {
+                    //     setValue("");
+                    //     setIsOpenSearchBar(false);
+                    // }}
+                >
+                    {/* <CardHeader>
                         <CardTitle>Search Results</CardTitle>
-                    </CardHeader>
+                    </CardHeader> */}
 
-                    <CardContent>
+                    <CardContent className="p-0 m-0">
                         {!isLoading && usersData.content && usersData.content.map((user, i) => (
-                                <HoverUserInfo userData={user} key={`userSearched${user.id}${i}`} className="flex">
+                                <HoverUserInfo 
+                                    userData={user} 
+                                    key={`userSearched${user.id}${i}`} 
+                                    className="flex " 
+                                    onClick={() => {
+                                        deskoptInput.current.focus();
+                                        setValue("");
+                                        setIsOpenSearchBar(false);
+                                        
+                                    }}
+                                >
                                     <FriendshipRowView user={user} />
                                 </HoverUserInfo>
                             ))
                         }
                         {!isLoading && usersData.content && usersData.content.length === 0 && (
-                            <h1 className="italic text-gray-500">No results...</h1>
+                            <h1 className="italic text-gray-500 ">No results...</h1>
                         )}
                     </CardContent>
 
-
-                    {/* <CardFooter>
-
-                    </CardFooter> */}
                 </Card>
             )}
         </div>

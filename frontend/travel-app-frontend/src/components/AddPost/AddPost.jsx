@@ -23,8 +23,9 @@ import { Icons } from "@/components/icons";
 import { useState, useEffect } from 'react';
 import SelectCountry from "@/components/AddPost/SelectCountry";
 import { Separator } from "@/components/ui/separator";
+import HoverPopoverInputInfo from "@/components/Register/HoverPopoverInputInfo";
 
-function AddPost({setAddNewPost}) {
+const AddPost = ({setAddNewPost}) => {
 	const authHeader = useAuthHeader();
 	const navigate = useNavigate();
     const { toast } = useToast();
@@ -91,11 +92,11 @@ function AddPost({setAddNewPost}) {
     };
 
     return (
-        <Card className="mt-5 w-full">
+        <Card className="w-full">
             <form onSubmit={handleSubmit(onSubmit)} className="">
                 {/* <CardHeader className="flex flex-col p-3"></CardHeader> */}
                 
-                <CardContent className="flex flex-row items-center w-full pt-5"> 
+                <CardContent className="flex flex-row items-center w-full pt-5 relative"> 
                     <Avatar>
                         <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
                         <AvatarFallback>CN</AvatarFallback>
@@ -117,7 +118,12 @@ function AddPost({setAddNewPost}) {
                         )}
                     </div>
 
-                    
+                    <div className="absolute right-2 top-[6px] z-50">
+                        <HoverPopoverInputInfo
+                            content={"To add a post, you must include a description, add a photo and the location of the photo you took."}
+                        />
+                    </div>
+
                 </CardContent>
 
                 <CardFooter className="flex flex-row justify-between items-start gap-4">
@@ -132,19 +138,24 @@ function AddPost({setAddNewPost}) {
                             {/* <p className=" text-red-500 text-sm">{countryError}</p> */}
                         </div>
                     </div>
-                    <Button
-                        disabled={!isValid || value == ''}
-                        variant="default" 
-                        type="submit" 
-                        className="w-fit bg-primary text-white "
-                    >
-                        <Icons.send className="h-6 w-6 fill-white mr-1"/>
-                        Add post
-                    </Button>
+
+                    <div className="flex flex-row justify-center items-center gap-2">
+   
+                        <Button
+                            disabled={!isValid || value == ''}
+                            variant="default" 
+                            type="submit" 
+                            className="w-fit bg-primary text-white"
+                        >
+                            <Icons.send className="h-6 w-6 fill-white mr-1"/>
+                            Add post
+                        </Button>
+                    </div>
+
                 </CardFooter>
             </form>
         </Card>
-    )
-}
+    );
+};
 
-export default AddPost
+export default AddPost;

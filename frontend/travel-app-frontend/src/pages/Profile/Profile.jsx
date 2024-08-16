@@ -29,6 +29,8 @@ import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import AchievementView from "@/components/Achievements/AchievementView";
 import AchievementsDialog from "@/components/Achievements/AchievementsDialog";
 import HorizontalBarChart from "@/components/Charts/HorizontalBarChart";
+import HoverPopoverInputInfo from "@/components/Register/HoverPopoverInputInfo";
+import Feed from "@/components/Feed/Feed";
 
 function Profile() {
 	const { userId } = useParams();
@@ -39,59 +41,10 @@ function Profile() {
 
 	const [isLoading, setIsLoading] = useState(true);
 	const [userData, setUserData] = useState("");
-	const [posts, setPosts] = useState([]);
 	const [userCountry, setUserCountry] = useState(null);
 	
 	const [userAchievements, setUserAchievements] = useState(null);
-
-	const {ref, inView} = useInView();
-	const [addNewPost, setAddNewPost] = useState(false);
 	
-	// do poprawnego ładowania postów
-	const location = useLocation();
-	const key = location.pathname;
-
-
-	useEffect(() => {
-		if(inView) fetchNextPage();
-	}, [inView]);
-
-	const fetchPost = async (page) => {
-		const response = await fetch(`http://localhost:5000/api/v1/posts/user/${userId}?pageSize=5&pageNumber=${page.pageParam}`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json', 
-				"Authorization": authHeader,
-			},
-		});
-		return await response.json();
-	}
-
-	const {
-		data,
-		error,
-		fetchNextPage,
-		hasNextPage,
-		isFetching,
-		isFetchingNextPage,
-		status,
-		refetch
-	} = useInfiniteQuery({
-		queryKey: ['posts', key],
-		queryFn: fetchPost,
-		initialPageParam: 0,
-		getNextPageParam: (lastPage, pages) => {
-			return lastPage.length === 0 ? null : pages.length + 1;
-		},
-	});
-
-	// refetch po dodaniu nowego posta
-	useEffect(() => {
-		if(addNewPost) {
-			setAddNewPost(false);
-			refetch({ refetchPage: (page, index) => index === 0 });
-		}
-	}, [addNewPost]);
 
 	// ładowanie danych o użytkowniku
 	useEffect(() => {
@@ -200,22 +153,15 @@ function Profile() {
         <MainContainer type="profile">
 
 			<div className="relative flex flex-col justify-center items-center">
-				{/* <Skeleton className="h-[200px] w-[2000px] " /> */}
-				<div className="h-[200px] w-[98vw] bg-gray-600 "></div>
-				{/* {isLoading ? (
-					<Skeleton className="h-[200px] w-[2000px] " />
-				) : (
-					<img src="https://picsum.photos/2000/300" alt="" className="w-full"/>
-				)} */}
-
-				<Avatar className="absolute w-[90px] h-[90px] border-primary border-4 bottom-[-50px]">
+				<img src="https://picsum.photos/800/200" className="w-full h-[200px] rounded-md object-cover" alt="" />
+				<Avatar className="absolute w-[110px] h-[110px] border-primary border-4 bottom-[-50px]">
 					<AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
 					<AvatarFallback>CN</AvatarFallback>
 				</Avatar>
 			</div>
 			
 
-			<div className="max-w-full w-[700px] flex flex-col justify-center items-center pt-14">
+			<div className="w-full flex flex-col justify-center items-center pt-14">
 
 				<div className="flex flex-col justify-center items-center">
 					<h2 className="text-center scroll-m-20 text-lg font-extrabold tracking-tight lg:text-2xl pt-1">
@@ -230,92 +176,55 @@ function Profile() {
 				<FriendshipButton userId={userId} />
 			</div>
 
-			<div className="flex flex-col max-w-full w-[700px] gap-4 pt-4 md:gap-8 md:pt-8">
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 lg:gap-6 ">
-                    <Card x-chunk="dashboard-01-chunk-2" className="col-span-1">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0">
-                            <CardTitle className="text-base font-bold">
-                                Visited countries
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            {/* <div className="flex flex-row gap-1 justify-start items-end">
-								<span className="text-5xl font-bold">
-									{userCountry && userCountry.totalElements}
-								</span>
-								<span className="text-sm font-normal text-muted-foreground">
-									/239
-								</span>
-							</div> */}
+			<div className="w-full mt-4 grid grid-cols-2 gap-2 sm:gap-4 md:gap-6 md:mt-8">
+				<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-1 ">
+					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+						<CardTitle className="text-lg font-bold">
+							Visited countries
+						</CardTitle>
+					</CardHeader>
 
-							<div className="flex items-baseline gap-1 text-5xl font-bold tabular-nums leading-none mb-2">
-								{userCountry && userCountry.totalElements}
-								<span className="text-base font-normal text-muted-foreground">
-									/239
-								</span>
-							</div>
-							<HorizontalBarChart value={userCountry && userCountry.totalElements} />
+					<CardContent className="pb-4">
+						<div className="flex items-baseline gap-1 text-5xl font-bold tabular-nums leading-none mb-2">
+							{userCountry && userCountry.totalElements}
+							<span className="text-base font-normal text-muted-foreground">
+								/239
+							</span>
+						</div>
+						<HorizontalBarChart value={userCountry && userCountry.totalElements} />
+					</CardContent>
+
+					<CardFooter>
+						<VectorMapDialog userId={userId}/>
+					</CardFooter>
+				</Card>
+
+				<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-1 ">
+					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+						<CardTitle className="text-lg font-bold">
+							Achievements earned
+						</CardTitle>
+					</CardHeader>
+
+					<CardContent className="pb-4">
+						<div className="flex flex-row gap-1 justify-start items-end text-5xl font-bold">
+							{userAchievements && userAchievements.totalElements}
+						</div>
+					</CardContent>
+
+					<CardFooter>
+						<AchievementsDialog userAchievements={userAchievements} />
+					</CardFooter>
+				</Card>
+			</div>
+
+			<div className="w-full flex flex-col ">
+				<h3 className=" text-lg font-extrabold text-center py-4">Posts</h3>
+				<Feed type="profile" userId={userId} />
+			</div>
 
 
-							{/* <span className="fill-foreground text-2xl font-bold">
-								{`${userCountry && userCountry.totalElements}/239`}
-							</span> */}
-                        </CardContent>
-                    </Card>
-
-                    <Card x-chunk="dashboard-01-chunk-2" className="col-span-1">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0">
-							<CardTitle className="text-base font-bold">
-								Achievements earned
-                            </CardTitle>
-							
-                        </CardHeader>
-                        <CardContent>
-							<div className="flex flex-row gap-1 justify-start items-end text-5xl font-bold">
-								{userAchievements && userAchievements.totalElements}
-							</div>
-                        </CardContent>
-                    </Card>
-
-                    <Card x-chunk="dashboard-01-chunk-2" className="flex flex-col justify-between sm:grid-rows-2 col-span-2 sm:col-span-1">
-                        <CardHeader className="pb-3">
-							<CardTitle className="text-base font-bold">
-								Achievements
-                            </CardTitle>
-							<CardDescription>
-								Check all the achievements the user has unlocked
-							</CardDescription>
-                        </CardHeader>
-                        <CardFooter className="flex flex-row justify-start lg:justify-center items-start">
-							{/* {userAchievements && (userAchievements.content.slice(0, 2).map((achievement, i) => {
-								console.log(i);
-								return (
-									<AchievementView key={`userAchievements${achievement.id}`} achievement={achievement}/>
-								)
-							}))} */}
-							<AchievementsDialog userAchievements={userAchievements} />
-                        </CardFooter>
-                    </Card>
-					
-					<Card x-chunk="dashboard-01-chunk-2" className="flex flex-col justify-between col-span-2 sm:col-span-1">
-                        <CardHeader className="pb-3">
-							<CardTitle className="text-base font-bold">
-								Interactive map
-								{/* <Icons.mapEmpty className="fill-muted-foreground w-7 h-7" />  */}
-                            </CardTitle>
-							<CardDescription>
-								Check out the world map showing the countries the user has visited
-							</CardDescription>
-                        </CardHeader>
-                        <CardFooter className="flex flex-row justify-start lg:justify-center items-start">
-							<VectorMapDialog userId={userId}/>
-                        </CardFooter>
-                    </Card>
-                </div>
-            </div>
-			
-
-			<div className="flex flex-col max-w-full w-[700px] gap-2 pt-5 md:pt-8 ">
+			{/* <div className="flex flex-col max-w-full w-[700px] gap-2 pt-5 md:pt-8 ">
 				
 				<h1 className="text-2xl font-extrabold tracking-tight lg:text-2xl text-center pb-0 md:pb-2">Posts</h1>
 				{auth.id === userId && <AddPost setAddNewPost={setAddNewPost}/> }
@@ -358,7 +267,7 @@ function Profile() {
 				)}
 
 				{hasNextPage && <div ref={ref} className=""></div>}
-			</div>
+			</div> */}
 
 			
         </MainContainer>
