@@ -30,12 +30,12 @@ export function UserNav() {
                     </Avatar>
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuContent className="w-fit min-w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-row items-center justify-between w-full">
+                    <div className="flex flex-row items-center justify-between w-full mr-2">
                         <div className="flex flex-col space-y-1">
-                            <p className="text-sm font-medium leading-none">
-                                {auth.firstName} {auth.lastName}
+                            <p className="text-sm font-medium leading-none flex flex-wrap">
+                                {`${auth.firstName} ${auth.lastName}`}
                             </p>
                             <p className="text-xs leading-none text-muted-foreground">
                                 {auth.email}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Avatar,
     AvatarFallback,
@@ -15,16 +15,18 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
-import { useState, useEffect } from 'react';
+import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 
 const FriendshipRowView = ({user}) => {
     const authHeader = useAuthHeader();
 
     const [friendshipStatus, setFriendshipStatus] = useState("");
+    const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
 
     useEffect(() => {
 		getStatusOfFriendship();
-	}, []);
+        setGlobalRefreshFriendship(false);
+	}, [globalRefreshFriendship]);
 
     const getStatusOfFriendship = () => {
         fetch(`http://localhost:5000/api/v1/friendship/status/${user.id}`, {

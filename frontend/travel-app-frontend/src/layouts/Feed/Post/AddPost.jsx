@@ -118,7 +118,7 @@ const AddPost = ({setAddNewPost}) => {
                         )}
                     </div>
 
-                    <div className="absolute right-2 top-[6px] z-50">
+                    <div className="absolute right-2 top-[6px] z-40">
                         <HoverPopoverInputInfo
                             content={"To add a post, you must include a description, add a photo and the location of the photo you took."}
                         />

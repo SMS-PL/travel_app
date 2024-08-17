@@ -101,18 +101,18 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
                 {/* ZDJECIE IMIE NAZWISKO CZAS CLOSE */}
                 <div className="flex flex-row justify-between items-center w-full">
                         {/* <p>{userPinsArray[Object.keys(userPinsArray)][0].author.firstName}</p> */}
-                    <div className="flex flex-row justify-center items-center gap-3 text-nowrap w-fit">
+                    <div className="flex flex-row justify-center items-center gap-3 w-fit">
                         <div className="w-[40px] h-[40px] rounded-full bg-secondary border-solid border-2 border-primary">
                         </div>
 
-                        <p className="text-current font-bold text-base flex flex-col justify-center items-start h-full">
-                            {userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.firstName} {userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.lastName}
+                        <p className="text-current font-bold text-base flex flex-col justify-center items-start h-full flex-wrap">
+                            {`${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.firstName} ${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.lastName}`}
                             <ReactTimeAgo timeStyle="round" date={new Date(userPinsArray[Object.keys(userPinsArray)][currentPinIndex].createdAt)} locale="en-US" className="mt-[-3px] font-normal text-sm text-gray-500"/>
                         </p>
 
                     </div>
 
-                    <div className="w-full flex justify-end items-center">
+                    <div className="w-fit flex justify-end items-center">
                         {auth.id == userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.id &&
                             <PinSettingsButton 
                                 pinId={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].id}

@@ -26,7 +26,7 @@ const AchievementsDialog = ({userAchievements}) => {
                 </div>
             </DialogTrigger>
 
-            <DialogContent className="flex flex-col justify-center items-center max-w-full w-[800px] p-10">
+            <DialogContent className="flex flex-col justify-center items-center max-w-full w-[700px] p-10">
                 <DialogHeader className="w-full">
                     <DialogTitle className="font-extrabold">All achievements</DialogTitle>
                     <DialogDescription>

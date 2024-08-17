@@ -326,18 +326,18 @@ function Post({postData, setAddNewPost, refetch}) {
     return (
         <Card className="mt-5 w-full">
             {/* AUTOR POSTA */}
-            <CardHeader className="flex flex-row pb-1 cursor-pointer">
+            <CardHeader className="flex flex-row pb-1 cursor-pointer justify-between">
                 {/* <Link to={`/profile/${user.id}`} className="flex flex-row"> */}
                 <HoverUserInfo userData={user} >
-                    <div className="flex flex-row items-center justify-center">
+                    <div className="flex flex-row justify-center items-start">
                         <Avatar>
                             <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                     
-                        <div className="px-2 w-fit">
-                            <CardTitle className="text-nowrap flex flex-row justify-start items-center gap-2 hover:underline">
-                                <p>{user.firstName} {user.lastName}</p>
+                        <div className="px-2 w-fit h-full">
+                            <CardTitle className="flex-wrap flex flex-row justify-start items-center gap-2 hover:underline">
+                                <p className="text-sm md:text-base">{user.firstName} {user.lastName}</p>
 
                                 {friendshipStatus == "FRIEND" ? (
                                     <Icons.userCheckFill className="h-5 w-5 fill-lime-600" />
@@ -352,7 +352,7 @@ function Post({postData, setAddNewPost, refetch}) {
                     </div>
                 </HoverUserInfo>
                 {/* </Link> */}
-                <div className="w-full flex flex-row justify-end items-center">
+                <div className="flex flex-row justify-end items-center">
                     {countryISO === null ? (
                         <div className="w-[40px] h-[25px] bg-gray-700 flex justify-center items-center text-xl text-white font-bold rounded-[1px]">?</div>
                     ) :

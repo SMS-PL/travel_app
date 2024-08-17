@@ -20,7 +20,7 @@ import { useParams } from 'react-router-dom';
 import { Icons } from "@/components/icons";
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 
-const FriendshipButton = ({userId}) => {
+const FriendshipButton = ({userId, ...props}) => {
 	const authHeader = useAuthHeader();
 	const auth = useAuthUser();
 
@@ -111,9 +111,9 @@ const FriendshipButton = ({userId}) => {
 	};
 
     return (
-        <div>
+		<>
             {userId == auth.id ? null : (
-					<div className="mt-4">
+					<div className="flex justify-center items-center" {...props}>
 						{friendshipStatus === "STRANGER" ? (
 							<DropdownMenu>
 								<DropdownMenuTrigger asChild>
@@ -166,7 +166,7 @@ const FriendshipButton = ({userId}) => {
 
 					</div>
 				)}
-        </div>
+        </>
     );
 };
 

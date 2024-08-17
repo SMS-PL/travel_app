@@ -135,7 +135,7 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
 
 			) : (
 				data.pages[0].empty == true ? (
-					<div className="flex flex-col justify-center items-center mt-7">
+					<div className="flex flex-col justify-center items-center mt-4">
 						<Icons.emptyBox className="fill-current w-[90px] h-[90px] opacity-20" />
 						<p className="font-base text-sm text-gray-400">No posts...</p>
 					</div>

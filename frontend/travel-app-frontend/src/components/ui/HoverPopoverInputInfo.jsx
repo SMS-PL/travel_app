@@ -32,7 +32,7 @@ const HoverPopoverInputInfo = ({content}) => {
         <Popover.Content
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className="w-fit z-50"
+            className="w-fit z-10"
         >
             <Card className="p-4 flex flex-col justify-center items-center flex-wrap w-[300px] text-sm bg-primary text-white">
                 {content}

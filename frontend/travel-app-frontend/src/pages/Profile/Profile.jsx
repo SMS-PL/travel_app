@@ -1,5 +1,5 @@
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import MainContainer from "@/components/MainContainer/MainContainer";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import {
@@ -26,6 +26,8 @@ import AchievementsDialog from "@/pages/Profile/Achievements/AchievementsDialog"
 import HorizontalBarChart from "@/pages/Profile/HorizontalBarChart/HorizontalBarChart";
 // import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
 import Feed from "@/layouts/Feed/Feed";
+import FriendsListDialog from "@/pages/Profile/FriendsListDialog/FriendsListDialog"
+import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 
 function Profile() {
 	const { userId } = useParams();
@@ -43,6 +45,8 @@ function Profile() {
 	
     const [countriesLength, setCountriesLength] = useState(0);
 
+	const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
+
 	// ładowanie danych o użytkowniku
 	useEffect(() => {
 		setIsLoading(true);
@@ -56,6 +60,12 @@ function Profile() {
 		setIsLoading(false);
 
 	}, [userId]);
+
+	useEffect(() => {
+		getUserFriendsList();
+		setGlobalRefreshFriendship(false);
+
+	}, [globalRefreshFriendship]);
 
 	const getUserData = () => {
 		fetch(`http://localhost:5000/api/v1/users/${userId}`, {
@@ -214,7 +224,7 @@ function Profile() {
 			<div className="w-full flex flex-col justify-center items-center pt-14">
 
 				<div className="flex flex-col justify-center items-center">
-					<h2 className="text-center scroll-m-20 text-lg font-extrabold tracking-tight lg:text-2xl pt-1">
+					<h2 className="text-center scroll-m-20 text-lg sm:text-xl md:text-2xl font-extrabold tracking-tight pt-1">
 						{userData.firstName} <span className="text-primary">{userData.lastName}</span>
 					</h2>
 					<h3 className="text-center scroll-m-20 text-lg font-bold tracking-tight lg:text-xl">
@@ -223,19 +233,19 @@ function Profile() {
 					<p>{userData.about}</p>
 				</div>
 
-				<FriendshipButton userId={userId} />
+				<FriendshipButton userId={userId} className="mt-3"/>
 			</div>
 
-			<div className="w-full mt-4 grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 md:mt-8">
-				<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-1 ">
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-lg font-bold">
+			<div className="w-full mt-4 grid  gap-2 sm:gap-4 md:gap-6 md:mt-8 grid-cols-2 sm:grid-cols-3">
+				<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-2 sm:col-span-1 p-4 ">
+					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+						<CardTitle className="text-base sm:text-lg font-bold leading-5">
 							Visited countries
 						</CardTitle>
 					</CardHeader>
 
-					<CardContent className="pb-4">
-						<div className="flex items-baseline gap-1 text-5xl font-bold tabular-nums leading-none mb-2">
+					<CardContent className="pb-4 p-0">
+						<div className="flex items-baseline gap-1 text-4xl sm:text-5xl font-bold tabular-nums leading-none mb-2">
 							{userCountry && userCountry.totalElements}
 							<span className="text-base font-normal text-muted-foreground">
 								{`/${countriesLength}`}
@@ -244,44 +254,45 @@ function Profile() {
 						<HorizontalBarChart value={userCountry && userCountry.totalElements} countriesLength={countriesLength}/>
 					</CardContent>
 
-					<CardFooter>
+					<CardFooter className="p-0 pt-3">
 						<VectorMapDialog userId={userId}/>
 					</CardFooter>
 				</Card>
 
-				<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-1 ">
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-lg font-bold">
+				<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-1 p-4">
+					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+						<CardTitle className="text-base sm:text-lg font-bold leading-5">
 							Achievements earned
 						</CardTitle>
 					</CardHeader>
 
-					<CardContent className="pb-4">
-						<div className="flex flex-row gap-1 justify-start items-end text-5xl font-bold">
+					<CardContent className="p-0 my-2">
+						<div className="flex flex-row gap-1 justify-start items-end text-4xl sm:text-5xl font-bold">
 							{userAchievements && userAchievements.totalElements}
 						</div>
 					</CardContent>
 
-					<CardFooter>
+					<CardFooter className="p-0 w-full">
 						<AchievementsDialog userAchievements={userAchievements} />
 					</CardFooter>
 				</Card>
 
-				<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-1 ">
-					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-						<CardTitle className="text-lg font-bold">
+				<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-1 p-4 ">
+					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
+						<CardTitle className="text-base sm:text-lg font-bold leading-5">
 							Friends
 						</CardTitle>
 					</CardHeader>
 
-					<CardContent className="pb-4">
-						<div className="flex flex-row gap-1 justify-start items-end text-5xl font-bold">
+					<CardContent className="p-0 my-2">
+						<div className="flex flex-row gap-1 justify-start items-end text-4xl sm:text-5xl font-bold">
 							{userFriendsList && userFriendsList.length}
 						</div>
 					</CardContent>
 
-					<CardFooter>
+					<CardFooter className="p-0">
 						{/* <AchievementsDialog userAchievements={userAchievements} /> */}
+						<FriendsListDialog userFriendsList={userFriendsList} />
 					</CardFooter>
 				</Card>
 
