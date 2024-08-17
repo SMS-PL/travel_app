@@ -6,6 +6,8 @@ import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
+import { useState, createContext } from "react";
+import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 
 TimeAgo.addDefaultLocale(en);
 
@@ -18,14 +20,20 @@ const store = createStore({
 
 const queryClient = new QueryClient();
 
+
 function App() {
+
+    const [globalRefreshFriendship, setGlobalRefreshFriendship] = useState(false);
+
     return (
         <>
             <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
                 <AuthProvider store={store}>
                     <QueryClientProvider client={queryClient}>
-                        <RoutesPage />
-                        <Toaster />
+                        <RefreshFriendshipContext.Provider value={{globalRefreshFriendship, setGlobalRefreshFriendship}}>
+                            <RoutesPage />
+                            <Toaster />
+                        </RefreshFriendshipContext.Provider>
                     </QueryClientProvider>
                 </AuthProvider>
             </ThemeProvider>

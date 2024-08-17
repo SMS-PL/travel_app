@@ -19,18 +19,13 @@ import {
 } from "@/components/ui/card";
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import { Icons } from "@/components/icons";
-import VectorMapDialog from "@/components/VectorWorldMap/VectorMapDialog";
-import {useInView} from "react-intersection-observer";
-import {useInfiniteQuery} from "@tanstack/react-query";
-import Post from "@/components/Post/Post";
-import AddPost from "@/components/AddPost/AddPost";
-import FriendshipButton from '@/components/Friendships/FriendshipButton';
+import VectorMapDialog from "@/pages/Profile/VectorWorldMap/VectorMapDialog";
+import FriendshipButton from '@/components/FriendshipsButton/FriendshipButton';
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-import AchievementView from "@/components/Achievements/AchievementView";
-import AchievementsDialog from "@/components/Achievements/AchievementsDialog";
-import HorizontalBarChart from "@/components/Charts/HorizontalBarChart";
-import HoverPopoverInputInfo from "@/components/Register/HoverPopoverInputInfo";
-import Feed from "@/components/Feed/Feed";
+import AchievementsDialog from "@/pages/Profile/Achievements/AchievementsDialog";
+import HorizontalBarChart from "@/pages/Profile/HorizontalBarChart/HorizontalBarChart";
+// import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
+import Feed from "@/layouts/Feed/Feed";
 
 function Profile() {
 	const { userId } = useParams();
@@ -44,11 +39,25 @@ function Profile() {
 	const [userCountry, setUserCountry] = useState(null);
 	
 	const [userAchievements, setUserAchievements] = useState(null);
+	const [userFriendsList, setUserFriendsList] = useState(null);
 	
+    const [countriesLength, setCountriesLength] = useState(0);
 
 	// ładowanie danych o użytkowniku
 	useEffect(() => {
 		setIsLoading(true);
+
+		getUserData();
+		getUserCountries(10, 0);
+		getUserAchievements(10, 0);
+		fetchCountries();
+		getUserFriendsList();
+
+		setIsLoading(false);
+
+	}, [userId]);
+
+	const getUserData = () => {
 		fetch(`http://localhost:5000/api/v1/users/${userId}`, {
 			method: 'GET',
 			headers: {
@@ -73,12 +82,7 @@ function Profile() {
 			console.error('Wystąpił błąd podczas wczytywania profilu użytkownika:', error);
 			navigate("/");
 		});
-		// console.log(userCountry);
-
-		getUserCountries(10, 0);
-		getUserAchievements(10, 0);
-
-	}, [userId]);
+	};
 
 
 	const getUserCountries = (pageSize, pageNumber) => {
@@ -103,6 +107,28 @@ function Profile() {
 			console.log(error.message);
 		});
 	};
+
+	const fetchCountries = () => {
+        fetch(`http://localhost:5000/api/v1/countries/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json', 
+                "Authorization": authHeader,
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Błąd sieci!');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setCountriesLength(data.length);
+        })
+        .catch(error => {
+            console.log(error.message);
+        });
+    };
 
 	const getCountryById = (countryId) => {
 		fetch(`http://localhost:5000/api/v1/countries/${countryId}`, {
@@ -149,6 +175,30 @@ function Profile() {
 		});
 	};
 
+	const getUserFriendsList = () => {
+		fetch(`http://localhost:5000/api/v1/friendship/${userId}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json', 
+				"Authorization": authHeader,
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Błąd sieci!');
+			}
+			return response.json();
+		})
+		.then(data => {
+			console.log(data);
+			setUserFriendsList(data);
+		})
+		.catch(error => {
+			console.log(error.message);
+		});
+	};
+
+
     return (
         <MainContainer type="profile">
 
@@ -176,7 +226,7 @@ function Profile() {
 				<FriendshipButton userId={userId} />
 			</div>
 
-			<div className="w-full mt-4 grid grid-cols-2 gap-2 sm:gap-4 md:gap-6 md:mt-8">
+			<div className="w-full mt-4 grid grid-cols-3 gap-2 sm:gap-4 md:gap-6 md:mt-8">
 				<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-1 ">
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 						<CardTitle className="text-lg font-bold">
@@ -188,10 +238,10 @@ function Profile() {
 						<div className="flex items-baseline gap-1 text-5xl font-bold tabular-nums leading-none mb-2">
 							{userCountry && userCountry.totalElements}
 							<span className="text-base font-normal text-muted-foreground">
-								/239
+								{`/${countriesLength}`}
 							</span>
 						</div>
-						<HorizontalBarChart value={userCountry && userCountry.totalElements} />
+						<HorizontalBarChart value={userCountry && userCountry.totalElements} countriesLength={countriesLength}/>
 					</CardContent>
 
 					<CardFooter>
@@ -216,10 +266,29 @@ function Profile() {
 						<AchievementsDialog userAchievements={userAchievements} />
 					</CardFooter>
 				</Card>
+
+				<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-1 ">
+					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+						<CardTitle className="text-lg font-bold">
+							Friends
+						</CardTitle>
+					</CardHeader>
+
+					<CardContent className="pb-4">
+						<div className="flex flex-row gap-1 justify-start items-end text-5xl font-bold">
+							{userFriendsList && userFriendsList.length}
+						</div>
+					</CardContent>
+
+					<CardFooter>
+						{/* <AchievementsDialog userAchievements={userAchievements} /> */}
+					</CardFooter>
+				</Card>
+
 			</div>
 
 			<div className="w-full flex flex-col ">
-				<h3 className=" text-lg font-extrabold text-center py-4">Posts</h3>
+				<h3 className=" text-lg font-extrabold text-center pt-4">Posts</h3>
 				<Feed type="profile" userId={userId} />
 			</div>
 

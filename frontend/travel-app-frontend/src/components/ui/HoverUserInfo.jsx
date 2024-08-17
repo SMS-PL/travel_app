@@ -11,14 +11,14 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Link } from "react-router-dom";
-import FriendshipButton from '@/components/Friendships/FriendshipButton';
+import FriendshipButton from '@/components/FriendshipsButton/FriendshipButton';
 
 const HoverUserInfo = ({children, userData, ...props}) => {
 
     return (
         
         <HoverCard>
-            <HoverCardTrigger>
+            <HoverCardTrigger asChild>
                 <Link to={`/profile/${userData.id}`} className="inline-flex items-center" {...props}>
                     {children}
                 </Link>

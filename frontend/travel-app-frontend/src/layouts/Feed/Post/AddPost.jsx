@@ -21,9 +21,9 @@ import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import { Icons } from "@/components/icons";
 import { useState, useEffect } from 'react';
-import SelectCountry from "@/components/AddPost/SelectCountry";
+import SelectCountry from "@/layouts/Feed/Post/SelectCountry";
 import { Separator } from "@/components/ui/separator";
-import HoverPopoverInputInfo from "@/components/Register/HoverPopoverInputInfo";
+import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
 
 const AddPost = ({setAddNewPost}) => {
 	const authHeader = useAuthHeader();
@@ -92,7 +92,7 @@ const AddPost = ({setAddNewPost}) => {
     };
 
     return (
-        <Card className="w-full">
+        <Card className="w-full mt-4">
             <form onSubmit={handleSubmit(onSubmit)} className="">
                 {/* <CardHeader className="flex flex-col p-3"></CardHeader> */}
                 

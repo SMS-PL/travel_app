@@ -1,5 +1,5 @@
 import MainContainer from "@/components/MainContainer/MainContainer";
-import Feed from "@/components/Feed/Feed";
+import Feed from "@/layouts/Feed/Feed";
 
 const Home = () => {
 

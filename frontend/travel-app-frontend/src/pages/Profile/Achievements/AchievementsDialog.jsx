@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
-import AchievementView from "@/components/Achievements/AchievementView";
+import AchievementView from "@/pages/Profile/Achievements/AchievementView";
 
 const AchievementsDialog = ({userAchievements}) => {
 

@@ -22,7 +22,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { Icons } from "@/components/icons";
-import HoverPopoverInputInfo from "@/components/Register/HoverPopoverInputInfo";
+import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
 
 const Register = () => {
 

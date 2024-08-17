@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Icons } from "@/components/icons";
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import {
@@ -11,24 +11,28 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import UserRowViewNotification from "@/components/Notifications/UserRowViewNotification";
+import UserRowViewNotification from "@/layouts//Navbar/Notifications/UserRowViewNotification";
 import HoverUserInfo from "@/components/ui/HoverUserInfo";
 import { Button } from "@/components/ui/button";
+import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 
 const ReceivedFriendshipNotification = () => {
 	const authHeader = useAuthHeader();
 
+	const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
+
     const [isLoading, setIsLoading] = useState(true);
-	const [refetch, setRefetch] = useState(false);
+	const [localRefetch, setLocalRefetch] = useState(false);
 
     const [dataFriendship, setDataFriendship] = useState(null);
     const [notificationCounter, setNotificationCounter] = useState(true);
 
 	useEffect(() => {
 		fetchReceivedFriendship();
-		setRefetch(false);
+		setLocalRefetch(false);
+		setGlobalRefreshFriendship(false);
 
-	}, [refetch]); // aktualnie wczytuje nowe powiadomienia, po refreshu strony
+	}, [localRefetch, globalRefreshFriendship]); // aktualnie wczytuje nowe powiadomienia, po refreshu strony
 
 	const fetchReceivedFriendship = async () => {
         setIsLoading(true);
@@ -78,7 +82,8 @@ const ReceivedFriendshipNotification = () => {
 		})
 		.then(data => {
 			console.log(data);
-			setRefetch(true);
+			setLocalRefetch(true);
+			setGlobalRefreshFriendship(true);
 		})
 		.catch(error => {
 			console.log(error.message);
@@ -101,7 +106,8 @@ const ReceivedFriendshipNotification = () => {
 		})
 		.then(data => {
 			console.log(data);
-			setRefetch(true);
+			setLocalRefetch(true);
+			setGlobalRefreshFriendship(true);
 		})
 		.catch(error => {
 			console.log(error.message);
@@ -113,7 +119,7 @@ const ReceivedFriendshipNotification = () => {
 		<DropdownMenu className="mx-5">
 			<DropdownMenuTrigger 
 				className="bg-secondary p-[4px] flex items-center justify-center rounded-full cursor-pointer" 
-				onPointerDown={() => setRefetch(true)}
+				onPointerDown={() => setLocalRefetch(true)}
 			>
 				<Icons.userCheckFill className="fill-current w-[25px] h-[25px]" /> 
 			</DropdownMenuTrigger>

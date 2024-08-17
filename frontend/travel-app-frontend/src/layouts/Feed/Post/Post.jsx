@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -13,12 +13,11 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar";
-import { useState, useEffect, useRef } from 'react';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
-import Reaction from "@/components/Reaction/Reaction";
+import Reaction from "@/layouts/Feed/Post/Reaction";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { Icons } from "@/components/icons";
 import {
@@ -34,12 +33,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import ReactTimeAgo from 'react-time-ago';
 import { useToast } from "@/components/ui/use-toast";
-import CommentRowView from './../Comments/CommentRowView';
+import CommentRowView from '@/layouts/Feed/Post/CommentRowView';
 import { useForm } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
-import { cn } from './../../lib/utils';
+import { cn } from "@/lib/utils";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -56,6 +55,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useImperativeHandle } from 'react';
 import HoverUserInfo from "@/components/ui/HoverUserInfo";
+import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 
 function Post({postData, setAddNewPost, refetch}) {    
 
@@ -79,6 +79,7 @@ function Post({postData, setAddNewPost, refetch}) {
     const [isLastPage, setIsLastPage] = useState(false);
     const [refetchData, setRefetchData] = useState(false);
 
+    const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
     const [friendshipStatus, setFriendshipStatus] = useState(null);
 
     const {
@@ -103,7 +104,8 @@ function Post({postData, setAddNewPost, refetch}) {
     
     useEffect(() => {
 		getStatusOfFriendship();
-	}, [user]);
+        setGlobalRefreshFriendship(false);
+	}, [user, globalRefreshFriendship]);
 
     useEffect(() => {
         fetchCountryData();

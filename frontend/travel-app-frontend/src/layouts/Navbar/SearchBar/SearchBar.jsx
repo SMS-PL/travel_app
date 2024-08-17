@@ -12,7 +12,7 @@ import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Icons } from "@/components/icons";
 import { Input } from "@/components/ui/input";
-import FriendshipRowView from "@/components/SearchBar/FriendshipRowView";
+import FriendshipRowView from "@/layouts//Navbar/SearchBar/FriendshipRowView";
 import HoverUserInfo from "@/components/ui/HoverUserInfo";
 import {
     Popover,

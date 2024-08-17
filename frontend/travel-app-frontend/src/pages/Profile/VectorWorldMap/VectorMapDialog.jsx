@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
-import VectorWorldMap from '@/components/VectorWorldMap/VectorWorldMap';
+import VectorWorldMap from '@/pages/Profile/VectorWorldMap/VectorWorldMap';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 
 const VectorMapDialog = ({userId}) => {
@@ -54,7 +54,7 @@ const VectorMapDialog = ({userId}) => {
                 </div>
             </DialogTrigger>
 
-            <DialogContent className="max-w-full w-[800px] p-10 flex flex-col justify-center items-center">
+            <DialogContent className="max-w-full w-[800px] p-5 md:p-10 flex flex-col justify-center items-center">
                 <DialogHeader className="w-full flex flex-col justify-center items-start">
                     <DialogTitle className="font-extrabold">Interactive map</DialogTitle>
                     <DialogDescription>

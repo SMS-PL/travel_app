@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {useInView} from "react-intersection-observer";
 import {useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
@@ -15,13 +14,16 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import Post from "@/components/Post/Post";
-import AddPost from "@/components/AddPost/AddPost";
+import Post from "@/layouts/Feed/Post/Post";
+import AddPost from "@/layouts/Feed/Post/AddPost";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 
 const Feed = ({type = "home", userId = null}) => { // type = home/friends/profile
 	const authHeader = useAuthHeader();
 	const auth = useAuthUser();
+
+	const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
 
 	const [addNewPost, setAddNewPost] = useState(false);
 	const {ref, inView} = useInView();
@@ -83,6 +85,10 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
 		}
 	}, [addNewPost]);
 
+	useEffect(() => {
+		refetch({ refetchPage: (page, index) => index === 0 });
+		setGlobalRefreshFriendship(false);
+	}, [globalRefreshFriendship]);
 
     return (
         <div>

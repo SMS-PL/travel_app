@@ -9,7 +9,7 @@ const VectorWorldMap = ({userCountry}) => {
     }, {});
     
     return (
-        <div className="w-[700px] h-[500px] rounded-lg">
+        <div className="w-full h-[500px] rounded-lg">
             <VectorMap 
                 className="rounded-xl"
                 map={worldMill}

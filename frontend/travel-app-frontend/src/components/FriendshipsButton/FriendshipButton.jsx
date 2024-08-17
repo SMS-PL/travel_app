@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,26 +14,29 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
-import { useState, useEffect } from 'react';
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { Button } from "@/components/ui/button";
 import { useParams } from 'react-router-dom';
 import { Icons } from "@/components/icons";
+import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 
 const FriendshipButton = ({userId}) => {
 	const authHeader = useAuthHeader();
 	const auth = useAuthUser();
 
+	const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
+	const [localRefetchFriedship, setLocalRefetchFriedship] = useState(false);
+
     const [friendshipStatus, setFriendshipStatus] = useState("");
-	const [refetchFriend, setRefetchFriend] = useState(false);
 
 
 	// wczytywanie danych o friends
 	useEffect(() => {
-		setRefetchFriend(false);
 		fetchFriendshipStatus();
-
-	}, [refetchFriend, userId]);
+		setLocalRefetchFriedship(false);
+		setGlobalRefreshFriendship(false);
+		
+	}, [localRefetchFriedship, globalRefreshFriendship, userId]);
 
 	const fetchFriendshipStatus = () => {
 		fetch(`http://localhost:5000/api/v1/friendship/status/${userId}`, {
@@ -75,7 +78,8 @@ const FriendshipButton = ({userId}) => {
 		})
 		.then(data => {
 			console.log(data);
-			setRefetchFriend(true);
+			setLocalRefetchFriedship(true);
+			setGlobalRefreshFriendship(true);
 		})
 		.catch(error => {
 			console.log(error.message);
@@ -98,7 +102,8 @@ const FriendshipButton = ({userId}) => {
 		})
 		.then(data => {
 			console.log(data);
-			setRefetchFriend(true);
+			setLocalRefetchFriedship(true);
+			setGlobalRefreshFriendship(true);
 		})
 		.catch(error => {
 			console.log(error.message);

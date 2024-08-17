@@ -7,9 +7,9 @@ import { UserNav } from "./user-nav";
 import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import { useLocation } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
-import SearchBar from "@/components/SearchBar/SearchBar";
+import SearchBar from "@/layouts//Navbar/SearchBar/SearchBar";
 import { useState } from 'react';
-import ReceivedFriendshipNotification from "@/components/Notifications/ReceivedFriendshipNotification";
+import ReceivedFriendshipNotification from "@/layouts//Navbar/Notifications/ReceivedFriendshipNotification";
 
 export function Navbar() {
     const isAuthenticated = useIsAuthenticated();

@@ -1,7 +1,6 @@
 import React from 'react'
-import Navbar from "@/components/Navbar/Navbar";
-import Footer from "@/components/Footer/Footer";
-import AddPost from "@/components/AddPost/AddPost";
+import Navbar from "@/layouts/Navbar/Navbar";
+import Footer from "@/layouts/Footer/Footer";
 import Pins from "@/components/Pins/Pins";
 
 function MainContainer({children, type = "default", setAddNewPost}) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Card,
     CardContent,
@@ -14,36 +14,48 @@ import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { Icons } from "@/components/icons";
 import PinDialog from "@/components/Pins/PinDialog";
-import HoverPopoverInputInfo from "@/components/Register/HoverPopoverInputInfo";
+import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
 import { cn } from "@/lib/utils";
+import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 
 function Pins() {
     const authHeader = useAuthHeader();
-    const auth = useAuthUser();
     const { toast } = useToast();
-    const navigate = useNavigate();
+
+    const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
+	const [localRefetch, setLocalRefetch] = useState(false);
 
     const [pinsData, setPinsData] = useState(null);
     const [myPinsData, setMyPinsData] = useState(null);
-	const [refetch, setRefetch] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
     const [creatingAnimation, setCreatingAnimation] = useState(false);
 
 
     useEffect(() => {
-        const loadPins = async () => {
+        const loadMyPins = async () => {
             await setIsLoading(true);
-            await fetchPins(0, 9);
+            // await fetchPins(0, 9);
             await fetchOnlyMyPins();
-            await setRefetch(false);
+            await setLocalRefetch(false);
             await setIsLoading(false);
         };
 
-        loadPins();
-        
+        loadMyPins();
 
-    }, [refetch]);
+    }, [localRefetch]);
+
+    useEffect(() => {
+        const loadFriendsPins = async () => {
+            await setIsLoading(true);
+            await fetchPins(0, 9);
+            await setGlobalRefreshFriendship(false);
+            await setIsLoading(false);
+        };
+
+        loadFriendsPins();
+
+    }, [globalRefreshFriendship]);
 
 
     const fetchPins = async (pageNumber, pageSize) => {
@@ -135,7 +147,7 @@ function Pins() {
             })
             .then(data => {
                 console.log(data);
-                setRefetch(true);
+                setLocalRefetch(true);
                 setCreatingAnimation(false);
 
                 toast({
@@ -187,8 +199,8 @@ function Pins() {
                 {(!isLoading && (myPinsData !== null)) && (myPinsData[0].length > 0) && 
                     <PinDialog
                         userPinsArray={myPinsData}
-                        setRefetch={setRefetch}
-                        refetch={refetch}
+                        setRefetch={setLocalRefetch}
+                        refetch={localRefetch}
                     />
                 }
 
@@ -203,8 +215,8 @@ function Pins() {
                         <PinDialog
                             key={`userPin-${userPinsArray[Object.keys(userPinsArray)][0].id}`}
                             userPinsArray={userPinsArray}
-                            setRefetch={setRefetch}
-                            refetch={refetch}
+                            setRefetch={setGlobalRefreshFriendship}
+                            refetch={globalRefreshFriendship}
                         />
                     );
                 })}
