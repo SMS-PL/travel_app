@@ -19,4 +19,6 @@ public interface CommentService {
     CommentReactionCountResponseDto reactToComment(Long commentId);
 
     Map<String, Boolean> checkUserReaction(Long commentId);
+
+    public void deleteReactionsByCommentId(Long commentId);
 }

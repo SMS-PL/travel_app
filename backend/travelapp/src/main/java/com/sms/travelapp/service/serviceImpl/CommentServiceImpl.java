@@ -17,6 +17,7 @@ import com.sms.travelapp.repository.CommentRepository;
 import com.sms.travelapp.repository.PostRepository;
 import com.sms.travelapp.service.AuthService;
 import com.sms.travelapp.service.CommentService;
+import com.sms.travelapp.service.NotificationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,7 @@ public class CommentServiceImpl implements CommentService {
     private final AuthService authService;
     private final PostRepository postRepository;
     private final CommentReactionRepository commentReactionRepository;
+    private final NotificationService notificationService;
 
     @Override
     public Page<CommentResponseDto> getCommentsByPostId(Long postId, int pageSize, int pageNumber, String sortBy) {
@@ -76,6 +78,10 @@ public class CommentServiceImpl implements CommentService {
         comment.setPost(post);
 
         commentRepository.save(comment);
+
+        notificationService.createNotification(0,user.getId(),post.getAuthorId(),post.getId());
+
+
         return CommentMapper.MapToCommentResponseDto(comment);
     }
 
@@ -90,10 +96,15 @@ public class CommentServiceImpl implements CommentService {
             throw new AccessDenied("This is not your comment!");
         }
 
-        commentReactionRepository.deleteByCommentId(commentId);
+        //commentReactionRepository.deleteByCommentId(commentId);
+        deleteReactionsByCommentId(commentId);
         commentRepository.delete(comment);
         return StringResponseMapper.mapToMap("Comment id-" + commentId + " deleted successfully");
 
+    }
+
+    public void deleteReactionsByCommentId(Long commentId){
+        commentReactionRepository.deleteByCommentId(commentId);
     }
 
     @Override
@@ -134,6 +145,8 @@ public class CommentServiceImpl implements CommentService {
             commentRepository.save(comment);
             commentReactionRepository.save(commentReaction);
         }
+
+        notificationService.createNotification(2,user.getId(),comment.getAuthor().getId(),comment.getId());
         return CommentMapper.MapToCommentReactionCountResponseDto(comment);
         
     }

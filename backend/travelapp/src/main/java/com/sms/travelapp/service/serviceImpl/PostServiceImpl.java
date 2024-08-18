@@ -12,12 +12,8 @@ import com.sms.travelapp.mapper.PostReactionMapper;
 import com.sms.travelapp.model.Post;
 import com.sms.travelapp.model.PostReaction;
 import com.sms.travelapp.model.UserEntity;
-import com.sms.travelapp.repository.PostReactionRepository;
-import com.sms.travelapp.repository.PostRepository;
-import com.sms.travelapp.repository.UserRepository;
-import com.sms.travelapp.service.AuthService;
-import com.sms.travelapp.service.PostService;
-import com.sms.travelapp.service.UserService;
+import com.sms.travelapp.repository.*;
+import com.sms.travelapp.service.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,6 +36,9 @@ public class PostServiceImpl implements PostService {
     private final AuthService authService;
     private final PostReactionRepository postReactionRepository;
     private final UserService userService;
+    private final NotificationService notificationService;
+    private final CommentRepository commentRepository;
+    private final CommentReactionRepository commentReactionRepository;
     @Override
     public List<PostResponseDto> getAllPosts() {
         return postRepository.findAll().stream().map(
@@ -92,9 +91,17 @@ public class PostServiceImpl implements PostService {
             throw new AccessDenied("You are not authorized to delete this post!");
         }
 
-        postReactionRepository.deleteByPostId(id);
+
+        deleteAllCascade(post);
+
         postRepository.deleteById(post.getId());
         return "Post id-"+ id +" deleted";
+    }
+
+    private void deleteAllCascade(Post post){
+        commentReactionRepository.deleteAllByComment_Post_Id(post.getId());
+        commentRepository.deleteByPostId(post.getId());
+        postReactionRepository.deleteByPostId(post.getId());
     }
 
     @Override
@@ -192,6 +199,8 @@ public class PostServiceImpl implements PostService {
                 }
             }
         }
+
+        notificationService.createNotification(1,user.getId(),postDb.getAuthorId(),postDb.getId());
 
         return PostReactionMapper.mapToPostReactionCountResponseDto(postReaction);
     }
