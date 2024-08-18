@@ -126,7 +126,7 @@ public class FriendshipServiceImpl implements FriendshipService {
 
         for (Friendship f:
                 friendshipRepository.findAllByFriend(user)) {
-            if(!friendshipRepository.existsByUserAndFriend(user,f.getFriend())){
+            if(!friendshipRepository.existsByUserAndFriend(user,f.getUser())){
                 receivedRequests.add(UserMapper.mapToUserResponseDto(f.getUser()));
             }
         }
