@@ -1,6 +1,7 @@
 package com.sms.travelapp.service.serviceImpl;
 
 import com.sms.travelapp.dto.Auth.UserResponseDto;
+import com.sms.travelapp.dto.User.UserRequestPayload;
 import com.sms.travelapp.exception.UserNotFound;
 import com.sms.travelapp.mapper.UserMapper;
 import com.sms.travelapp.model.Friendship;
@@ -17,7 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -113,4 +113,40 @@ public class UserServiceImpl implements UserService {
         // the same day?
         return !nowDate.equals(lastGivenHeartDate);
     }
+
+    @Override
+    public UserResponseDto updateUser(Long id, UserRequestPayload userRequestPayload) {
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFound("User Not found!"));
+
+        if (userRequestPayload.getFirstName() != null) {
+            user.setFirstName(userRequestPayload.getFirstName());
+        }
+        if (userRequestPayload.getLastName() != null) {
+            user.setLastName(userRequestPayload.getLastName());
+        }
+        if (userRequestPayload.getUsername() != null) {
+            user.setUsername(userRequestPayload.getUsername());
+        }
+        if (userRequestPayload.getEmail() != null) {
+            user.setEmail(userRequestPayload.getEmail());
+        }
+        if (userRequestPayload.getPassword() != null) {
+            user.setPassword(userRequestPayload.getPassword());
+        }
+        if (userRequestPayload.getAbout() != null) {
+            user.setAbout(userRequestPayload.getAbout());
+        }
+        if (userRequestPayload.getProfileImage() != null) {
+            user.setProfileImage(userRequestPayload.getProfileImage());
+        }
+        if (userRequestPayload.getBackgroundImage() != null) {
+            user.setBackgroundImage(userRequestPayload.getBackgroundImage());
+        }
+
+        UserEntity updatedUser = userRepository.save(user);
+        return UserMapper.mapToUserResponseDto(updatedUser);
+    }
+
+
 }

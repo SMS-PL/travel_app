@@ -2,7 +2,7 @@ package com.sms.travelapp.controller;
 
 
 import com.sms.travelapp.dto.Auth.UserResponseDto;
-import com.sms.travelapp.dto.Country.CountryResponseDto;
+import com.sms.travelapp.dto.User.UserRequestPayload;
 import com.sms.travelapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +29,12 @@ public class UserController {
                                                                        @RequestParam int pageNumber, @RequestParam int pageSize){
         Page<UserResponseDto> res = userService.searchForUser(query,pageNumber,pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UserRequestPayload userRequestPayload){
+        UserResponseDto updatedUser = userService.updateUser(id, userRequestPayload);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
 
 

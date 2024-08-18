@@ -1,6 +1,7 @@
 package com.sms.travelapp.service;
 
 import com.sms.travelapp.dto.Auth.UserResponseDto;
+import com.sms.travelapp.dto.User.UserRequestPayload;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -22,4 +23,8 @@ public interface UserService {
     void giveHeart();
 
     boolean checkIfHeartAvailable();
+
+
+    UserResponseDto updateUser(Long id, UserRequestPayload userRequestPayload);
+
 }
