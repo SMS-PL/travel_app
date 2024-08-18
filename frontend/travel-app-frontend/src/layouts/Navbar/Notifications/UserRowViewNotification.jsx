@@ -23,10 +23,11 @@ const UserRowViewNotification = ({user, ...props}) => {
         <div className="w-full flex flex-row items-center hover:bg-secondary rounded-md pl-[4px] pt-[2px] hover:underline" {...props} >
             <Avatar className="w-[30px] h-[30px]">
                 <AvatarImage 
-                    src={user.profilePicture || "https://picsum.photos/200/200"} 
-                    alt={`${user.firstName} ${user.lastName}`}
+                    src={user && user.photoUrl} 
+                    alt={user && `${user.firstName} ${user.lastName}`}
+                    className="object-cover bg-black"
                 />
-                <AvatarFallback>{`${user.firstName[0]}${user.lastName[0]}`}</AvatarFallback>
+                <AvatarFallback>{user && `${user.firstName[0]}${user.lastName[0]}`}</AvatarFallback>
             </Avatar>
         
             <div className="px-2">

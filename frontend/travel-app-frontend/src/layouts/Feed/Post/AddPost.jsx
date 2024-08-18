@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/avatar";
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { useNavigate } from 'react-router-dom';
-
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
@@ -24,9 +24,12 @@ import { useState, useEffect } from 'react';
 import SelectCountry from "@/layouts/Feed/Post/SelectCountry";
 import { Separator } from "@/components/ui/separator";
 import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
+import ImageUploader from "@/layouts/Feed/Post/ImageUploader";
 
 const AddPost = ({setAddNewPost}) => {
 	const authHeader = useAuthHeader();
+    const auth = useAuthUser();
+
 	const navigate = useNavigate();
     const { toast } = useToast();
 
@@ -34,6 +37,10 @@ const AddPost = ({setAddNewPost}) => {
     const [countryId, setCountryId] = useState(""); // id kraju wybranego w SelectCountry
     const [value, setValue] = React.useState("");  // nazwa kraju wybranego w SelectCountry
     const [countryError, setCountryError] = useState(""); // wiadomość o błędzie z SelectCountry
+
+    // zmienne do uploadowania zdjęć
+    const [uploadingImage, setUploadingImage] = useState(false);
+    const [imageURL, setImageURL] = useState("");
 
     const {
         register,
@@ -55,7 +62,7 @@ const AddPost = ({setAddNewPost}) => {
                 body: JSON.stringify({
                     "content": values.description,
                     "countryId": +countryId,
-                    "imageUrl": "image.pl/image"     // na razie jest na sztywno
+                    "imageUrl": imageURL,
                 })
             })
             .then(response => {
@@ -73,6 +80,7 @@ const AddPost = ({setAddNewPost}) => {
 
                 setValue("");
                 setCountryId("");
+                setImageURL("");
 
                 reset();
                 setAddNewPost(true);
@@ -98,8 +106,8 @@ const AddPost = ({setAddNewPost}) => {
                 
                 <CardContent className="flex flex-row items-center w-full pt-5 relative"> 
                     <Avatar>
-                        <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarImage src={auth.photoUrl} alt="stock img" className="object-cover bg-black" />
+                        <AvatarFallback>{`${auth.firstName[0]}${auth.lastName[0]}`}</AvatarFallback>
                     </Avatar>
                     
                     <div className="w-full ml-4">
@@ -120,7 +128,7 @@ const AddPost = ({setAddNewPost}) => {
 
                     <div className="absolute right-2 top-[6px] z-40">
                         <HoverPopoverInputInfo
-                            content={"To add a post, you must include a description, add a photo and the location of the photo you took."}
+                            content={"To add a post, you must include a description, add a photo and the location of the photo you took. The photo cannot exceed 10MB and must have a .jpg, .jpeg, or .png extension."}
                         />
                     </div>
 
@@ -128,21 +136,28 @@ const AddPost = ({setAddNewPost}) => {
 
                 <CardFooter className="flex flex-row justify-between items-start gap-4">
                     
-                    <div className="flex flex-row justify-center items-start gap-1">
-                        <Button variant="ghost" className="w-fit text-foreground p-2" type="button">
+                    <div className="flex flex-row justify-center items-center gap-1">
+                        {/* <Button variant="ghost" className="w-fit text-foreground p-2" type="button">
                             <Icons.imageAdd className="h-7 w-7 fill-primary"/>
-                        </Button>
+                        </Button> */}
 
                         <div className="flex flex-col justify-center items-center">
                             <SelectCountry value={value} setValue={setValue} setCountryId={setCountryId} />
-                            {/* <p className=" text-red-500 text-sm">{countryError}</p> */}
                         </div>
+
+                        <ImageUploader
+                            uploadingImage={uploadingImage}
+                            setUploadingImage={setUploadingImage}
+                            imageURL={imageURL}
+                            setImageURL={setImageURL}
+                        />
+
                     </div>
 
                     <div className="flex flex-row justify-center items-center gap-2">
    
                         <Button
-                            disabled={!isValid || value == ''}
+                            disabled={!isValid || value == "" || imageURL == ""}
                             variant="default" 
                             type="submit" 
                             className="w-fit bg-primary text-white"

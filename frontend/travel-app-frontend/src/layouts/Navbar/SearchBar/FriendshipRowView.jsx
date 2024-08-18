@@ -54,7 +54,7 @@ const FriendshipRowView = ({user}) => {
     return (
         <div className="w-full flex flex-row items-center hover:bg-secondary p-2 px-5 rounded-md hover:underline">
             <Avatar>
-                <AvatarImage src={user.profilePicture || "https://picsum.photos/200/200"} alt={`${user.firstName} ${user.lastName}`} />
+                <AvatarImage src={user.photoUrl} alt="stock img" className="object-cover bg-black" />
                 <AvatarFallback>{`${user.firstName[0]}${user.lastName[0]}`}</AvatarFallback>
             </Avatar>
         

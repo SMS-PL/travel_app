@@ -93,9 +93,9 @@ const Login = () => {
         return <Navigate to={"/"} replace />;
     } else {
         return (
-            <MainContainer>
-                <div className="h-screen flex justify-center items-center">
-                    <Card className="max-w-full w-[400px]">
+            <MainContainer className="my-auto">
+                <div className="flex justify-center items-center ">
+                    <Card className="w-[400px]">
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <CardHeader>
                                 <CardTitle className="mt-8 scroll-m-20 text-2xl font-bold tracking-tight">Login</CardTitle>

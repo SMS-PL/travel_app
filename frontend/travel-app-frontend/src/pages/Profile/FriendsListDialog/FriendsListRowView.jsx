@@ -52,10 +52,11 @@ const FriendsListRowView = ({user, setOpen, ...props}) => {
             <Link to={`/profile/${user.id}`} onClick={() => setOpen(false)} className="flex flex-row justify-center items-center cursor-pointer">
                 <Avatar className="w-[45px] h-[45px]">
                     <AvatarImage 
-                        src={user.profilePicture || "https://picsum.photos/200/200"} 
-                        alt={`${user.firstName} ${user.lastName}`}
+                        src={user && user.photoUrl} 
+                        alt={user && `${user.firstName} ${user.lastName}`}
+                        className="object-cover bg-black"
                     />
-                    <AvatarFallback>{`${user.firstName[0]}${user.lastName[0]}`}</AvatarFallback>
+                    <AvatarFallback>{user && `${user.firstName[0]}${user.lastName[0]}`}</AvatarFallback>
                 </Avatar>
             
                 <div className="px-2">

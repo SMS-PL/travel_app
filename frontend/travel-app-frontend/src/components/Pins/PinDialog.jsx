@@ -23,6 +23,11 @@ import MapComponent from "@/components/Pins/MapComponent";
 import PinSettingsButton from "@/components/Pins/PinSettingsButton";
 import { Icons } from "@/components/icons";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar";
 
 const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
     const auth = useAuthUser();
@@ -78,8 +83,10 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
         <Dialog key={`userPin-${userPinsArray[Object.keys(userPinsArray)][0].id}`} onOpenChange={setOpenDialog} open={openDialog}> 
             <DialogTrigger>
                 <div  className="flex flex-col justify-center items-center ">
-                    <div className="w-[50px] h-[50px] rounded-full bg-secondary flex justify-center items-center border-solid border-2 border-primary cursor-pointer">
-                    </div>
+                <Avatar className="w-[50px] h-[50px] border-2 border-primary">
+                    <AvatarImage src={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.photoUrl} alt="stock img" className="object-cover bg-black" />
+                    <AvatarFallback>{`${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.firstName[0]}${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.lastName[0]}`}</AvatarFallback>
+                </Avatar>
 
                     <div className="mt-1 text-gray-500 text-sm flex flex-col text-center">
                         <p>{userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.firstName}</p>

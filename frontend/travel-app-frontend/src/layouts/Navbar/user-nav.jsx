@@ -24,9 +24,9 @@ export function UserNav() {
                     variant="ghost"
                     className="relative h-8 w-8 rounded-full"
                 >
-                    <Avatar className="h-8 w-8">
-                        <AvatarImage src="/avatars/01.png" alt="@shadcn" />
-                        <AvatarFallback>SC</AvatarFallback>
+                    <Avatar className="h-8 w-8 ">
+                        <AvatarImage src={auth.photoUrl} alt="stock img" className="object-cover bg-black" />
+                        <AvatarFallback>{`${auth.firstName[0]}${auth.lastName[0]}`}</AvatarFallback>
                     </Avatar>
                 </Button>
             </DropdownMenuTrigger>

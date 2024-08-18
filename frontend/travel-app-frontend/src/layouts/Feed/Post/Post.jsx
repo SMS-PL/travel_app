@@ -58,12 +58,12 @@ import HoverUserInfo from "@/components/ui/HoverUserInfo";
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 
 function Post({postData, setAddNewPost, refetch}) {    
-
     const authHeader = useAuthHeader();
-	const navigate = useNavigate();
     const auth = useAuthUser();
+
+    const navigate = useNavigate();
     const { toast } = useToast();
-    
+
     const [user, setUser] = useState({});
     const [countryISO, setCountryISO] = useState(null);
 
@@ -331,8 +331,8 @@ function Post({postData, setAddNewPost, refetch}) {
                 <HoverUserInfo userData={user} >
                     <div className="flex flex-row justify-center items-start">
                         <Avatar>
-                            <AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
-                            <AvatarFallback>CN</AvatarFallback>
+                            <AvatarImage src={user && user.photoUrl} alt="stock img" className="object-cover bg-black" />
+                            <AvatarFallback>{user && `${String(user.firstName)[0]}${String(user.lastName)[0]}`}</AvatarFallback>
                         </Avatar>
                     
                         <div className="px-2 w-fit h-full">
@@ -397,7 +397,8 @@ function Post({postData, setAddNewPost, refetch}) {
             {/* OPIS I ZDJĘCIE */}
             <CardContent>
                 {postData.content}
-                <Skeleton className="w-full h-[500px] mt-4" />
+
+                <img src={postData.imageUrl} alt="" className="w-full h-fit max-h-[800px] object-cover border-2 rounded-lg mt-4 bg-black" />
 
                 {/* przycisk do włączania/wyłączania komentarzy */}
                 <div className="flex justify-between h-fit mt-5">
@@ -432,7 +433,10 @@ function Post({postData, setAddNewPost, refetch}) {
                             onSubmit={handleSubmit(addNewComment)} 
                             className="flex flex-row gap-3 w-full items-center pb-3 box-content"
                         >
-                            <Skeleton className="h-10 w-10 rounded-full" />
+                            <Avatar>
+                                <AvatarImage src={auth.photoUrl} alt="stock img" className="object-cover bg-black" />
+                                <AvatarFallback>{`${auth.firstName[0]}${auth.lastName[0]}`}</AvatarFallback>
+                            </Avatar>
 
                             <div className="w-full ">
                                 <Textarea

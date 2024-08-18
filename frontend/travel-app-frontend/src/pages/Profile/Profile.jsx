@@ -28,6 +28,8 @@ import HorizontalBarChart from "@/pages/Profile/HorizontalBarChart/HorizontalBar
 import Feed from "@/layouts/Feed/Feed";
 import FriendsListDialog from "@/pages/Profile/FriendsListDialog/FriendsListDialog"
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
+import ProfileImageUploader from "@/pages/Profile/ProfileImageUploader";
+import BackgroundImageUploader from "@/pages/Profile/BackgroundImageUploader";
 
 function Profile() {
 	const { userId } = useParams();
@@ -47,6 +49,13 @@ function Profile() {
 
 	const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
 
+	// zmienne do uploadowania zdjęć
+	const [uploadingImageProfile, setUploadingImageProfile] = useState(false);
+	const [imageProfileURL, setImageProfileURL] = useState("");
+
+	const [uploadingImageBackground, setUploadingImageBackground] = useState(false);
+	const [imageBackgroundURL, setImageBackgroundURL] = useState("");
+
 	// ładowanie danych o użytkowniku
 	useEffect(() => {
 		setIsLoading(true);
@@ -61,6 +70,8 @@ function Profile() {
 
 	}, [userId]);
 
+
+
 	useEffect(() => {
 		getUserFriendsList();
 		setGlobalRefreshFriendship(false);
@@ -74,6 +85,7 @@ function Profile() {
 				'Content-Type': 'application/json', 
 				"Authorization": authHeader,
 			},
+			
 		})
 		.then(response => {
 			if (!response.ok) {
@@ -82,8 +94,11 @@ function Profile() {
 			return response.json();
 		})
 		.then(data => {
-			// console.log("Profil wczytano poprawnie!");
 			setUserData(data);
+			// console.log(data);
+			setImageProfileURL(data.photoUrl);
+			setImageBackgroundURL(data.backgroundUrl);
+
 			setIsLoading(false);
 			
 		})
@@ -177,7 +192,7 @@ function Profile() {
 			return response.json();
 		})
 		.then(data => {
-			console.log(data);
+			// console.log(data);
 			setUserAchievements(data);
 		})
 		.catch(error => {
@@ -200,7 +215,7 @@ function Profile() {
 			return response.json();
 		})
 		.then(data => {
-			console.log(data);
+			// console.log(data);
 			setUserFriendsList(data);
 		})
 		.catch(error => {
@@ -213,11 +228,35 @@ function Profile() {
         <MainContainer type="profile">
 
 			<div className="relative flex flex-col justify-center items-center">
-				<img src="https://picsum.photos/800/200" className="w-full h-[200px] rounded-md object-cover" alt="" />
-				<Avatar className="absolute w-[110px] h-[110px] border-primary border-4 bottom-[-50px]">
-					<AvatarImage src="https://picsum.photos/200/200" alt="stock img" />
-					<AvatarFallback>CN</AvatarFallback>
+				
+				{(!imageBackgroundURL || imageBackgroundURL == "") ? (
+					<div className="w-full h-[200px] rounded-md bg-secondary"></div>
+				) : (
+					<img src={imageBackgroundURL} className="w-full h-[200px] rounded-md object-cover bg-black" alt="" />
+				)}
+
+				{auth.id == userId &&
+					<BackgroundImageUploader 
+						uploadingImage={uploadingImageBackground}
+						setUploadingImage={setUploadingImageBackground}
+						imageURL={imageBackgroundURL}
+						setImageURL={setImageBackgroundURL}
+					/> 
+				}
+				
+				<Avatar className="absolute w-[110px] h-[110px] bottom-[-50px] border-[3px] border-primary">
+					<AvatarImage src={imageProfileURL} alt="stock img" className="object-cover bg-black" />
+					<AvatarFallback>{userData &&`${userData.firstName[0]}${userData.lastName[0]}`}</AvatarFallback>
+					{auth.id == userId &&
+						<ProfileImageUploader 
+							uploadingImage={uploadingImageProfile}
+							setUploadingImage={setUploadingImageProfile}
+							imageURL={imageProfileURL}
+							setImageURL={setImageProfileURL}
+						/>
+					}
 				</Avatar>
+
 			</div>
 			
 

@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import FriendshipButton from '@/components/FriendshipsButton/FriendshipButton';
 
 const HoverUserInfo = ({children, userData, ...props}) => {
+    // console.log(userData);
 
     return (
         
@@ -28,8 +29,8 @@ const HoverUserInfo = ({children, userData, ...props}) => {
                     <Link to={`/profile/${userData.id}`} className="flex flex-row">
                         <div className="flex flex-row gap-3 justify-center items-center">
                             <Avatar className="w-[70px] h-[70px]">
-                                <AvatarImage src="https://picsum.photos/200/200" />
-                                <AvatarFallback>VC</AvatarFallback>
+                                <AvatarImage src={userData != {} && userData.photoUrl} alt="stock img" className="object-cover bg-black"/>
+                                <AvatarFallback>{userData != {} && `${String(userData.firstName)[0]}${String(userData.lastName)[0]}`}</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col justify-center items-start">
                                 <span className="text-xl font-bold">{userData.firstName} {userData.lastName}</span>

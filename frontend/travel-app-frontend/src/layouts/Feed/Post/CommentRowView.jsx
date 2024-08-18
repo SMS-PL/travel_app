@@ -23,6 +23,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import HoverUserInfo from "@/components/ui/HoverUserInfo";
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+} from "@/components/ui/avatar";
 
 function CommentRowView({postId, commentData, commentsData, setCommentsData, setRefetch}) {
 	const authHeader = useAuthHeader();
@@ -152,7 +157,10 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData, set
     return (
         <div className="flex flex-row gap-5 w-full my-3">
             <div className="flex justify-center items-start">
-                <Skeleton className="h-10 w-10 rounded-full " />
+                <Avatar>
+                    <AvatarImage src={commentData && commentData.author.photoUrl} alt="stock img" className="object-cover bg-black" />
+                    <AvatarFallback>{commentData && `${commentData.author.firstName[0]}${commentData.author.lastName[0]}`}</AvatarFallback>
+                </Avatar>
             </div>
 
             <div className="flex flex-col w-full">
