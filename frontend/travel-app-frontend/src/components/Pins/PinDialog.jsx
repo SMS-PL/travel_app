@@ -65,7 +65,7 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
     return (
         <Dialog key={`userPin-${userPinsArray[Object.keys(userPinsArray)][0].id}`} onOpenChange={setOpenDialog} open={openDialog}> 
             <DialogTrigger asChild>
-                <div className="flex flex-col justify-center items-center ">
+                <div className="flex flex-col justify-center items-center cursor-pointer">
                     <Avatar className="w-[50px] h-[50px] border-2 border-primary">
                         <AvatarImage src={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.photoUrl} alt="stock img" className="object-cover bg-black" />
                         <AvatarFallback>{`${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.firstName[0]}${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.lastName[0]}`}</AvatarFallback>

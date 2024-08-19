@@ -92,7 +92,6 @@ function Post({postData, setAddNewPost, refetch}) {
         formState: { errors, isValid },
     } = useForm();
 
-
     useEffect(() => {
         fetchComments();
         setRefetchData(false);
@@ -504,9 +503,6 @@ function Post({postData, setAddNewPost, refetch}) {
                 ) : null}
             </CardFooter>
 
-            <div>
-
-            </div>
         </Card>
     );
 }

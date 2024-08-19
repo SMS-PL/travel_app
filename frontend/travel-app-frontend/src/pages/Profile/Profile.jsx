@@ -28,8 +28,8 @@ import HorizontalBarChart from "@/pages/Profile/HorizontalBarChart/HorizontalBar
 import Feed from "@/layouts/Feed/Feed";
 import FriendsListDialog from "@/pages/Profile/FriendsListDialog/FriendsListDialog"
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
-import ProfileImageUploader from "@/pages/Profile/ProfileImageUploader";
-import BackgroundImageUploader from "@/pages/Profile/BackgroundImageUploader";
+import ProfileImageUploader from "@/pages/Profile/ImageUploader/ProfileImageUploader";
+import BackgroundImageUploader from "@/pages/Profile/ImageUploader/BackgroundImageUploader";
 
 function Profile() {
 	const { userId } = useParams();

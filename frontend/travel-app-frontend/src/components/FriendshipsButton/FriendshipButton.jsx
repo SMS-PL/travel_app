@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { useParams } from 'react-router-dom';
 import { Icons } from "@/components/icons";
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
+import SpinLoading from '@/components/ui/SpinLoading';
 
 const FriendshipButton = ({userId, ...props}) => {
 	const authHeader = useAuthHeader();
@@ -114,6 +115,8 @@ const FriendshipButton = ({userId, ...props}) => {
 		<>
             {userId == auth.id ? null : (
 					<div className="flex justify-center items-center" {...props}>
+						{!friendshipStatus && <SpinLoading className="w-full flex justify-center items-center" /> }
+
 						{friendshipStatus === "STRANGER" ? (
 							<DropdownMenu>
 								<DropdownMenuTrigger asChild>

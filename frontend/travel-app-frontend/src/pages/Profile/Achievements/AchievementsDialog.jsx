@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import AchievementView from "@/pages/Profile/Achievements/AchievementView";
+import SpinLoading from '@/components/ui/SpinLoading';
 
 const AchievementsDialog = ({userAchievements}) => {
 
@@ -34,6 +35,8 @@ const AchievementsDialog = ({userAchievements}) => {
                     </DialogDescription>
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 overflow-y-scroll max-h-[70vh] pt-2 items-start gap-5">
+                        {!userAchievements && <SpinLoading className="w-full flex justify-center items-center" /> }
+
                         {userAchievements && (userAchievements.content.slice().map((achievement, i) => {
                             return (
                                 <AchievementView key={`userAchievements${achievement.id}`} achievement={achievement}/>

@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import FriendsListRowView from "@/pages/Profile/FriendsListDialog/FriendsListRowView";
 import HoverUserInfo from "@/components/ui/HoverUserInfo";
+import SpinLoading from '@/components/ui/SpinLoading';
 
 const FriendsListDialog = ({userFriendsList}) => {
 
@@ -35,6 +36,8 @@ const FriendsListDialog = ({userFriendsList}) => {
                     <DialogDescription className="">Here you can find the user's friends list</DialogDescription>
 
                     <div className="flex flex-col justify-center items-center w-full gap-2">
+                        {!userFriendsList && <SpinLoading className="w-full flex justify-center items-center" /> }
+
                         {userFriendsList && userFriendsList.length != 0 && (userFriendsList.map((user, i) => {
                             return (
                                 <FriendsListRowView key={`userFriendshipList${user.id}`} user={user} setOpen={setOpen} />

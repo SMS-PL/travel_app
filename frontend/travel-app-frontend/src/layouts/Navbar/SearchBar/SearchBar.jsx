@@ -36,8 +36,11 @@ const SearchBar = ({placeholder, ...props}) => {
 
     const fetchUsers = async (searchedText) => {
         setIsLoading(true);
+
         if(searchedText !== "") {
-            fetch(`http://localhost:5000/api/v1/users/search/${searchedText}?pageNumber=0&pageSize=5`, {
+            let replacedStr = searchedText.replace(/ /g, '+');
+
+            fetch(`http://localhost:5000/api/v1/users/search/${replacedStr}?pageNumber=0&pageSize=5`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json', 

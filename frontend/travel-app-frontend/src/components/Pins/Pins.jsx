@@ -17,6 +17,7 @@ import PinDialog from "@/components/Pins/PinDialog";
 import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
 import { cn } from "@/lib/utils";
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
+import SpinLoading from '@/components/ui/SpinLoading';
 
 function Pins() {
     const authHeader = useAuthHeader();
@@ -187,7 +188,7 @@ function Pins() {
 
             </CardHeader>
 
-            <CardContent className="flex flex-row gap-4 justify-center items-start">
+            <CardContent className="flex flex-row gap-4 justify-center items-start ">
                 <div className="flex flex-col justify-center items-center">
                     <div onClick={onCreate} className="w-[50px] h-[50px] rounded-full bg-secondary flex border-dashed border-2 border-current justify-center items-center cursor-pointer">
                         <Icons.plusEmpty className={cn(creatingAnimation ? "hidden" : "block", "h-3 w-3 fill-current")} />
@@ -206,8 +207,10 @@ function Pins() {
 
                 {(isLoading || pinsData == null) ? (
                     <>
-                        <Skeleton className="w-[50px] h-[50px] rounded-full"/>
                         {/* <Skeleton className="w-[50px] h-[50px] rounded-full"/> */}
+                        {/* <Skeleton className="w-[50px] h-[50px] rounded-full"/> */}
+                        <SpinLoading className="flex justify-center items-center pt-[14px]" />
+
                     </>
 
                 ) : pinsData.content.map(userPinsArray => {

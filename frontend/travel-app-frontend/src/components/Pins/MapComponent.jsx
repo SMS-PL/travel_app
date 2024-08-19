@@ -20,7 +20,7 @@ const MapComponent = ({ lat, lng }) => {
         iconUrl: "/public/map_pin.svg",
         iconSize: [38, 38]
     });
-
+    
     return (
         <MapContainer center={[lat, lng]} zoom={10} className="z-[9] h-[500px] w-[750px] max-h-[100vh] max-w-[100vw] p-10 rounded-lg">
             <TileLayer

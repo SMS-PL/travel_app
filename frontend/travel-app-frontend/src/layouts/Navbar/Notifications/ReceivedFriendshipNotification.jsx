@@ -15,6 +15,7 @@ import UserRowViewNotification from "@/layouts//Navbar/Notifications/UserRowView
 import HoverUserInfo from "@/components/ui/HoverUserInfo";
 import { Button } from "@/components/ui/button";
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
+import SpinLoading from '@/components/ui/SpinLoading';
 
 const ReceivedFriendshipNotification = () => {
 	const authHeader = useAuthHeader();
@@ -28,6 +29,7 @@ const ReceivedFriendshipNotification = () => {
     const [notificationCounter, setNotificationCounter] = useState(true);
 
 	useEffect(() => {
+		
 		fetchReceivedFriendship();
 		setLocalRefetch(false);
 		setGlobalRefreshFriendship(false);
@@ -35,7 +37,7 @@ const ReceivedFriendshipNotification = () => {
 	}, [localRefetch, globalRefreshFriendship]); // aktualnie wczytuje nowe powiadomienia, po refreshu strony
 
 	const fetchReceivedFriendship = async () => {
-        setIsLoading(true);
+		setIsLoading(true);
 
         fetch(`http://localhost:5000/api/v1/friendship/receivedRequests`, {
 			method: 'GET',
@@ -51,10 +53,10 @@ const ReceivedFriendshipNotification = () => {
 			return response.json();
 		})
 		.then(data => {
-            setIsLoading(false);
 			// console.log("Wczytano powiadomienia o znajomych");
 			// console.log(data);
 			setDataFriendship(data);
+			setIsLoading(false);
             // toast({
             //     title: "Hurrah!",
             //     description: "Fetch comments!",
@@ -134,7 +136,7 @@ const ReceivedFriendshipNotification = () => {
 				<DropdownMenuSeparator />
 				
 				<DropdownMenuGroup className="py-2">
-					{(!isLoading && dataFriendship && dataFriendship.length != 0) ? (
+					{(dataFriendship && dataFriendship.length != 0) ? (
 						dataFriendship.slice().reverse().map((user, i) => (
 							<div key={`userFriendship${user.id}${i}`} className="flex flex-row items-center justify-between py-1">
 								<HoverUserInfo userData={user} className="flex w-full">
