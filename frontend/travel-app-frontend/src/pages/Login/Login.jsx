@@ -93,16 +93,16 @@ const Login = () => {
         return <Navigate to={"/"} replace />;
     } else {
         return (
-            <MainContainer className="my-auto">
-                <div className="flex justify-center items-center ">
+            <MainContainer type="loginRegister">
+                <div className="flex justify-center items-center">
                     <Card className="w-[400px]">
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <CardHeader>
-                                <CardTitle className="mt-8 scroll-m-20 text-2xl font-bold tracking-tight">Login</CardTitle>
+                                <CardTitle className="scroll-m-20 text-2xl font-bold tracking-tight">Login</CardTitle>
                                 <CardDescription>Enter your details to log in!</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                
+    
                                     <div className="grid w-full items-center gap-4">
                                         <div className="flex flex-col space-y-1.5">
                                             <Label htmlFor="email" className={cn(errors.email ? "text-red-500" : "text-foreground")}>Email</Label>

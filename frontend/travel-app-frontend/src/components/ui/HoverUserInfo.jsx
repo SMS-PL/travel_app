@@ -20,14 +20,14 @@ const HoverUserInfo = ({children, userData, ...props}) => {
         
         <HoverCard>
             <HoverCardTrigger asChild>
-                <Link to={`/profile/${userData.id}`} className="inline-flex items-center" {...props}>
+                <Link to={`/profile/${userData.id}`} {...props} >
                     {children}
                 </Link>
             </HoverCardTrigger>
             <HoverCardContent className="w-80" asChild>
                 <div className="flex flex-col justify-center items-start">
                     <Link to={`/profile/${userData.id}`} className="flex flex-row">
-                        <div className="flex flex-row gap-3 justify-center items-center">
+                        <div className="flex flex-row gap-3 justify-center items-center" >
                             <Avatar className="w-[70px] h-[70px]">
                                 <AvatarImage src={userData != {} && userData.photoUrl} alt="stock img" className="object-cover bg-black"/>
                                 <AvatarFallback>{userData != {} && `${String(userData.firstName)[0]}${String(userData.lastName)[0]}`}</AvatarFallback>

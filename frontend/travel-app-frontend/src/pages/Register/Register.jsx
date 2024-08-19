@@ -122,12 +122,12 @@ const Register = () => {
         return <Navigate to={"/"} replace />;
     } else {
         return (
-            <MainContainer>
-                <div className="h-screen flex justify-center items-center">
+            <MainContainer type="loginRegister">
+                <div className="flex justify-center items-center">
                     <Card className="max-w-full w-[400px]">
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <CardHeader>
-                                <CardTitle className="mt-8 scroll-m-20 text-2xl font-bold tracking-tight">Register</CardTitle>
+                                <CardTitle className="scroll-m-20 text-2xl font-bold tracking-tight">Register</CardTitle>
                                 <CardDescription>Provide your details and create an account!</CardDescription>
                             </CardHeader>
 

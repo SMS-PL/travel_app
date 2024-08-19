@@ -28,6 +28,7 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar";
+import HoverUserInfo from "@/components/ui/HoverUserInfo";
 
 const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
     const auth = useAuthUser();
@@ -36,7 +37,6 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
 
     const [currentPinIndex, setCurrentPinIndex] = useState(0);
     const [openDialog, setOpenDialog] = useState(false);
-    const [animating, setAnimating] = useState(false); // Nowy stan animacji
 
     useEffect(() => {
         setHowMuchPins(+userPinsArray[Object.keys(userPinsArray)].length);
@@ -48,53 +48,38 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
 
     const nextPin = () => {
         if(currentPinIndex < (howMuchPins-1)) {
-            setAnimating(true);
-            setTimeout(() => {
-                setCurrentPinIndex(currentPinIndex + 1);
-                setAnimating(false);
-            }, 200);
+            setCurrentPinIndex(currentPinIndex + 1);
         } else if(currentPinIndex === (howMuchPins-1)) {
-            setAnimating(true);
-            setTimeout(() => {
-                setCurrentPinIndex(0);
-                setAnimating(false);
-            }, 200);
+            setCurrentPinIndex(0);
         }
     }
 
     const prevPin = () => {
         if(currentPinIndex > 0) {
-            setAnimating(true);
-            setTimeout(() => {
-                setCurrentPinIndex(currentPinIndex - 1);
-                setAnimating(false);
-            }, 200);
+            setCurrentPinIndex(currentPinIndex - 1);
         } else if(currentPinIndex === 0) {
-            setAnimating(true);
-            setTimeout(() => {
-                setCurrentPinIndex(howMuchPins-1);
-                setAnimating(false);
-            }, 200);
+            setCurrentPinIndex(howMuchPins-1);
         }
     }
 
-
     return (
         <Dialog key={`userPin-${userPinsArray[Object.keys(userPinsArray)][0].id}`} onOpenChange={setOpenDialog} open={openDialog}> 
-            <DialogTrigger>
-                <div  className="flex flex-col justify-center items-center ">
-                <Avatar className="w-[50px] h-[50px] border-2 border-primary">
-                    <AvatarImage src={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.photoUrl} alt="stock img" className="object-cover bg-black" />
-                    <AvatarFallback>{`${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.firstName[0]}${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.lastName[0]}`}</AvatarFallback>
-                </Avatar>
-
-                    <div className="mt-1 text-gray-500 text-sm flex flex-col text-center">
-                        <p>{userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.firstName}</p>
-                    </div>
+            <DialogTrigger asChild>
+                <div className="flex flex-col justify-center items-center ">
+                    <Avatar className="w-[50px] h-[50px] border-2 border-primary">
+                        <AvatarImage src={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.photoUrl} alt="stock img" className="object-cover bg-black" />
+                        <AvatarFallback>{`${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.firstName[0]}${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.lastName[0]}`}</AvatarFallback>
+                    </Avatar>
+                    
+                    <HoverUserInfo userData={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author} className="flex flex-row items-center" >
+                        <div className="mt-1 text-gray-500 text-sm flex flex-col text-center hover:underline">
+                            {userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.firstName}
+                        </div>
+                    </HoverUserInfo>
                 </div>
             </DialogTrigger>
 
-            <DialogContent className={cn("flex flex-col justify-center items-center max-w-full w-[800px] max-h-full", animating ? "opacity-0" : "opacity-100")}>
+            <DialogContent className="flex flex-col justify-center items-center max-w-full w-[800px] max-h-full">
                 <DialogTitle className="hidden"></DialogTitle>
                 <DialogDescription className="hidden"></DialogDescription>
 
@@ -109,13 +94,20 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
                 <div className="flex flex-row justify-between items-center w-full">
                         {/* <p>{userPinsArray[Object.keys(userPinsArray)][0].author.firstName}</p> */}
                     <div className="flex flex-row justify-center items-center gap-3 w-fit">
-                        <div className="w-[40px] h-[40px] rounded-full bg-secondary border-solid border-2 border-primary">
-                        </div>
+                        <HoverUserInfo userData={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author} className="flex flex-row items-center gap-2">
+                            <Avatar className="w-[40px] h-[40px]">
+                                <AvatarImage src={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.photoUrl} alt="stock img" className="object-cover bg-black" />
+                                <AvatarFallback>{`${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.firstName[0]}${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.lastName[0]}`}</AvatarFallback>
+                            </Avatar>
+                        
+                            <p className="text-current font-bold text-base flex flex-col justify-center items-start h-full flex-wrap">
+                                <span className="hover:underline">
+                                    {`${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.firstName} ${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.lastName}`}
+                                </span>
+                                <ReactTimeAgo timeStyle="round" date={new Date(userPinsArray[Object.keys(userPinsArray)][currentPinIndex].createdAt)} locale="en-US" className="mt-[-3px] font-normal text-sm text-gray-500"/>
+                            </p>
 
-                        <p className="text-current font-bold text-base flex flex-col justify-center items-start h-full flex-wrap">
-                            {`${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.firstName} ${userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.lastName}`}
-                            <ReactTimeAgo timeStyle="round" date={new Date(userPinsArray[Object.keys(userPinsArray)][currentPinIndex].createdAt)} locale="en-US" className="mt-[-3px] font-normal text-sm text-gray-500"/>
-                        </p>
+                        </HoverUserInfo>
 
                     </div>
 
@@ -136,7 +128,7 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
                     {howMuchPins > 1 && (
                         <Button 
                             variant="ghost" 
-                            className="p-1 absolute bg-secondary left-5 rounded-full"
+                            className="p-1 absolute bg-secondary left-5 rounded-full z-10"
                             onClick={() => prevPin()}
                         >
                             <ChevronLeftIcon className="h-6 w-6 cursor-pointer hover:bg-secondary rounded-md" />
@@ -154,7 +146,7 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
                     {howMuchPins > 1 && (
                         <Button 
                             variant="ghost" 
-                            className="p-1 absolute bg-secondary right-5 rounded-full"
+                            className="p-1 absolute bg-secondary right-5 rounded-full z-10"
                             onClick={() => nextPin()}
                         >
                             <ChevronRightIcon className="h-6 w-6 cursor-pointer hover:bg-secondary rounded-md" />

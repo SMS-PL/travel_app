@@ -64,7 +64,7 @@ function HorizontalBarChart({ value,  countriesLength}) {
                 margin={{ left: -60 }}
             >
                 
-                <XAxis type="number" domain={[0, countriesLength]} hide />
+                <XAxis type="number" domain={[0, !countriesLength ? 239 : countriesLength ]} hide />
                 <YAxis
                     // dataKey="label"
                     type="category"

@@ -10,7 +10,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 
-const HoverPopoverInputInfo = ({content}) => {
+const HoverPopoverInputInfo = ({children = null, content, ...props}) => {
     const [open, setOpen] = useState(false);
 
     const handleMouseEnter = () => {
@@ -27,14 +27,15 @@ const HoverPopoverInputInfo = ({content}) => {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <Icons.circleInfoFill className="h-4 w-4 fill-gray-500" />
+            {!children && <Icons.circleInfoFill className="h-4 w-4 fill-gray-500" />}
+            {children}
         </Popover.Trigger>
         <Popover.Content
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             className="w-fit z-10"
         >
-            <Card className="p-4 flex flex-col justify-center items-center flex-wrap w-[300px] text-sm bg-primary text-white">
+            <Card className="p-4 flex-wrap w-[300px] text-sm bg-primary text-white" {...props}>
                 {content}
             </Card>
             <Popover.Arrow />

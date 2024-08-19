@@ -56,6 +56,7 @@ import {
 import { useImperativeHandle } from 'react';
 import HoverUserInfo from "@/components/ui/HoverUserInfo";
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
+import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
 
 function Post({postData, setAddNewPost, refetch}) {    
     const authHeader = useAuthHeader();
@@ -66,6 +67,7 @@ function Post({postData, setAddNewPost, refetch}) {
 
     const [user, setUser] = useState({});
     const [countryISO, setCountryISO] = useState(null);
+    const [countryName, setCountryName] = useState(null);
 
     const [isCommentsOpen, setIsCommentsOpen] = useState(false);
     const [commentsData, setCommentsData] = useState([[]]);
@@ -195,6 +197,7 @@ function Post({postData, setAddNewPost, refetch}) {
             })
             .then(data => {
                 setCountryISO(data.iso);
+                setCountryName(data.nicename)
             })
             .catch(error => {
                 console.log(error.message);
@@ -356,7 +359,9 @@ function Post({postData, setAddNewPost, refetch}) {
                     {countryISO === null ? (
                         <div className="w-[40px] h-[25px] bg-gray-700 flex justify-center items-center text-xl text-white font-bold rounded-[1px]">?</div>
                     ) :
-                        <img src={`https://flagsapi.com/${countryISO}/flat/64.png`} alt="" className="w-[40px] cursor-pointer" />
+                        <HoverPopoverInputInfo content={countryName} className="w-fit px-4 py-2 flex-wrap text-sm bg-primary text-white font-bold">
+                            <img src={`https://flagsapi.com/${countryISO}/flat/64.png`} alt="" className="w-[40px] cursor-pointer" />
+                        </HoverPopoverInputInfo>
                     }
                     
                     {parseInt(user.id) == parseInt(auth.id) ? (

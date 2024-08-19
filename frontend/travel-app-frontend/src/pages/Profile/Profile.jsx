@@ -334,60 +334,12 @@ function Profile() {
 						<FriendsListDialog userFriendsList={userFriendsList} />
 					</CardFooter>
 				</Card>
-
 			</div>
 
 			<div className="w-full flex flex-col ">
 				<h3 className=" text-lg font-extrabold text-center pt-4">Posts</h3>
 				<Feed type="profile" userId={userId} />
 			</div>
-
-
-			{/* <div className="flex flex-col max-w-full w-[700px] gap-2 pt-5 md:pt-8 ">
-				
-				<h1 className="text-2xl font-extrabold tracking-tight lg:text-2xl text-center pb-0 md:pb-2">Posts</h1>
-				{auth.id === userId && <AddPost setAddNewPost={setAddNewPost}/> }
-				
-				{status == "pending" ? (
-					<Card className="mt-5 w-full">
-						<CardHeader className="flex flex-row">
-							<Skeleton className="h-12 w-12 rounded-full" />
-							<div className="px-2 w-fit">
-								<Skeleton className="h-4 w-[250px]" />
-								<Skeleton className="h-4 w-[200px] mt-2" />
-							</div>
-						</CardHeader>
-						<CardContent>
-							<Skeleton className="h-14 w-full mb-5" />
-							<Skeleton className="w-full h-[500px]" />
-						</CardContent>
-						<CardFooter className="flex justify-between">
-							<Button variant="outline">Likes</Button>
-							<Button variant="outline">Comments</Button>
-						</CardFooter>
-					</Card>
-
-				) : (
-					data.pages[0].empty == true ? (
-						<h1 className="text-sm font-extrabold tracking-tight lg:text-md text-center mt-8">No posts...</h1>
-					) : (
-						<>
-							{data.pages.map((group, i) => (
-								group.content.map((post) => (
-									<Post
-										key={post.id}
-										postData={post}
-										setAddNewPost={setAddNewPost}
-									/>
-								))
-							))}
-						</>
-					)
-				)}
-
-				{hasNextPage && <div ref={ref} className=""></div>}
-			</div> */}
-
 			
         </MainContainer>
     );
