@@ -1,17 +1,36 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
+import { Icon } from "leaflet";
+import "leaflet/dist/leaflet.css";
+
+const RecenterMap = ({ lat, lng }) => {
+    const map = useMap();
+    useEffect(() => {
+        if (lat && lng) {
+            map.setView([lat, lng], map.getZoom(), {
+                animate: true
+            });
+        }
+    }, [lat, lng, map]);
+    return null;
+};
 
 const MapComponent = ({ lat, lng }) => {
+    const customIcon = new Icon({
+        iconUrl: "/public/map_pin.svg",
+        iconSize: [38, 38]
+    });
 
     return (
-        <iframe 
-            src={`https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d999499.3418762151287!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zNTHCsDEyJzQ2LjAiTiAyMsKwNDEnNTcuNSJF!5e0!3m2!1spl!2spl!4v1717069975723!5m2!1spl!2spl`} 
-            loading="lazy" 
-            referrerPolicy="no-referrer-when-downgrade"
-            className="max-w-full w-[800px] max-h-full h-[500px] rounded-xl border bg-card text-card-foreground shadow"
-        >
-        </iframe>
-        
-    )
-}
+        <MapContainer center={[lat, lng]} zoom={10} className="z-[9] h-[500px] w-[750px] max-h-[100vh] max-w-[100vw] p-10 rounded-lg">
+            <TileLayer
+                attribution={`<a href='https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=14/${lat}/${lng}&layers=N'>Open full map</a> | &copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>`}
+                url={`https://tile.openstreetmap.org/{z}/{x}/{y}.png`}
+            />
+            {lat && lng && <Marker position={[lat, lng]} icon={customIcon}></Marker>}
+            <RecenterMap lat={lat} lng={lng} />
+        </MapContainer>
+    );
+};
 
 export default MapComponent;
