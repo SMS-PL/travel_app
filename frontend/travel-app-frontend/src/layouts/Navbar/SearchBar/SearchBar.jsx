@@ -140,7 +140,7 @@ const SearchBar = ({placeholder, ...props}) => {
                                 <HoverUserInfo 
                                     userData={user} 
                                     key={`userSearched${user.id}${i}`} 
-                                    className="flex " 
+                                    className="flex" 
                                     onClick={() => {
                                         deskoptInput.current.focus();
                                         mobileInput.current.focus();

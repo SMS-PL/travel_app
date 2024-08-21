@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, Suspense } from 'react';
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -83,6 +83,9 @@ function Post({postData, setAddNewPost, refetch}) {
 
     const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
     const [friendshipStatus, setFriendshipStatus] = useState(null);
+
+
+    const [isImageLoading, setIsImageLoading] = useState(true);
 
     const {
         register,
@@ -338,6 +341,7 @@ function Post({postData, setAddNewPost, refetch}) {
                         </Avatar>
                     
                         <div className="px-2 w-fit h-full">
+                            {postData.id}
                             <CardTitle className="flex-wrap flex flex-row justify-start items-center gap-2 hover:underline">
                                 <p className="text-sm md:text-base">{user.firstName} {user.lastName}</p>
 
@@ -402,7 +406,13 @@ function Post({postData, setAddNewPost, refetch}) {
             <CardContent>
                 {postData.content}
 
-                <img src={postData.imageUrl} alt="" className="w-full h-fit max-h-[800px] object-cover border-2 rounded-lg mt-4 bg-black" />
+                <img 
+                    src={postData.imageUrl} 
+                    alt="" 
+                    className={cn(isImageLoading ? "h-[400px] bg-secondary" : "h-fit max-h-[800px] bg-black", "w-full object-cover border-2 rounded-lg mt-4 ")} 
+                    onLoad={() => setIsImageLoading(false)} 
+                    loading="lazy" 
+                />
 
                 {/* przycisk do włączania/wyłączania komentarzy */}
                 <div className="flex justify-between h-fit mt-5">

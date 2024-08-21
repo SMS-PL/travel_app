@@ -9,7 +9,8 @@ import { useLocation } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
 import SearchBar from "@/layouts//Navbar/SearchBar/SearchBar";
 import { useState } from 'react';
-import ReceivedFriendshipNotification from "@/layouts//Navbar/Notifications/ReceivedFriendshipNotification";
+import FriendshipNotification from "@/layouts/Navbar/Notifications/Friendship/FriendshipNotification";
+import ActivityNotification from "@/layouts/Navbar/Notifications/Activity/ActivityNotification";
 
 export function Navbar() {
     const isAuthenticated = useIsAuthenticated();
@@ -56,7 +57,8 @@ export function Navbar() {
 
                 {/* 3 kolumna */}
                 <div className="col-span-1 flex justify-end gap-3 items-center">
-                    { isAuthenticated() && <ReceivedFriendshipNotification /> }
+                    { isAuthenticated() && <ActivityNotification /> }
+                    { isAuthenticated() && <FriendshipNotification /> }
                     { isAuthenticated() && <UserNav /> }
                     { !isAuthenticated() && <ModeToggle className="mx-3"/> }
                 </div>

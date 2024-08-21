@@ -16,7 +16,7 @@ const ImageUploader = ({uploadingImage, setUploadingImage, imageURL, setImageURL
     const { toast } = useToast();
 
     const handleImageChange = async (e) => {
-        console.log(e.target.files[0]);
+        // console.log(e.target.files[0]);
 
         const image = e.target.files[0];
 
@@ -60,6 +60,10 @@ const ImageUploader = ({uploadingImage, setUploadingImage, imageURL, setImageURL
         }
     };
   
+    const handleRemoveImage = () => {
+        setImageURL("");
+        document.getElementById('file').value = "";
+    };
 
     return (
         <div className="flex flex-row justify-center items-center relative">
@@ -83,7 +87,7 @@ const ImageUploader = ({uploadingImage, setUploadingImage, imageURL, setImageURL
             {imageURL !== "" && !uploadingImage && (
                 <Icons.trashEmpty 
                     className="h-5 w-5 fill-current hover:fill-red-600 cursor-pointer absolute top-[-10px] right-[-7px]"
-                    onClick={() => setImageURL("")}
+                    onClick={handleRemoveImage}
                 /> 
             )}
 

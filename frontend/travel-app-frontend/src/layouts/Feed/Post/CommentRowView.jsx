@@ -166,6 +166,7 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData, set
             <div className="flex flex-col w-full">
                 <div className="flex flex-row items-baseline gap-3">
                     <div className="text-sm">
+                        {commentData.id}
                         <HoverUserInfo userData={commentData.author}>
                             <span className="font-bold hover:underline">{commentData !== null && commentData.author.firstName} {commentData.author.lastName}</span> 
                         </HoverUserInfo>
