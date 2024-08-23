@@ -27,13 +27,15 @@ const AchievementsDialog = ({userAchievements}) => {
                 </div>
             </DialogTrigger>
 
-            <DialogContent className="flex flex-col justify-center items-center max-w-full w-[700px] p-10">
-                <DialogHeader className="w-full">
+            <DialogContent className="flex flex-col justify-center items-center max-w-full w-[700px] rounded-lg py-8 px-5 sm:p-10">
+                <DialogHeader className="w-full text-center sm:text-start" >
                     <DialogTitle className="font-extrabold">All achievements</DialogTitle>
                     <DialogDescription>
                         Here you will find all achievements earned by this user.
                     </DialogDescription>
+                </DialogHeader>
 
+                <div className="w-full">
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 overflow-y-scroll max-h-[70vh] pt-2 items-start gap-5">
                         {!userAchievements && <SpinLoading className="w-full flex justify-center items-center" /> }
 
@@ -50,8 +52,8 @@ const AchievementsDialog = ({userAchievements}) => {
                             <span className="text-sm absolute bottom-[-7px]">The user has not earned any achievements yet.</span>
                         </div>
                     )}
-
-                </DialogHeader>
+                </div>
+                
             </DialogContent>
         </Dialog>
     );

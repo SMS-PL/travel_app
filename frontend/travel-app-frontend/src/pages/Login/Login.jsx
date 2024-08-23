@@ -95,7 +95,7 @@ const Login = () => {
         return (
             <MainContainer type="loginRegister">
                 <div className="flex justify-center items-center">
-                    <Card className="w-[400px]">
+                    <Card className="w-[400px] backdrop-blur-[150px]">
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <CardHeader>
                                 <CardTitle className="scroll-m-20 text-2xl font-bold tracking-tight">Login</CardTitle>

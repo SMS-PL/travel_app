@@ -135,7 +135,7 @@ const SearchBar = ({placeholder, ...props}) => {
                     // tabIndex="0"
                     ref={searchDiv}
                 >
-                    <CardContent className="p-0 m-0">
+                    <CardContent className="p-0 m-0 px-2 py-2">
                         {!isLoading && usersData.content && usersData.content.map((user, i) => (
                                 <HoverUserInfo 
                                     userData={user} 

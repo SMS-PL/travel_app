@@ -28,7 +28,7 @@ function App() {
     return (
         <>
             <div className="fixed top-0 z-[-2] h-screen w-screen bg-[#000000] dark:bg-[radial-gradient(#fff1111f_1px,#000001_1px)] bg-[radial-gradient(#dbdbdb_1px,#ffffff_1px)] bg-[size:20px_20px]" ></div>
-            <div className="fixed top-0 right-[10%] z[-2] bg-primary w-[400px] h-[300px] rounded-full blur-[290px] "></div>
+            <div className="fixed top-0 right-[10%] z-[-1] bg-primary w-[400px] h-[300px] rounded-full blur-[290px] "></div>
             <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
                 <AuthProvider store={store}>
                     <QueryClientProvider client={queryClient}>

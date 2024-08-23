@@ -60,7 +60,7 @@ const FriendsListRowView = ({user, setOpen, ...props}) => {
                 </Avatar>
             
                 <div className="px-2">
-                    <CardTitle className="text-base">{user.firstName} {user.lastName}</CardTitle>
+                    <CardTitle className="text-base text-start">{user.firstName} {user.lastName}</CardTitle>
                 </div>
             </Link>
             <FriendshipButton userId={user.id} />

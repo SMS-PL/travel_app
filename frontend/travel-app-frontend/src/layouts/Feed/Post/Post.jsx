@@ -20,17 +20,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Reaction from "@/layouts/Feed/Post/Reaction";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { Icons } from "@/components/icons";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+
 import ReactTimeAgo from 'react-time-ago';
 import { useToast } from "@/components/ui/use-toast";
 import CommentRowView from '@/layouts/Feed/Post/CommentRowView';
@@ -57,6 +47,8 @@ import { useImperativeHandle } from 'react';
 import HoverUserInfo from "@/components/ui/HoverUserInfo";
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
+import EditPostDialog from "@/layouts/Feed/Post/EditPostDialog";
+import DeletePostDialog from "@/layouts/Feed/Post/DeletePostDialog";
 
 function Post({postData, setAddNewPost, refetch}) {    
     const authHeader = useAuthHeader();
@@ -69,11 +61,15 @@ function Post({postData, setAddNewPost, refetch}) {
     const [countryISO, setCountryISO] = useState(null);
     const [countryName, setCountryName] = useState(null);
 
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
     const [isCommentsOpen, setIsCommentsOpen] = useState(false);
     const [commentsData, setCommentsData] = useState([[]]);
     const [refetchComments, setRefetchComments] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
+    // paginacja
     const [currentPage, setCurrentPage] = useState(0);
     const [pageSize, setPageSize] = useState(3);
     const [totalPages, setTotalPages] = useState(0);
@@ -86,6 +82,7 @@ function Post({postData, setAddNewPost, refetch}) {
 
 
     const [isImageLoading, setIsImageLoading] = useState(true);
+
 
     const {
         register,
@@ -163,7 +160,6 @@ function Post({postData, setAddNewPost, refetch}) {
                 }
                 return [...prevData, data.content]
             });
-
             setTotalElements(data.totalElements);
             setTotalPages(data.totalPages);
             setIsLastPage(data.last);
@@ -232,6 +228,11 @@ function Post({postData, setAddNewPost, refetch}) {
 		});
     };
 
+    // edit content of POST
+    // const editPost = (newContent) => {
+
+    // };
+
  
 
     const handlePrevPage = () => {
@@ -293,45 +294,11 @@ function Post({postData, setAddNewPost, refetch}) {
         }
     };
 
-    // funkcja do usuwania postu
-    const deletePostOnClick = () => {
-        fetch(`http://localhost:5000/api/v1/posts/${postData.id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json', 
-                "Authorization": authHeader,
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                console.log(response);
-                throw new Error("Blad sieci!");
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data);
-            toast({
-                title: "Hurrah!",
-                description: "Post deleted successfully!",
-                className: "bg-green-800"
-            })
-            setAddNewPost(true);
-        })
-        .catch(error => {
-            console.log(error);
-            toast({
-                variant: "destructive",
-                title: "Uh oh! Failed to delete post!",
-                description: error.message,
-            })
-        });
-    };
 
     return (
         <Card className="mt-5 w-full">
             {/* AUTOR POSTA */}
-            <CardHeader className="flex flex-row pb-1 cursor-pointer justify-between">
+            <CardHeader className="flex flex-row pb-1 justify-between">
                 {/* <Link to={`/profile/${user.id}`} className="flex flex-row"> */}
                 <HoverUserInfo userData={user} >
                     <div className="flex flex-row justify-center items-start">
@@ -341,7 +308,7 @@ function Post({postData, setAddNewPost, refetch}) {
                         </Avatar>
                     
                         <div className="px-2 w-fit h-full">
-                            {postData.id}
+                            {/* {postData.id} */}
                             <CardTitle className="flex-wrap flex flex-row justify-start items-center gap-2 hover:underline">
                                 <p className="text-sm md:text-base">{user.firstName} {user.lastName}</p>
 
@@ -367,37 +334,49 @@ function Post({postData, setAddNewPost, refetch}) {
                         </HoverPopoverInputInfo>
                     }
                     
-                    {parseInt(user.id) == parseInt(auth.id) ? (
+                    {parseInt(user.id) == parseInt(auth.id) && (
                         <>
                             <DropdownMenu>
                                 <DropdownMenuTrigger>
                                     <Icons.dotsVertical className="fill-gray-500 w-5 h-5 cursor-pointer" />
                                 </DropdownMenuTrigger>
 
-                                <DropdownMenuContent>
-                                    <DropdownMenuItem className="cursor-pointer" onSelect={(e) => e.preventDefault()}>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger className="w-full flex justify-start">
-                                                Delete
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent>
-                                                <AlertDialogHeader>
-                                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                                    <AlertDialogDescription>
-                                                        This action cannot be undone. This will permanently delete the post from our servers.
-                                                    </AlertDialogDescription>
-                                                </AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction type="button" onClick={deletePostOnClick} >Continue</AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem 
+                                        className="cursor-pointer"
+                                        onSelect={() => setIsDeleteDialogOpen(true)}
+                                    >
+                                        Delete
                                     </DropdownMenuItem>
+
+                                    <DropdownMenuItem 
+                                        className="cursor-pointer"
+                                        onSelect={() => setIsEditDialogOpen(true)} 
+                                    >
+                                        Edit post
+                                    </DropdownMenuItem>
+
                                 </DropdownMenuContent>
-                        </DropdownMenu>
+                            </DropdownMenu>
+
+                            <DeletePostDialog 
+                                postId={postData.id}
+                                isOpen={isDeleteDialogOpen}
+                                setIsOpen={setIsDeleteDialogOpen}
+                                onClose={() => setIsDeleteDialogOpen(false)}
+                                refetch={refetch}     
+                            />
+
+                            <EditPostDialog
+                                postId={postData.id}
+                                prevContent={postData.content}
+                                isOpen={isEditDialogOpen}
+                                setIsOpen={setIsEditDialogOpen}
+                                onClose={() => setIsEditDialogOpen(false)}
+                                refetch={refetch}
+                            />
                         </>
-                    ) : null}
+                    )}
                 </div>
             </CardHeader>
             
@@ -405,7 +384,6 @@ function Post({postData, setAddNewPost, refetch}) {
             {/* OPIS I ZDJĘCIE */}
             <CardContent>
                 {postData.content}
-
                 <img 
                     src={postData.imageUrl} 
                     alt="" 

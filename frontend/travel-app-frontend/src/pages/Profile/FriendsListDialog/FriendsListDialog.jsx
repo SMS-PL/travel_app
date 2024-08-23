@@ -30,11 +30,12 @@ const FriendsListDialog = ({userFriendsList}) => {
                 </div>
             </DialogTrigger>
 
-            <DialogContent className="flex flex-col justify-center items-center max-w-full w-[450px] p-8">
-                <DialogHeader className="w-full">
+            <DialogContent className="flex flex-col justify-center items-center max-w-full w-[700px] rounded-lg px-2 py-10 sm:p-10">
+                <DialogHeader className="w-full text-center sm:text-start" >
                     <DialogTitle className="font-extrabold">All friends</DialogTitle>
                     <DialogDescription className="">Here you can find the user's friends list</DialogDescription>
-
+                </DialogHeader>
+                <div className="w-full">
                     <div className="flex flex-col justify-center items-center w-full gap-2">
                         {!userFriendsList && <SpinLoading className="w-full flex justify-center items-center" /> }
 
@@ -51,8 +52,8 @@ const FriendsListDialog = ({userFriendsList}) => {
                             <span className="text-sm mt-4">The user has not friends.</span>
                         </div>
                     )}
-
-                </DialogHeader>
+                </div>
+                
             </DialogContent>
         </Dialog>
     );

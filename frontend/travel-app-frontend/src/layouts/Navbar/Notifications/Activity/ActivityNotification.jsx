@@ -56,7 +56,7 @@ const ActivityNotification = () => {
 			return response.json();
 		})
 		.then(data => {
-			console.log(data);
+			// console.log(data);
 
 			setData(data);
 			setTotalPages(data.totalPages);
@@ -83,7 +83,7 @@ const ActivityNotification = () => {
 				<Icons.bellFill className={cn(open ? "fill-primary" : "fill-current", "w-[22px] h-[22px]")} /> 
 			</DropdownMenuTrigger>
 
-			<DropdownMenuContent className="max-w-full w-[400px] p-2 h-fit max-h-[500px] overflow-y-scroll" align="end" forceMount>
+			<DropdownMenuContent className="max-w-[100vw] w-[400px] p-2" align="end"  forceMount>
 				<DropdownMenuLabel className="font-bold pb-2">
 					<p className="text-base font-bold leading-none">
 						Notifications
@@ -92,13 +92,13 @@ const ActivityNotification = () => {
 
 				<DropdownMenuSeparator />
 				
-				<DropdownMenuGroup className="py-2">
+				<DropdownMenuGroup className="py-2 max-h-[500px] h-fit overflow-y-auto">
 
 					{(data && data.content.length != 0) && (
-						data.content.map((notification, i) => (
+						data.content.map((notificationGroup, i) => (
 							<NotificationRowView 
 								key={`notification${i}`}
-								notification={notification}
+								notificationGroup={notificationGroup}
 							/>
 						))
 					)}

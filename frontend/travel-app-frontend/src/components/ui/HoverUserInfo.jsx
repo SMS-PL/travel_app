@@ -24,8 +24,8 @@ const HoverUserInfo = ({children, userData, ...props}) => {
                     {children}
                 </Link>
             </HoverCardTrigger>
-            <HoverCardContent className="w-80" asChild>
-                <div className="flex flex-col justify-center items-start">
+            <HoverCardContent className="w-80 " asChild>
+                <div className="flex flex-col justify-center items-start ">
                     <Link to={`/profile/${userData.id}`} className="flex flex-row">
                         <div className="flex flex-row gap-3 justify-center items-center" >
                             <Avatar className="w-[70px] h-[70px]">

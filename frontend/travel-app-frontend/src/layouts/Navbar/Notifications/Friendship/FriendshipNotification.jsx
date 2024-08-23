@@ -71,7 +71,7 @@ const FriendshipNotification = () => {
 				<Icons.userCheckFill className={cn(open ? "fill-primary" : "fill-current", "w-[30px] h-[30px]")} /> 
 			</DropdownMenuTrigger>
 
-			<DropdownMenuContent className="max-w-full w-fit p-2" align="end" forceMount>
+			<DropdownMenuContent className="max-w-[100vw] w-[400px] p-2" align="end" forceMount>
 				<DropdownMenuLabel className="font-bold pb-2">
 					<p className="text-base font-bold leading-none">
 						Invitations to friends
@@ -80,7 +80,7 @@ const FriendshipNotification = () => {
 
 				<DropdownMenuSeparator />
 				
-				<DropdownMenuGroup className="py-2">
+				<DropdownMenuGroup className="py-2 max-h-[500px] h-fit overflow-y-auto">
 					{(dataFriendship && dataFriendship.length != 0) ? (
 						dataFriendship.slice().reverse().map((user, i) => (
 							<UserRowView 

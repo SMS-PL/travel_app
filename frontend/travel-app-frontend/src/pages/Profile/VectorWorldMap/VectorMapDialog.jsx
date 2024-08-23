@@ -54,8 +54,8 @@ const VectorMapDialog = ({userId}) => {
                 </div>
             </DialogTrigger>
 
-            <DialogContent className="max-w-full w-[800px] p-5 md:p-10 flex flex-col justify-center items-center">
-                <DialogHeader className="w-full flex flex-col justify-center items-start">
+            <DialogContent className="flex flex-col justify-center items-center max-w-full w-[800px] rounded-lg py-8 px-5 sm:p-10">
+                <DialogHeader className="w-full text-center sm:text-start">
                     <DialogTitle className="font-extrabold">Interactive map</DialogTitle>
                     <DialogDescription>
                         The countries visited by the user are marked in <span className="text-primary font-bold">blue</span>.

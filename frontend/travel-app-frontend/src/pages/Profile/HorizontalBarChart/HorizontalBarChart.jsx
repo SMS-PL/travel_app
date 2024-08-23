@@ -73,12 +73,12 @@ function HorizontalBarChart({ value,  countriesLength}) {
                     axisLine={false}
                     // tickFormatter={(value) => value.slice(0, 3)}
                 />
-                <CartesianGrid vertical={false}/>
+                <CartesianGrid vertical={false} />
                 {/* <ChartTooltip
                     cursor={false}
                     content={<ChartTooltipContent hideLabel />}
                 /> */}
-                <Bar dataKey="count" fill="hsl(var(--primary))" radius={5} stackId="a" className="w-full"/>
+                <Bar dataKey="count" fill="hsl(var(--primary))" background={{ fill: 'hsl(var(--secondary))'}} radius={5} className="" />
                 {/* <Bar dataKey="max" fill="hsl(var(--secondary))" radius={5} stackId="a"/> */}
 
             </BarChart>

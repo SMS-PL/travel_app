@@ -100,7 +100,7 @@ const AddPost = ({setAddNewPost}) => {
     };
 
     return (
-        <Card className="w-full mt-4">
+        <Card className="w-full mt-4 backdrop-blur-[150px]">
             <form onSubmit={handleSubmit(onSubmit)} className="">
                 {/* <CardHeader className="flex flex-col p-3"></CardHeader> */}
                 

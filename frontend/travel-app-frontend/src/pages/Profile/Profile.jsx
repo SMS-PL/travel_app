@@ -227,7 +227,7 @@ function Profile() {
     return (
         <MainContainer type="profile">
 
-			<div className="relative flex flex-col justify-center items-center">
+			<div className="relative flex flex-col justify-center items-center ">
 				
 				{(!imageBackgroundURL || imageBackgroundURL == "") ? (
 					<div className="w-full h-[200px] rounded-md bg-secondary"></div>
@@ -275,7 +275,7 @@ function Profile() {
 				<FriendshipButton userId={userId} className="mt-3"/>
 			</div>
 
-			<div className="w-full mt-4 grid  gap-2 sm:gap-4 md:gap-6 md:mt-8 grid-cols-2 sm:grid-cols-3">
+			<div className="w-full mt-4 grid  gap-2 sm:gap-4 md:gap-6 md:mt-8 grid-cols-2 sm:grid-cols-3 backdrop-blur-[150px]">
 				<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-2 sm:col-span-1 p-4 ">
 					<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
 						<CardTitle className="text-base sm:text-lg font-bold leading-5">
