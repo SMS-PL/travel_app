@@ -8,6 +8,7 @@ import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import { useState, createContext } from "react";
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
+import { cn } from '@/lib/utils';
 
 TimeAgo.addDefaultLocale(en);
 
@@ -20,13 +21,14 @@ const store = createStore({
 
 const queryClient = new QueryClient();
 
-
 function App() {
 
     const [globalRefreshFriendship, setGlobalRefreshFriendship] = useState(false);
 
     return (
         <>
+            <div className="fixed top-0 z-[-2] h-screen w-screen bg-[#000000] dark:bg-[radial-gradient(#ffffff19_1px,#000001_1px)] bg-[radial-gradient(#dbdbdb_1px,#ffffff_1px)] bg-[size:20px_20px]" ></div>
+            <div className="fixed top-0 right-[10%] z[-2] bg-primary w-[400px] h-[300px] rounded-full blur-[270px] "></div>
             <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
                 <AuthProvider store={store}>
                     <QueryClientProvider client={queryClient}>
