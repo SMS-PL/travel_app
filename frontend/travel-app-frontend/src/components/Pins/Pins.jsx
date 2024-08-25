@@ -240,9 +240,11 @@ function Pins() {
                     }
                 </div>
 
-                {(isLoading || pinsData == null) ? (
-                    <SpinLoading className="flex justify-center items-center" />
-                ) : (
+                {isLoading && <SpinLoading className="flex justify-center items-center" /> }
+
+                {!isLoading && pinsData &&( pinsData.content.length == 0) && null}
+
+                {!isLoading && pinsData && (pinsData.content.length != 0) && (
                     <div className="flex flex-row gap-2 bg-secondary p-3 rounded-2xl justify-center items-center h-full">
                         <div onClick={() => prevPage()} className="w-fit hover:bg-background/40 rounded-full">
                             <ChevronLeftIcon className={cn("h-6 w-6 cursor-pointer rounded-md", currentPage == 0 && "hidden")} />

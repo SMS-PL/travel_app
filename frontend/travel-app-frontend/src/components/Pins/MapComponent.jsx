@@ -17,7 +17,7 @@ const RecenterMap = ({ lat, lng }) => {
 
 const MapComponent = ({ lat, lng }) => {
     const customIcon = new Icon({
-        iconUrl: "/public/map_pin.svg",
+        iconUrl: "/map_pin.svg",
         iconSize: [38, 38]
     });
     
