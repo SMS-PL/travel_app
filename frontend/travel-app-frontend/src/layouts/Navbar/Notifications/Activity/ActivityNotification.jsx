@@ -94,13 +94,18 @@ const ActivityNotification = () => {
 				
 				<DropdownMenuGroup className="py-2 max-h-[500px] h-fit overflow-y-auto">
 
-					{(data && data.content.length != 0) && (
+				{(data && data.content.length != 0) ? (
 						data.content.map((notificationGroup, i) => (
 							<NotificationRowView 
 								key={`notification${i}`}
 								notificationGroup={notificationGroup}
 							/>
 						))
+					) : (
+						<div className="flex flex-col justify-center items-center">
+							<Icons.bellFill className="fill-current w-16 h-16 cursor-pointer opacity-20" />
+							<p className="text-sm text-gray-400 mt-3">No notifications!</p>
+						</div>
 					)}
 
 				</DropdownMenuGroup>
