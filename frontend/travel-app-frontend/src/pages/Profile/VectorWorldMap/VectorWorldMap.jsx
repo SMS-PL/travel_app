@@ -11,7 +11,7 @@ const VectorWorldMap = ({userCountry}) => {
     return (
         <div className="w-full h-[500px] rounded-lg">
             <VectorMap 
-                className="rounded-xl"
+                className="rounded-xl z-[99]"
                 map={worldMill}
                 containerStyle={{
                     width: "800px",
@@ -34,22 +34,13 @@ const VectorWorldMap = ({userCountry}) => {
                         }
                     ]
                 }}
-                // onRegionTipShow={function (event, label, code, ...props) {
-                //     label.html(
-                //       '<div style="background-color: white; z-index: 49; border: 1px solid white; outline: 10px solid white; border-radius: 6px; min-height: 70px; width: 150px; color: black"; padding-left: 10px>' +
-                //         "<p>" +
-                //         "<b>" +
-                //         label.html() +
-                //         "</b>" +
-                //         "</p>" +
-                //         "<p>" +
-                //         "Count: " +
-                //         "<b>" +
-                //         "</b>" +
-                //         "</p>" +
-                //         "</div>"
-                //     );
-                //   }}
+                onRegionTipShow={function (event, label, code, ...props) {
+                    label.html(
+                        "<div style='position: absolute; margin-left: 20px; height: fit; width: fit; z-index: 99; background-color: hsl(var(--secondary)); padding: 5px 10px; border-radius: 25px; color: var(--current); text-wrap: nowrap;'>" +
+                            "Country: " + label.html() +
+                        "</div>"
+                    );
+                  }}
             />
         </div>
     )
