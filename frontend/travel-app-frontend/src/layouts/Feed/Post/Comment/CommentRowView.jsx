@@ -28,8 +28,10 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar";
+import DeleteCommentDialog from "@/layouts/Feed/Post/Comment/DeleteCommentDialog";
+import EditCommentDialog from "@/layouts/Feed/Post/Comment/EditCommentDialog";
 
-function CommentRowView({postId, commentData, commentsData, setCommentsData, setRefetch}) {
+const CommentRowView = ({commentId, commentData, commentsData, setCommentsData, setRefetch}) => {
 	const authHeader = useAuthHeader();
     const auth = useAuthUser();
     const { toast } = useToast();
@@ -37,6 +39,8 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData, set
     const [reactionCount, setReactionCount] = useState(0);
     const [isReacted, setIsReacted] = useState(false);
 
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     
     useEffect(() => {
         setReactionCount(commentData.reactionCount);
@@ -45,40 +49,10 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData, set
         
     }, [isReacted, commentsData]);
 
-    const deleteComment = () => {
-		fetch(`http://localhost:5000/api/v1/comments/${commentData.id}`, {
-			method: 'DELETE',
-			headers: {
-				'Content-Type': 'application/json', 
-				"Authorization": authHeader,
-			},
-		})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Błąd sieci!');
-			}
-			return response.json();
-		})
-		.then(data => {
-            setCommentsData(
-                commentsData.map((group, i) => (
-                    group.filter(comment => comment.id !== commentData.id)
-                ))
-            );
-            setRefetch(true);
-            toast({
-                title: "Hurrah!",
-                description: "Comment deleted correctly!",
-                className: "bg-green-800"
-            })
-		})
-		.catch(error => {
-			console.log(error.message);
-		});
-    };
+
 
     const checkIsReacted = () => {
-        fetch(`http://localhost:5000/api/v1/comments/${commentData.id}/reacted`, {
+        fetch(`http://localhost:5000/api/v1/comments/${commentId}/reacted`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json', 
@@ -101,7 +75,7 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData, set
     };
 
     const reactToComment = () => {
-        fetch(`http://localhost:5000/api/v1/comments/${commentData.id}/react`, {
+        fetch(`http://localhost:5000/api/v1/comments/${commentId}/react`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json', 
@@ -176,18 +150,49 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData, set
                 
                 <div className="flex flex-row gap-2">
                     <ReactTimeAgo timeStyle="round" date={new Date(commentData !== null && commentData.createdAt)} locale="en-US" className="text-sm text-gray-500"/>
-                    {auth.id == commentData.author.id && (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger>
-                                <Icons.dotsVertical className="fill-gray-500 w-5 h-5 cursor-pointer" />
-                            </DropdownMenuTrigger>
-                            
-                            <DropdownMenuContent>
-                                <DropdownMenuItem className="cursor-pointer" onClick={() => {deleteComment()}}>Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                        )
-                    }
+                    {parseInt(auth.id) == parseInt(commentData.author.id) && (
+                        <>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger>
+                                    <Icons.dotsVertical className="fill-gray-500 w-5 h-5 cursor-pointer" />
+                                </DropdownMenuTrigger>
+
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem 
+                                        className="cursor-pointer"
+                                        onSelect={() => setIsDeleteDialogOpen(true)}
+                                    >
+                                        Delete
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem 
+                                        className="cursor-pointer"
+                                        onSelect={() => setIsEditDialogOpen(true)} 
+                                    >
+                                        Edit post
+                                    </DropdownMenuItem>
+
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+
+                            <DeleteCommentDialog 
+                                commentId={commentData.id}
+                                isOpen={isDeleteDialogOpen}
+                                onClose={() => setIsDeleteDialogOpen(false)}
+                                setCommentsData={setCommentsData}
+                                commentsData={commentsData}
+                            />
+
+                            <EditCommentDialog
+                                commentId={commentData.id}
+                                prevContent={commentData.content}
+                                isOpen={isEditDialogOpen}
+                                setIsOpen={setIsEditDialogOpen}
+                                onClose={() => setIsEditDialogOpen(false)}
+                                setRefetch={setRefetch}
+                            />
+                        </>
+                    )}
                 </div>
 
             </div>
@@ -204,7 +209,7 @@ function CommentRowView({postId, commentData, commentsData, setCommentsData, set
             </div>
             
         </div>
-    )
-}
+    );
+};
 
 export default CommentRowView;
