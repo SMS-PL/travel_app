@@ -23,11 +23,9 @@ import { Icons } from "@/components/icons";
 
 import ReactTimeAgo from 'react-time-ago';
 import { useToast } from "@/components/ui/use-toast";
-import CommentRowView from '@/layouts/Feed/Post/CommentRowView';
 import { useForm } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 import {
     DropdownMenu,
@@ -49,6 +47,8 @@ import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
 import EditPostDialog from "@/layouts/Feed/Post/EditPostDialog";
 import DeletePostDialog from "@/layouts/Feed/Post/DeletePostDialog";
+import CommentRowView from '@/layouts/Feed/Post/Comment/CommentRowView';
+import EditCommentDialog from "@/layouts/Feed/Post/Comment/EditCommentDialog";
 
 function Post({postData, setAddNewPost, refetch}) {    
     const authHeader = useAuthHeader();
@@ -75,7 +75,6 @@ function Post({postData, setAddNewPost, refetch}) {
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [isLastPage, setIsLastPage] = useState(false);
-    const [refetchData, setRefetchData] = useState(false);
 
     const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
     const [friendshipStatus, setFriendshipStatus] = useState(null);
@@ -94,8 +93,8 @@ function Post({postData, setAddNewPost, refetch}) {
 
     useEffect(() => {
         fetchComments();
-        setRefetchData(false);
-	}, [currentPage, refetchData]);
+        setRefetchComments(false);
+	}, [currentPage, refetchComments]);
 
     
     useEffect(() => {
@@ -278,7 +277,7 @@ function Post({postData, setAddNewPost, refetch}) {
                     return [[data], ...commentsData]
                 });
                 setCurrentPage(0);
-                setRefetchData(true);
+                setRefetchComments(true);
             })
             .catch(error => {
                 toast({
@@ -471,11 +470,11 @@ function Post({postData, setAddNewPost, refetch}) {
                                     group.map((commentData, j) => 
                                         <CommentRowView 
                                             key={`commentView${postData.id}${i}${j}`}
-                                            postId={postData.id}
+                                            commentId={commentData.id}
                                             commentData={commentData}
                                             commentsData={commentsData}
                                             setCommentsData={setCommentsData}
-                                            setRefetch={setRefetchData}
+                                            setRefetch={setRefetchComments}
                                         />
                                     )
 

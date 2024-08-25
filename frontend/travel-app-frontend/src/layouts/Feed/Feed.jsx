@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Post from "@/layouts/Feed/Post/Post";
-import AddPost from "@/layouts/Feed/Post/AddPost";
+import AddPost from "@/layouts/Feed/Post/AddPost/AddPost";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 import SpinLoading from '@/components/ui/SpinLoading';

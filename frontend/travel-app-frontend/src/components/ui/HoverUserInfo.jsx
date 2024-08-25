@@ -1,3 +1,4 @@
+import React, {useState} from 'react';
 import { CalendarIcon } from "@radix-ui/react-icons";
 import {
     Avatar,
@@ -16,16 +17,18 @@ import FriendshipButton from '@/components/FriendshipsButton/FriendshipButton';
 const HoverUserInfo = ({children, userData, ...props}) => {
     // console.log(userData);
 
+    const [isOpen, setIsOpen] = useState(false);
+
     return (
         
-        <HoverCard>
+        <HoverCard openDelay={200} closeDelay={200} open={isOpen} onOpenChange={(open) => setIsOpen(open)} >
             <HoverCardTrigger asChild>
                 <Link to={`/profile/${userData.id}`} {...props} >
                     {children}
                 </Link>
             </HoverCardTrigger>
-            <HoverCardContent className="w-80 " asChild>
-                <div className="flex flex-col justify-center items-start ">
+            <HoverCardContent asChild>
+                <div className="flex flex-col justify-center items-start w-80">
                     <Link to={`/profile/${userData.id}`} className="flex flex-row">
                         <div className="flex flex-row gap-3 justify-center items-center" >
                             <Avatar className="w-[70px] h-[70px]">
@@ -38,7 +41,7 @@ const HoverUserInfo = ({children, userData, ...props}) => {
                             </div>
                         </div>
                     </Link>
-                    <div className="w-full flex justify-center items-center">
+                    <div className="w-full flex justify-center items-center" >
                         <FriendshipButton userId={userData.id} />
                     </div>
                 </div>

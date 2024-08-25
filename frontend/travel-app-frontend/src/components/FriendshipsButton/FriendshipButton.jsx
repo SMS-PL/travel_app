@@ -21,7 +21,7 @@ import { Icons } from "@/components/icons";
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 import SpinLoading from '@/components/ui/SpinLoading';
 
-const FriendshipButton = ({userId, ...props}) => {
+const FriendshipButton = ({userId, type = "default", ...props}) => {
 	const authHeader = useAuthHeader();
 	const auth = useAuthUser();
 
@@ -113,8 +113,8 @@ const FriendshipButton = ({userId, ...props}) => {
 
     return (
 		<>
-            {userId == auth.id ? null : (
-					<div className="flex justify-center items-center" {...props}>
+            {userId != auth.id && (
+					<div className="flex justify-center items-center" {...props} >
 						{!friendshipStatus && <SpinLoading className="w-full flex justify-center items-center" /> }
 
 						{friendshipStatus === "STRANGER" ? (
@@ -152,14 +152,19 @@ const FriendshipButton = ({userId, ...props}) => {
 
 						{ friendshipStatus === "FRIEND" ? (
 							<DropdownMenu>
-								<DropdownMenuTrigger asChild>
-									<Button variant="outline" className="flex flex-row items-center justify-center gap-2">
+								<DropdownMenuTrigger asChild > 
+									<Button variant="outline" className="flex flex-row items-center justify-center gap-2" >
                                         <Icons.userCheckFill className="h-6 w-6 fill-current" />
 										Friend
 									</Button>
 								</DropdownMenuTrigger>
-								<DropdownMenuContent className="w-full">
-									<DropdownMenuItem onClick={removeFriend} className="cursor-pointer flex flex-row items-center justify-center gap-2">
+								<DropdownMenuContent 
+									className="w-full" 
+								>
+									<DropdownMenuItem 
+										onClick={() => removeFriend()}
+										className="cursor-pointer flex flex-row items-center justify-center gap-2"
+									>
                                         <Icons.userDeleteFill className="h-6 w-6 fill-current" />
                                         Remove friend
                                     </DropdownMenuItem>
