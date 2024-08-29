@@ -93,46 +93,11 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
 
     return (
         <div>
-			{((type == "home") || 
-			(type == "friends") || 
-			(type == "profile" && userId == auth.id)) && 
-			<AddPost setAddNewPost={setAddNewPost}/> }
+			{((type == "home") || (type == "friends") || (type == "profile" && userId == auth.id)) &&
+				<AddPost setAddNewPost={setAddNewPost} /> 
+			}
             
-
 			{status == "pending" ? (
-				// <Card className="mt-5 w-full">
-				// 	<CardHeader className="flex flex-row">
-				// 		<Skeleton className="h-12 w-12 rounded-full" />
-				// 		<div className="px-2 w-fit">
-				// 			<Skeleton className="h-4 w-[250px]" />
-				// 			<Skeleton className="h-4 w-[200px] mt-2" />
-				// 		</div>
-				// 	</CardHeader>
-				// 	<CardContent>
-				// 		<Skeleton className="h-8 w-full mb-5" />
-				// 		<Skeleton className="w-full h-[500px]" />
-				// 	</CardContent>
-				// 	<CardFooter className="flex justify-between">
-				// 		<div className="flex flex-row gap-3">
-				// 			<Button variant="secondary" >
-				// 				<div className="flex flex-row justify-center items-center gap-2">
-				// 					<Icons.likeEmpty className="h-6 w-6 fill-primary" />
-				// 					0
-				// 				</div>
-				// 			</Button>
-				// 			<Button variant="secondary" className="w-max-full w-[75px]" >
-				// 				<div className="flex flex-row justify-center items-center gap-1">
-				// 					<Icons.heartEmpty className="h-6 w-6 fill-red-500" />
-				// 					0
-				// 				</div>
-				// 			</Button>
-				// 		</div>
-				// 		<Button type="button" variant="secondary" className="flex flex-row items-center justify-center gap-2">
-				// 			<Icons.commentEmpty className="fill-current w-6 h-6" /> 
-				// 			0
-				// 		</Button>
-				// 	</CardFooter>
-				// </Card>
 				<SpinLoading className="w-full flex justify-center items-center py-5" />
 
 			) : (

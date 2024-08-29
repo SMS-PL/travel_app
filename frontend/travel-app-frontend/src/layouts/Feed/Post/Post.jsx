@@ -450,7 +450,7 @@ function Post({postData, setAddNewPost, refetch}) {
                             </Button>
                         </form>
                             
-                            {isLoading ? (
+                            {(isLoading || (commentsData == [[]])) ? (
                                 <div className="flex flex-row items-center gap-3 w-full my-3">
                                     <Skeleton className="h-10 w-10 rounded-full flex-none" />
                         
@@ -477,7 +477,6 @@ function Post({postData, setAddNewPost, refetch}) {
                                             setRefetch={setRefetchComments}
                                         />
                                     )
-
                                 ))
                             )}
 
