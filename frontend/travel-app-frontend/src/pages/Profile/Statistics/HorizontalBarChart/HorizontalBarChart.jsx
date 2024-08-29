@@ -1,19 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Bar, BarChart, XAxis, YAxis, CartesianGrid  } from "recharts"
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 
 // Kontener przyjmujący liczbę krajów i rysujący poziomy wykres słupkowy
 function HorizontalBarChart({ value,  countriesLength}) {

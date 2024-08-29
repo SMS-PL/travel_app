@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
-import VectorWorldMap from '@/pages/Profile/VectorWorldMap/VectorWorldMap';
+import VectorWorldMap from './VectorWorldMap';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import SpinLoading from '@/components/ui/SpinLoading';
 
 const VectorMapDialog = ({userId}) => {
 	const authHeader = useAuthHeader();
-
 
 	const [userCountry, setUserCountry] = useState(null);
 
@@ -41,7 +41,7 @@ const VectorMapDialog = ({userId}) => {
 			console.log(error.message);
 		});
 
-	}, []);
+	}, [userId]);
 
     return (
         <Dialog>
@@ -62,7 +62,9 @@ const VectorMapDialog = ({userId}) => {
                     </DialogDescription>
                 </DialogHeader>
 
-                <VectorWorldMap userCountry={userCountry}/>
+                {!userCountry && <SpinLoading className="w-full flex justify-center items-center" /> }
+                {userCountry && <VectorWorldMap userCountry={userCountry} />}
+                
             </DialogContent>
         </Dialog>
     );

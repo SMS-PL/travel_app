@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
-import FriendsListRowView from "@/pages/Profile/FriendsListDialog/FriendsListRowView";
+import FriendsListRowView from "./FriendsListRowView";
 import HoverUserInfo from "@/components/ui/HoverUserInfo";
 import SpinLoading from '@/components/ui/SpinLoading';
 
