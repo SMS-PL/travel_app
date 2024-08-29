@@ -17,10 +17,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -48,8 +47,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public Page<Map<String, Object>> getNotifications(int pageSize, int pageNumber) {
         UserEntity user = authService.getLoggedUser();
-        Page<Notification> notificationPage =
-                notificationRepository.findAllByReceiverId(user.getId(), PageRequest.of(pageNumber, pageSize));
+        Page<Notification> notificationPage = notificationRepository.findAllByReceiverId(user.getId(), PageRequest.of(pageNumber, pageSize));
 
         // Grupowanie powiadomień według contentId i type
         Map<ContentTypeGroupKey, List<NotificationResponseDto>> groupedNotifications = notificationPage.stream()
@@ -58,7 +56,7 @@ public class NotificationServiceImpl implements NotificationService {
                         notification -> new ContentTypeGroupKey(notification.getContentId(), notification.getType())
                 ));
 
-        // preszktalcenie na  mapę na listę obiektów z czytelnym formatem JSON
+        // Przekształcenie na mapę na listę obiektów z czytelnym formatem JSON
         List<Map<String, Object>> result = groupedNotifications.entrySet().stream()
                 .map(entry -> {
                     Map<String, Object> groupMap = new LinkedHashMap<>();
@@ -66,16 +64,31 @@ public class NotificationServiceImpl implements NotificationService {
                     groupMap.put("contentId", key.getContentId());
                     groupMap.put("type", key.getType());
                     groupMap.put("notifications", entry.getValue());
+
+                    // Znalezienie najnowszej daty "createdAt" dla tej grupy
+                    Timestamp latestCreatedAt = entry.getValue().stream()
+                            .map(NotificationResponseDto::getCreatedAt)
+                            .max(Comparator.naturalOrder())
+                            .orElse(Timestamp.from(Instant.MIN));
+
+                    groupMap.put("latestCreatedAt", latestCreatedAt);
                     return groupMap;
+                })
+                // Sortowanie według najnowszej daty "createdAt"
+                .sorted((group1, group2) -> {
+                    Timestamp createdAt1 = (Timestamp) group1.get("latestCreatedAt");
+                    Timestamp createdAt2 = (Timestamp) group2.get("latestCreatedAt");
+                    return createdAt2.compareTo(createdAt1);
                 })
                 .collect(Collectors.toList());
 
-        // Przekształć wynik na stronę (Page)
         return new PageImpl<>(
                 result,
                 PageRequest.of(pageNumber, pageSize),
                 notificationPage.getTotalElements()
         );
     }
+
+
 }
 
