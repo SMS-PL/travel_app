@@ -104,9 +104,9 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <div>
-                    <Button className="text-white gap-[2px] px-[10px] text-sm" >
-                        <Icons.userFill className="h-[15px] w-[15px] fill-white" />
-                        Show history
+                    <Button className="text-white gap-[4px] px-[10px] text-sm" >
+                        <Icons.historyFill className="h-[15px] w-[15px] fill-white" />
+                        Show
                     </Button>
                 </div>
             </DialogTrigger>

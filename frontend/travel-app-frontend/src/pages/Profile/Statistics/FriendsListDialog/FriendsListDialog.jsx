@@ -23,7 +23,7 @@ const FriendsListDialog = ({userFriendsList}) => {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <div>
-                    <Button className="text-white gap-[2px] px-[10px] text-sm" >
+                    <Button className="text-white gap-[4px] px-[10px] text-sm" >
                         <Icons.userFill className="h-[15px] w-[15px] fill-white" />
                         Show all
                     </Button>

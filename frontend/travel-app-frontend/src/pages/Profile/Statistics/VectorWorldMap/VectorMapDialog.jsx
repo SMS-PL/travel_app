@@ -47,8 +47,8 @@ const VectorMapDialog = ({userId}) => {
         <Dialog>
             <DialogTrigger className="text-white gap-1" asChild>
                 <div>
-                    <Button className="text-white gap-[2px] px-[10px]">
-                        <Icons.mapEmpty className="fill-current w-5 h-5" /> 
+                    <Button className="text-white gap-[4px] px-[10px]">
+                        <Icons.locationPinFill className="fill-current w-4 h-4" /> 
                         Open map
                     </Button>
                 </div>
