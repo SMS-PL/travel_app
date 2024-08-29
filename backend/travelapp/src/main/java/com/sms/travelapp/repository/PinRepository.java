@@ -2,6 +2,7 @@ package com.sms.travelapp.repository;
 
 import com.sms.travelapp.model.Pin;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,6 @@ public interface PinRepository extends JpaRepository<Pin,Long> {
     List<Pin> findAllByAuthorIds(@Param("friendsIds") List<Long> friendsIds, @Param("cutoff") Timestamp cutoff);
 
     List<Pin> findAllByAuthorIdAndCreatedAtAfter(Long id, Timestamp timestampCutoff);
+
+    Page<Pin> findAllByAuthorIdOrderByCreatedAtDesc(Long id, PageRequest pg);
 }

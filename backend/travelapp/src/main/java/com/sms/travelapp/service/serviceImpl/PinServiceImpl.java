@@ -132,4 +132,17 @@ public class PinServiceImpl implements PinService {
         return pins.stream().map(PinMapper::mapToPinResponseDto).collect(Collectors.toList());
 
     }
+
+    @Override
+    public Page<PinResponseDto> getAllUserPins(Long userId, int pageNumber, int pageSize) {
+        UserEntity user = userService.getUserById(userId);
+        Page<Pin> pins = pinRepository.findAllByAuthorIdOrderByCreatedAtDesc(userId, PageRequest.of(pageNumber,
+                pageSize,
+                Sort.by("createdAt").descending()));
+
+        return new PageImpl<>(
+                pins.getContent().stream().map(PinMapper::mapToPinResponseDto).collect(Collectors.toList()),
+                PageRequest.of(pageNumber,pageSize),
+                pins.getTotalElements());
+    }
 }

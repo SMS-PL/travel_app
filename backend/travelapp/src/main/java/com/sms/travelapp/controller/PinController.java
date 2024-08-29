@@ -30,7 +30,11 @@ public class PinController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
-    //@GetMapping("/")
+    @GetMapping("/all/{userId}")
+    public ResponseEntity<Page<PinResponseDto>> getAllUserPins(@PathVariable Long userId, @RequestParam int pageNumber, @RequestParam int pageSize){
+        Page<PinResponseDto> res = pinService.getAllUserPins(userId,pageNumber,pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
 
     @PostMapping("/")
     public ResponseEntity<PinResponseDto> createPin(@RequestBody PinRequestDto pinRequestDto){

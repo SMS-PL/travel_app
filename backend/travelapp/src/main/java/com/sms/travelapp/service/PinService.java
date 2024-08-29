@@ -18,4 +18,5 @@ public interface PinService {
 
     List<PinResponseDto> getMyActivePins();
 
+    Page<PinResponseDto> getAllUserPins(Long userId, int pageNumber, int pageSize);
 }
