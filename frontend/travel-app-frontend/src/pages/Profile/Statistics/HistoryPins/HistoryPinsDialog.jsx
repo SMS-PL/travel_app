@@ -25,6 +25,11 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { cn } from '@/lib/utils';
+import{
+    ChevronLeftIcon,
+    ChevronRightIcon,
+} from "@radix-ui/react-icons";
 
 const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
 	const authHeader = useAuthHeader();
@@ -43,9 +48,11 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
 
 	useEffect(() => {
 		setIsLoading(true);
+		setRefetchData(false);
+
         getAllUserPins();
-		
-	}, [userId]);
+
+	}, [userId, refetchData]);
 
 
     const getAllUserPins = async () => {
@@ -133,6 +140,28 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
                             }))}
                         </TableBody>
                     </Table>
+                    
+                    <div className="w-full flex flex-row justify-center items-center gap-1">
+                        <Button 
+                            onClick={() => prevPage()} 
+                            variant="secondary"
+                            className="w-fit"
+                            disabled={currentPage == 0}
+                        >
+                            <ChevronLeftIcon className="h-6 w-6 cursor-pointer rounded-md" />
+                        </Button>
+                        
+                        <div className="text-sm text-gray-400">{`${currentPage+1}/${totalPages}`}</div>
+
+                        <Button 
+                            onClick={() => nextPage()}
+                            variant="secondary"
+                            className="w-fit"
+                            disabled={currentPage == (totalPages-1)}
+                        >
+                            <ChevronRightIcon className="h-6 w-6 cursor-pointer rounded-md"/>
+                        </Button>
+                    </div>
 
                 </div>
             </DialogContent>
