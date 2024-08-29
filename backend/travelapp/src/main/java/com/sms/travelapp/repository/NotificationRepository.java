@@ -12,5 +12,6 @@ public interface NotificationRepository extends JpaRepository<Notification,Long>
 
     Page<Notification> findAllByReceiverId(Long id, Pageable pageable);
 
+    Boolean existsByAuthorIdAndAndContentIdAndType(Long authorId, Long contentId, int type);
 
 }
