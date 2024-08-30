@@ -18,7 +18,7 @@ public class Comment {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "LONGTEXT")
     private String content;
 
     @ManyToOne

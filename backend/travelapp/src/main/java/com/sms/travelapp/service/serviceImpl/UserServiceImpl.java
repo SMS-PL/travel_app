@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
         } else {
             users = userRepository.findByMultipleWords(words[0], words[0], pageRequest);
         }
-        
+
         return new PageImpl<>(
                 users.getContent().stream().map(UserMapper::mapToUserResponseDto).collect(Collectors.toList()),
                 pageRequest,

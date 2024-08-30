@@ -25,8 +25,8 @@ public class Post {
     @Column(name="id")
     private Long id;
 
-    @Lob
-    @Column(name = "description")
+
+    @Column(name = "description", columnDefinition = "LONGTEXT")
     private String content;
 
 
