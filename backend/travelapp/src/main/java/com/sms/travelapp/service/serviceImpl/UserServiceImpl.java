@@ -85,16 +85,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserResponseDto> searchForUser(String query, int pageNumber, int pageSize) {
-        Page<UserEntity> users = userRepository.findByUsernameOrFirstNameOrLastNameContaining(query,
-                PageRequest.of(
-                        pageNumber,
-                        pageSize,
-                        Sort.by("firstName").ascending()
-                ));
+        System.out.println("Query");
+        System.out.println(query);
 
+
+        if(query.contains("-")){
+            query = query.replace("-", " ");
+        }
+
+        String[] words = query.split(" ");
+
+        PageRequest pageRequest = PageRequest.of(
+                pageNumber,
+                pageSize,
+                Sort.by("firstName").ascending()
+        );
+
+        Page<UserEntity> users;
+        if (words.length > 1) {
+            users = userRepository.findByMultipleWords(words[0], words[1], pageRequest);
+        } else {
+            users = userRepository.findByMultipleWords(words[0], words[0], pageRequest);
+        }
+        
         return new PageImpl<>(
                 users.getContent().stream().map(UserMapper::mapToUserResponseDto).collect(Collectors.toList()),
-                PageRequest.of(pageNumber,pageSize),
+                pageRequest,
                 users.getTotalElements()
         );
     }
