@@ -1,24 +1,22 @@
-import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { useState, useEffect, useContext } from 'react';
 import MainContainer from "@/components/MainContainer/MainContainer";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import {
     Avatar,
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
 import { Icons } from "@/components/icons";
 import FriendshipButton from '@/components/FriendshipsButton/FriendshipButton';
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-// import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
 import Feed from "@/layouts/Feed/Feed";
 import ProfileImageUploader from "@/pages/Profile/ImageUploader/ProfileImageUploader";
 import BackgroundImageUploader from "@/pages/Profile/ImageUploader/BackgroundImageUploader";
 import ProfileSettingsDialog from '@/pages/Profile/ProfileSettingsDialog/ProfileSettingsDialog';
 import ProfileStatistics from '@/pages/Profile/Statistics/ProfileStatistics';
+import SpinLoading from '@/components/ui/SpinLoading';
 
 function Profile() {
 	const { userId } = useParams();
@@ -26,10 +24,9 @@ function Profile() {
 	const navigate = useNavigate();
 	const auth = useAuthUser();
 
-	const [isLoading, setIsLoading] = useState(true);
 
 	// dane o użytkowniku
-	const [userData, setUserData] = useState("");
+	const [userData, setUserData] = useState(null);
 	
 	// zmienne do uploadowania zdjęć
 	const [uploadingImageProfile, setUploadingImageProfile] = useState(false);
@@ -40,10 +37,7 @@ function Profile() {
 
 	// ładowanie danych o użytkowniku
 	useEffect(() => {
-		setIsLoading(true);
 		getUserData();
-		setIsLoading(false);
-
 	}, [userId]);
 
 	const getUserData = () => {
@@ -63,11 +57,8 @@ function Profile() {
 		})
 		.then(data => {
 			setUserData(data);
-			// console.log(data);
 			setImageProfileURL(data.photoUrl);
 			setImageBackgroundURL(data.backgroundUrl);
-
-			setIsLoading(false);
 			
 		})
 		.catch(error => {
@@ -111,26 +102,27 @@ function Profile() {
 				</Avatar>
 
 			</div>
+
+			{!userData && <SpinLoading className="w-full flex justify-center items-center pt-16" /> }
 			
+			{userData && 
+				<div className="w-full flex flex-col justify-center items-center pt-14">
+					<div className="flex flex-col justify-center items-center">
+						<h2 className="text-center scroll-m-20 text-lg sm:text-xl md:text-2xl font-extrabold tracking-tight pt-1">
+							{userData.firstName} <span className="text-primary">{userData.lastName}</span>
+						</h2>
+						<h3 className="text-center scroll-m-20 text-lg font-bold tracking-tight lg:text-xl">
+							@{userData.username}
+						</h3>
+						<p>{userData.about}</p>
 
-			<div className="w-full flex flex-col justify-center items-center pt-14">
+						{/* <ProfileSettingsDialog /> */}
 
-				<div className="flex flex-col justify-center items-center">
-					<h2 className="text-center scroll-m-20 text-lg sm:text-xl md:text-2xl font-extrabold tracking-tight pt-1">
-						{userData.firstName} <span className="text-primary">{userData.lastName}</span>
-					</h2>
-					<h3 className="text-center scroll-m-20 text-lg font-bold tracking-tight lg:text-xl">
-						@{userData.username}
-					</h3>
-					<p>{userData.about}</p>
+					</div>
 
-					{/* <ProfileSettingsDialog /> */}
-
+					<FriendshipButton userId={userId} className="mt-3"/>
 				</div>
-
-				<FriendshipButton userId={userId} className="mt-3"/>
-			</div>
-
+			}
 			<ProfileStatistics userId={userId} />
 
 			<div className="w-full flex flex-col ">

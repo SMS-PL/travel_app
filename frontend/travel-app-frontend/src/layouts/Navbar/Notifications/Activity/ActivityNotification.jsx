@@ -56,7 +56,7 @@ const ActivityNotification = () => {
 			return response.json();
 		})
 		.then(data => {
-			// console.log(data);
+			console.log(data);
 
 			setData(data);
 			setTotalPages(data.totalPages);

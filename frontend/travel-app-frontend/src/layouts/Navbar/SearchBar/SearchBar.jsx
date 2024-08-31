@@ -38,7 +38,7 @@ const SearchBar = ({placeholder, ...props}) => {
         setIsLoading(true);
 
         if(searchedText !== "") {
-            let replacedStr = searchedText.replace(/ /g, '+');
+            let replacedStr = searchedText.replace(/ /g, '-');
 
             fetch(`http://localhost:5000/api/v1/users/search/${replacedStr}?pageNumber=0&pageSize=5`, {
                 method: 'GET',
@@ -62,8 +62,6 @@ const SearchBar = ({placeholder, ...props}) => {
             });
         }
     }; 
-
-
 
     return (
         <div className="max-w-full w-[300px] flex justify-start items-center relative">

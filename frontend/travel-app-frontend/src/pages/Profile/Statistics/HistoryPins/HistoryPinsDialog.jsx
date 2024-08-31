@@ -36,7 +36,6 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
 
     const [open, setOpen] = useState(false);
 
-    const [isLoading, setIsLoading] = useState(true);
     const [pinsData, setPinsData] = useState(null);
 
     // paginacja
@@ -47,11 +46,8 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
 
 
 	useEffect(() => {
-		setIsLoading(true);
 		setRefetchData(false);
-
         getAllUserPins();
-
 	}, [userId, refetchData]);
 
 
@@ -70,12 +66,9 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
 			return response.json();
 		})
 		.then(data => {
-			console.log(data);
-			// setUserFriendsList(data);
             setPinsData(data.content);
             setTotalPages(data.totalPages);
             setCounterHistoryPins(data.totalElements);
-            setIsLoading(false);
 		})
 		.catch(error => {
 			console.log(error.message);
@@ -85,7 +78,6 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
     const nextPage = () => {
         if(currentPage < (totalPages-1)) {
             setPinsData(null);
-            setIsLoading(true);
             setCurrentPage(prev => prev + 1);
             setRefetchData(true);
         }
@@ -94,7 +86,6 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
     const prevPage = () => {
         if(currentPage > 0) {
             setPinsData(null);
-            setIsLoading(true);
             setCurrentPage(prev => prev - 1);
             setRefetchData(true);
         }
@@ -103,12 +94,14 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <div>
-                    <Button className="text-white gap-[4px] px-[10px] text-sm" >
-                        <Icons.historyFill className="h-[15px] w-[15px] fill-white" />
-                        Show
-                    </Button>
-                </div>
+                {pinsData && 
+                    <div>
+                        <Button className="text-white gap-[4px] px-[10px] text-sm" >
+                            <Icons.historyFill className="h-[15px] w-[15px] fill-white" />
+                            Show
+                        </Button>
+                    </div>
+                }
             </DialogTrigger>
 
             <DialogContent className="flex flex-col justify-center items-center max-w-full w-[700px] rounded-lg px-2 py-10 sm:p-10">

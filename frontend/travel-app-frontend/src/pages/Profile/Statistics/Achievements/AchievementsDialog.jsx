@@ -13,18 +13,77 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import AchievementView from "./AchievementView";
 import SpinLoading from '@/components/ui/SpinLoading';
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import{
+    ChevronLeftIcon,
+    ChevronRightIcon,
+} from "@radix-ui/react-icons";
 
-const AchievementsDialog = ({userAchievements}) => {
+const AchievementsDialog = ({userId, userAchievements, setUserAchievements}) => {
+    const authHeader = useAuthHeader();
+
+    // paginacja
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pageSize, setPageSize] = useState(10);
+    const [totalPages, setTotalPages] = useState(0);
+    const [refetchData, setRefetchData] = useState(false);
+	
+    useEffect(() => {
+		getUserAchievements();
+        setRefetchData(false);
+	}, [userId, refetchData]);
+
+	const getUserAchievements = () => {
+		fetch(`http://localhost:5000/api/v1/achievements/${userId}?pageSize=${pageSize}&pageNumber=${currentPage}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json', 
+				"Authorization": authHeader,
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Błąd sieci!');
+			}
+			return response.json();
+		})
+		.then(data => {
+			// console.log(data);
+			setUserAchievements(data);
+            setTotalPages(data.totalPages);
+		})
+		.catch(error => {
+			console.log(error.message);
+		});
+	};
+
+    const nextPage = () => {
+        if(currentPage < (totalPages-1)) {
+            setUserAchievements(null);
+            setCurrentPage(prev => prev + 1);
+            setRefetchData(true);
+        }
+    }
+
+    const prevPage = () => {
+        if(currentPage > 0) {
+            setUserAchievements(null);
+            setCurrentPage(prev => prev - 1);
+            setRefetchData(true);
+        }
+    }
 
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <div>
-                    <Button className="text-white gap-[2px] px-[10px] text-sm" >
-                        <Icons.medal2Fill className="h-5 w-5 fill-white" />
-                        Show all
-                    </Button>
-                </div>
+                {userAchievements && 
+                    <div>
+                        <Button className="text-white gap-[2px] px-[10px] text-sm" >
+                            <Icons.medal2Fill className="h-5 w-5 fill-white" />
+                            Show all
+                        </Button>
+                    </div>
+                }
             </DialogTrigger>
 
             <DialogContent className="flex flex-col justify-center items-center max-w-full w-[700px] rounded-lg py-8 px-5 sm:p-10">
@@ -53,6 +112,28 @@ const AchievementsDialog = ({userAchievements}) => {
                         </div>
                     )}
                 </div>
+
+                <div className="w-full flex flex-row justify-center items-center gap-1">
+                        <Button 
+                            onClick={() => prevPage()} 
+                            variant="secondary"
+                            className="w-fit"
+                            disabled={currentPage == 0}
+                        >
+                            <ChevronLeftIcon className="h-6 w-6 cursor-pointer rounded-md" />
+                        </Button>
+                        
+                        <div className="text-sm text-gray-400">{`${currentPage+1}/${totalPages}`}</div>
+
+                        <Button 
+                            onClick={() => nextPage()}
+                            variant="secondary"
+                            className="w-fit"
+                            disabled={currentPage == (totalPages-1)}
+                        >
+                            <ChevronRightIcon className="h-6 w-6 cursor-pointer rounded-md"/>
+                        </Button>
+                    </div>
                 
             </DialogContent>
         </Dialog>

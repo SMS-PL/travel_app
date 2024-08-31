@@ -138,20 +138,32 @@ const CommentRowView = ({commentId, commentData, commentsData, setCommentsData, 
             </div>
 
             <div className="flex flex-col w-full">
-                <div className="flex flex-row items-baseline gap-3">
+                <div className="flex flex-row items-baseline gap-3 break-words">
                     <div className="text-sm">
                         {/* {commentData.id} */}
                         <HoverUserInfo userData={commentData.author}>
                             <span className="font-bold hover:underline">{commentData !== null && commentData.author.firstName} {commentData.author.lastName}</span> 
                         </HoverUserInfo>
-                        <span> {commentData !== null && commentData.content}</span>
+                        <span className="break-words break-all"> {commentData !== null && commentData.content}</span>
                     </div>
                 </div>
                 
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-row gap-3 justify-start items-center">
                     <ReactTimeAgo timeStyle="round" date={new Date(commentData !== null && commentData.createdAt)} locale="en-US" className="text-sm text-gray-500"/>
+
+                    <div className="flex flex-row items-center justify-center gap-1 group cursor-pointer" onClick={() => reactToComment()}>
+
+                        {isReacted ? (
+                            <Icons.heartFill className=" fill-red-500 w-4 h-4 cursor-pointer" />
+                        ) : (
+                            <Icons.heartEmpty className="fill-gray-500 w-4 h-4 cursor-pointer group-hover:fill-red-500" />
+                        )}
+
+                        <span className="text-sm font-base text-gray-500 group-hover:text-red-500">{reactionCount}</span>
+                    </div>
+
                     {parseInt(auth.id) == parseInt(commentData.author.id) && (
-                        <>
+                        <div className="flex justify-center items-center">
                             <DropdownMenu>
                                 <DropdownMenuTrigger>
                                     <Icons.dotsVertical className="fill-gray-500 w-5 h-5 cursor-pointer" />
@@ -191,22 +203,13 @@ const CommentRowView = ({commentId, commentData, commentsData, setCommentsData, 
                                 onClose={() => setIsEditDialogOpen(false)}
                                 setRefetch={setRefetch}
                             />
-                        </>
+                        </div>
                     )}
+                    
                 </div>
 
             </div>
 
-            <div className="flex flex-row items-center gap-1 group cursor-pointer" onClick={() => reactToComment()}>
-
-                {isReacted ? (
-                    <Icons.heartFill className=" fill-red-500 w-4 h-4 cursor-pointer" />
-                ) : (
-                    <Icons.heartEmpty className="fill-current w-4 h-4 cursor-pointer group-hover:fill-red-500" />
-                )}
-                
-                <span className="text-sm font-base text-current group-hover:text-red-500">{reactionCount}</span>
-            </div>
             
         </div>
     );

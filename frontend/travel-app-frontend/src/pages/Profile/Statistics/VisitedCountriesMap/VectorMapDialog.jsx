@@ -15,13 +15,16 @@ import VectorWorldMap from './VectorWorldMap';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import SpinLoading from '@/components/ui/SpinLoading';
 
-const VectorMapDialog = ({userId}) => {
+const VectorMapDialog = ({userId, userCountry, setUserCountry}) => {
 	const authHeader = useAuthHeader();
 
-	const [userCountry, setUserCountry] = useState(null);
-
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/visited-countries/${userId}?pageSize=300&pageNumber=0`, {
+        getUserCountries(300, 0);
+
+	}, [userId]);
+
+    const getUserCountries = (pageSize, pageNumber) => {
+		fetch(`http://localhost:5000/api/v1/visited-countries/${userId}?pageSize=${pageSize}&pageNumber=${pageNumber}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json', 
@@ -35,23 +38,25 @@ const VectorMapDialog = ({userId}) => {
 			return response.json();
 		})
 		.then(data => {
+			// console.log(data);
 			setUserCountry(data);
 		})
 		.catch(error => {
 			console.log(error.message);
 		});
-
-	}, [userId]);
+	};
 
     return (
         <Dialog>
             <DialogTrigger className="text-white gap-1" asChild>
-                <div>
-                    <Button className="text-white gap-[4px] px-[10px]">
-                        <Icons.locationPinFill className="fill-current w-4 h-4" /> 
-                        Open map
-                    </Button>
-                </div>
+                {userCountry && 
+                    <div>
+                        <Button className="text-white gap-[4px] px-[10px]">
+                            <Icons.locationPinFill className="fill-current w-4 h-4" /> 
+                            Open map
+                        </Button>
+                    </div>
+                }
             </DialogTrigger>
 
             <DialogContent className="flex flex-col justify-center items-center max-w-full w-[800px] rounded-lg py-8 px-5 sm:p-10">

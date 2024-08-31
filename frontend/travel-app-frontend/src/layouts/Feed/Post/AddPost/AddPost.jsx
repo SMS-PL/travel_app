@@ -23,6 +23,7 @@ import { Icons } from "@/components/icons";
 import SelectCountry from "@/layouts/Feed/Post/AddPost/SelectCountry";
 import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
 import ImageUploader from "@/layouts/Feed/Post/AddPost/ImageUploader";
+import { cn } from '@/lib/utils';
 
 const AddPost = ({setAddNewPost}) => {
 	const authHeader = useAuthHeader();
@@ -49,7 +50,7 @@ const AddPost = ({setAddNewPost}) => {
     } = useForm();
 
     const onSubmit = async (values) => {
-        
+
         if (isValid) {
             await fetch("http://localhost:5000/api/v1/posts/", {
                 method: 'POST',
@@ -96,6 +97,7 @@ const AddPost = ({setAddNewPost}) => {
             alert("INVALID");
         }
     };
+    
 
     return (
         <Card className="w-full mt-4 backdrop-blur-[150px]">
@@ -104,8 +106,8 @@ const AddPost = ({setAddNewPost}) => {
                 
                 <CardContent className="flex flex-row items-center w-full pt-5 relative"> 
                     <Avatar>
-                        <AvatarImage src={auth.photoUrl} alt="stock img" className="object-cover bg-black" />
-                        <AvatarFallback>{`${auth.firstName[0]}${auth.lastName[0]}`}</AvatarFallback>
+                        <AvatarImage src={auth && auth.photoUrl} alt="stock img" className="object-cover bg-black" />
+                        <AvatarFallback>{`${auth && auth.firstName[0]}${auth && auth.lastName[0]}`}</AvatarFallback>
                     </Avatar>
                     
                     <div className="w-full ml-4">
@@ -115,18 +117,26 @@ const AddPost = ({setAddNewPost}) => {
                             className="resize-y rounded-2xl bg-secondary border-0"
 
                             {...register("description", {
+                                maxLength: {
+                                    value: 255,
+                                    message: "The maximum length of the description is 255 characters",
+                                },
                                 required: "Description is required",
                             })}
 
                         />
-                        {errors.description && errors.description.type === "required" && (
-                            <p className="text-red-500 text-sm">Description is required!</p>
-                        )}
+                        {/* {errors.description && (
+                            <p className="text-red-500 text-sm">
+                                {errors.description.message}
+                            </p>
+                        )} */}
+                        {console.log(errors)}
+                        <p className={cn(errors.description == null ? "hidden" : "flex" ,"text-red-500 h-5 text-xs")}>{errors.description && errors.description.message}</p>
                     </div>
 
                     <div className="absolute right-2 top-[6px] z-40">
                         <HoverPopoverInputInfo
-                            content={"To add a post, you must include a description, add a photo and the location of the photo you took. The photo cannot exceed 10MB and must have a .jpg, .jpeg, or .png extension."}
+                            content={"To add a post, you must include a description (maximum length 255 characters), add a photo and the location of the photo you took. The photo cannot exceed 10MB and must have a .jpg, .jpeg, or .png extension."}
                         />
                     </div>
 

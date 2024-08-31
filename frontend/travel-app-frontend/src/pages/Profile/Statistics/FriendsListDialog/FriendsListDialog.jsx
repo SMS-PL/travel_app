@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     Dialog,
     DialogClose,
@@ -14,20 +14,62 @@ import { Icons } from "@/components/icons";
 import FriendsListRowView from "./FriendsListRowView";
 import HoverUserInfo from "@/components/ui/HoverUserInfo";
 import SpinLoading from '@/components/ui/SpinLoading';
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 
-const FriendsListDialog = ({userFriendsList}) => {
+const FriendsListDialog = ({userId, userFriendsList, setUserFriendsList }) => {
+    const authHeader = useAuthHeader();
 
+	const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
     const [open, setOpen] = useState(false);
+
+    // paginacja
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pageSize, setPageSize] = useState(8);
+    const [totalPages, setTotalPages] = useState(0);
+    const [refetchData, setRefetchData] = useState(false);
+
+    useEffect(() => {
+		getUserFriendsList();
+		setGlobalRefreshFriendship(false);
+
+	}, [userId, globalRefreshFriendship]);
+
+    const getUserFriendsList = () => {
+		fetch(`http://localhost:5000/api/v1/friendship/${userId}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json', 
+				"Authorization": authHeader,
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Błąd sieci!');
+			}
+			return response.json();
+		})
+		.then(data => {
+			// console.log(data);
+			setUserFriendsList(data);
+		})
+		.catch(error => {
+			console.log(error.message);
+		});
+	};
+    
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <div>
-                    <Button className="text-white gap-[4px] px-[10px] text-sm" >
-                        <Icons.userFill className="h-[15px] w-[15px] fill-white" />
-                        Show all
-                    </Button>
-                </div>
+                {userFriendsList && 
+                    <div>
+                        <Button className="text-white gap-[4px] px-[10px] text-sm" >
+                            <Icons.userFill className="h-[15px] w-[15px] fill-white" />
+                            Show all
+                        </Button>
+                    </div>
+                }
             </DialogTrigger>
 
             <DialogContent className="flex flex-col justify-center items-center max-w-full w-[700px] rounded-lg px-2 py-10 sm:p-10">

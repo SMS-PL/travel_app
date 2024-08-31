@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { Icons } from "@/components/icons";
 import { cn } from '@/lib/utils';
+import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
 
 const EditPostDialog = ({postId, prevContent, isOpen, setIsOpen, refetch, onClose}) => {
     const authHeader = useAuthHeader();
@@ -85,25 +86,34 @@ const EditPostDialog = ({postId, prevContent, isOpen, setIsOpen, refetch, onClos
                     
                     <div className="grid gap-1 py-4 w-full">
                         <Textarea
-                            id="description"
+                            id="editDescription"
                             placeholder="Tell us a little bit about yourself"
                             className={cn(errors.description ? "border-2 border-red-600  focus:border-red-500" : "text-foreground border-0", " resize-y rounded-2xl bg-secondary min-h-[100px]")}
-                            {...register("description", {
+                            {...register("editDescription", {
                                 required: "Description is required",
+                                maxLength: {
+                                    value: 255,
+                                    message: "The maximum length of the comment is 255 characters",
+                                },
                             })}
                         />
-                        {errors.description && errors.description.type === "required" && (
+                        {errors.editDescription && errors.editDescription.type === "required" && (
                             <p className="text-red-500 text-sm">Description is required!</p>
                         )}
                     </div>
 
                     <AlertDialogFooter>
                         <AlertDialogCancel onClick={() => reset()}>Cancel</AlertDialogCancel>
-                        <Button type="submit" className="text-white">
+                        <Button type="submit" className="text-white" disabled={!isValid} >
                             Save changes
                         </Button> 
                     </AlertDialogFooter>
                 </form>
+                <div className="absolute right-2 top-[6px] z-40">
+                        <HoverPopoverInputInfo
+                            content={"To add a post, you must include a description (maximum length 255 characters), add a photo and the location of the photo you took. The photo cannot exceed 10MB and must have a .jpg, .jpeg, or .png extension."}
+                        />
+                    </div>
             </AlertDialogContent>
         </AlertDialog>
     );

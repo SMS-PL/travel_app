@@ -49,6 +49,7 @@ import EditPostDialog from "@/layouts/Feed/Post/EditPostDialog";
 import DeletePostDialog from "@/layouts/Feed/Post/DeletePostDialog";
 import CommentRowView from '@/layouts/Feed/Post/Comment/CommentRowView';
 import EditCommentDialog from "@/layouts/Feed/Post/Comment/EditCommentDialog";
+import SpinLoading from '@/components/ui/SpinLoading';
 
 function Post({postData, setAddNewPost, refetch}) {    
     const authHeader = useAuthHeader();
@@ -69,19 +70,17 @@ function Post({postData, setAddNewPost, refetch}) {
     const [refetchComments, setRefetchComments] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
+    const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
+    const [friendshipStatus, setFriendshipStatus] = useState(null);
+
+    const [isImageLoading, setIsImageLoading] = useState(true);
+
     // paginacja
     const [currentPage, setCurrentPage] = useState(0);
     const [pageSize, setPageSize] = useState(3);
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [isLastPage, setIsLastPage] = useState(false);
-
-    const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
-    const [friendshipStatus, setFriendshipStatus] = useState(null);
-
-
-    const [isImageLoading, setIsImageLoading] = useState(true);
-
 
     const {
         register,
@@ -112,8 +111,8 @@ function Post({postData, setAddNewPost, refetch}) {
     }, [postData.countryId]);
 
     const getStatusOfFriendship = () => {
-        if(user.id !== undefined) {
-            fetch(`http://localhost:5000/api/v1/friendship/status/${user.id}`, {
+        if(user.id !== undefined && auth !== null) {
+            fetch(`http://localhost:5000/api/v1/friendship/status/${auth && user.id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json', 
@@ -333,7 +332,7 @@ function Post({postData, setAddNewPost, refetch}) {
                         </HoverPopoverInputInfo>
                     }
                     
-                    {parseInt(user.id) == parseInt(auth.id) && (
+                    {auth && (parseInt(user.id) == parseInt(auth.id)) && (
                         <>
                             <DropdownMenu>
                                 <DropdownMenuTrigger>
@@ -381,7 +380,7 @@ function Post({postData, setAddNewPost, refetch}) {
             
 
             {/* OPIS I ZDJĘCIE */}
-            <CardContent>
+            <CardContent className="break-all" >
                 {postData.content}
                 <img 
                     src={postData.imageUrl} 
@@ -422,12 +421,18 @@ function Post({postData, setAddNewPost, refetch}) {
 
                         <form 
                             onSubmit={handleSubmit(addNewComment)} 
-                            className="flex flex-row gap-3 w-full items-center pb-3 box-content"
+                            className="flex flex-row gap-3 w-full items-center pb-3 box-content relative"
                         >
                             <Avatar>
-                                <AvatarImage src={auth.photoUrl} alt="stock img" className="object-cover bg-black" />
-                                <AvatarFallback>{`${auth.firstName[0]}${auth.lastName[0]}`}</AvatarFallback>
+                                <AvatarImage src={auth && auth.photoUrl} alt="stock img" className="object-cover bg-black" />
+                                <AvatarFallback>{`${auth && auth.firstName[0]}${auth && auth.lastName[0]}`}</AvatarFallback>
                             </Avatar>
+
+                            <div className="absolute right-[-12px] top-[-25px] z-40">
+                                <HoverPopoverInputInfo
+                                    content={"The maximum length of the comment is 255 characters."}
+                                />
+                            </div>
 
                             <div className="w-full ">
                                 <Textarea
@@ -437,6 +442,10 @@ function Post({postData, setAddNewPost, refetch}) {
 
                                     {...register("commentContent", {
                                         required: "Comment is required",
+                                        maxLength: {
+                                            value: 255,
+                                            message: "The maximum length of the comment is 255 characters",
+                                        },
                                     })}
 
                                 />
@@ -445,24 +454,15 @@ function Post({postData, setAddNewPost, refetch}) {
                                 )}
                             </div>
 
-                            <Button type="submit" variant="ghost" className="p-0" size="icon">
+                            <Button type="submit" variant="ghost" className="p-0" size="icon" disabled={!isValid}>
                                 <Icons.sendMessageFill className="fill-primary w-5 h-5" />
                             </Button>
                         </form>
                             
                             {(isLoading || (commentsData == [[]])) ? (
-                                <div className="flex flex-row items-center gap-3 w-full my-3">
-                                    <Skeleton className="h-10 w-10 rounded-full flex-none" />
-                        
-                                    <div className="flex flex-col items-start gap-2 w-full">
-                                        <div className="flex flex-row items-center gap-3 w-full">
-                                            <Skeleton className="w-[100px] h-[20px] flex-none" />
-                                            <Skeleton className="max-w-full w-[50%] h-[20px]" />
-                                        </div>
-                                        
-                                        <Skeleton className="w-[60px] h-[15px] flex-none" />
-                                    </div>          
-                                </div>
+                                // <div className="flex flex-row items-center gap-3 w-full my-3">
+                                    <SpinLoading className="w-full flex justify-center items-center py-2" />
+                                // </div>
 
 
                             ) : (
@@ -480,7 +480,7 @@ function Post({postData, setAddNewPost, refetch}) {
                                 ))
                             )}
 
-                            {!isLastPage &&
+                            {(!isLoading && !isLastPage) &&
                                 <Button variant="ghost" onClick={() => {handleNextPage()}}>Load more...</Button>
                             } 
 

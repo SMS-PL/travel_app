@@ -1,29 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Icons } from "@/components/icons";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
-import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-import { useToast } from "@/components/ui/use-toast";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import app from "@/components/firebase";
-import useSignIn from "react-auth-kit/hooks/useSignIn";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
-import HorizontalBarChart from "@/pages/Profile/Statistics/HorizontalBarChart/HorizontalBarChart";
-import AchievementsDialog from "@/pages/Profile/Statistics/Achievements/AchievementsDialog";
-import FriendsListDialog from "@/pages/Profile/Statistics/FriendsListDialog/FriendsListDialog"
-import VectorMapDialog from "@/pages/Profile/Statistics/VectorWorldMap/VectorMapDialog";
-import HistoryPinsDialog from "@/pages/Profile/Statistics/HistoryPins/HistoryPinsDialog";
 import {
     Table,
     TableBody,
@@ -34,7 +12,6 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import ReactTimeAgo from 'react-time-ago';
-
 
 const HistoryPinRowView = ({userId, pin}) => {
 	const authHeader = useAuthHeader();

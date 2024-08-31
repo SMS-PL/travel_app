@@ -42,7 +42,7 @@ const EditCommentDialog = ({commentId, prevContent, isOpen, setRefetch, onClose}
                     "Authorization": authHeader,
                 },
                 body: JSON.stringify({
-                    "content": values.description,
+                    "content": values.editCommentDescription,
                 })
             })
             .then(response => {
@@ -75,7 +75,7 @@ const EditCommentDialog = ({commentId, prevContent, isOpen, setRefetch, onClose}
             <AlertDialogContent className="max-w-full w-[500px] rounded-lg">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Edit post description</AlertDialogTitle>
+                        <AlertDialogTitle>Edit comment description</AlertDialogTitle>
                         <AlertDialogDescription className="hidden">
                             {/* Make changes to your profile here. Click save when you're done. */}
                         </AlertDialogDescription>
@@ -83,25 +83,30 @@ const EditCommentDialog = ({commentId, prevContent, isOpen, setRefetch, onClose}
                     
                     <div className="grid gap-1 py-4 w-full">
                         <Textarea
-                            id="description"
+                            id="editCommentDescription"
                             placeholder="Tell us a little bit about yourself"
-                            className={cn(errors.description ? "border-2 border-red-600  focus:border-red-500" : "text-foreground border-0", " resize-y rounded-2xl bg-secondary min-h-[100px]")}
-                            {...register("description", {
+                            className={cn(errors.editCommentDescription ? "border-2 border-red-600  focus:border-red-500" : "text-foreground border-0", " resize-y rounded-2xl bg-secondary min-h-[100px]")}
+                            {...register("editCommentDescription", {
                                 required: "Description is required",
+                                maxLength: {
+                                    value: 255,
+                                    message: "The maximum length of the comment is 255 characters",
+                                },
                             })}
                         />
-                        {errors.description && errors.description.type === "required" && (
+                        {errors.editCommentDescription && errors.editCommentDescription.type === "required" && (
                             <p className="text-red-500 text-sm">Description is required!</p>
                         )}
                     </div>
 
                     <AlertDialogFooter>
                         <AlertDialogCancel onClick={() => reset()}>Cancel</AlertDialogCancel>
-                        <Button type="submit" className="text-white">
+                        <Button type="submit" className="text-white" disabled={!isValid}>
                             Save changes
                         </Button> 
                     </AlertDialogFooter>
                 </form>
+                
             </AlertDialogContent>
         </AlertDialog>
     );
