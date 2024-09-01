@@ -130,7 +130,6 @@ const AddPost = ({setAddNewPost}) => {
                                 {errors.description.message}
                             </p>
                         )} */}
-                        {console.log(errors)}
                         <p className={cn(errors.description == null ? "hidden" : "flex" ,"text-red-500 h-5 text-xs")}>{errors.description && errors.description.message}</p>
                     </div>
 

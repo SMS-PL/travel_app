@@ -27,6 +27,8 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
 	const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
 
 	const [addNewPost, setAddNewPost] = useState(false);
+	const [isLastPage, setIsLastPage] = useState(false);
+
 	const {ref, inView} = useInView();
 
     // do poprawnego ładowania postów
