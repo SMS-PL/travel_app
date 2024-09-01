@@ -106,7 +106,7 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
 
             <DialogContent className="flex flex-col justify-center items-center max-w-full w-[700px] rounded-lg px-2 py-10 sm:p-10">
                 <DialogHeader className="w-full text-center sm:text-start" >
-                    <DialogTitle className="font-extrabold">History of all pins</DialogTitle>
+                    <DialogTitle className="font-extrabold">History of pins</DialogTitle>
                     <DialogDescription className="">Here you will find the history of all user pins</DialogDescription>
                 </DialogHeader>
 
@@ -134,7 +134,7 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
                         </TableBody>
                     </Table>
                     
-                    <div className="w-full flex flex-row justify-center items-center gap-1">
+                    <div className={cn("w-full flex flex-row justify-center items-center gap-1", (totalPages == 1) && "hidden")} >
                         <Button 
                             onClick={() => prevPage()} 
                             variant="secondary"

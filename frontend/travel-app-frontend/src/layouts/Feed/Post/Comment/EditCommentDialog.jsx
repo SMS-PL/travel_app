@@ -29,7 +29,7 @@ const EditCommentDialog = ({commentId, prevContent, isOpen, setRefetch, onClose}
         reset,
         formState: { errors, isValid },
     } = useForm({defaultValues: {
-        description: prevContent,
+        editCommentDescription: prevContent,
     }});
 
     const onSubmit = async (values) => {
@@ -76,9 +76,7 @@ const EditCommentDialog = ({commentId, prevContent, isOpen, setRefetch, onClose}
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Edit comment description</AlertDialogTitle>
-                        <AlertDialogDescription className="hidden">
-                            {/* Make changes to your profile here. Click save when you're done. */}
-                        </AlertDialogDescription>
+                        <AlertDialogDescription className="hidden"></AlertDialogDescription>
                     </AlertDialogHeader>
                     
                     <div className="grid gap-1 py-4 w-full">

@@ -85,46 +85,55 @@ const NotificationRowView = ({notificationGroup, ...props}) => {
 
         if(counterNotifications == 1) {
             return (
-                <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
-                    <Avatar className="w-[45px] h-[45px] relative">
-                        <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                        <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
-                        <Icons.commentFill className="h-4 w-4 fill-white bg-green-600 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
-                    </Avatar>
-                    <div>
-                        <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
-                        {` commented your post!`}
+                <Link to={`/post/${contentId && contentId}`} className="cursor-pointer">
+                    <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
+                        <Avatar className="w-[45px] h-[45px] relative">
+                            <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
+                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <Icons.commentFill className="h-4 w-4 fill-white bg-green-600 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
+                        </Avatar>
+                        <div>
+                            <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
+                            {` commented your post!`}
+                        </div>
                     </div>
-                </div>
+                </Link>
             );
         } else if(counterNotifications == 2) {
             return (
-                <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
-                    <Avatar className="w-[45px] h-[45px] relative">
-                        <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                        <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
-                        <Icons.commentFill className="h-4 w-4 fill-white bg-green-600 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
-                    </Avatar>
-                    <div>
-                        <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
-                        {` and `}
-                        <span className="font-bold">{user1 && user1.firstName} {user1 && user1.lastName}</span>
-                        {` commented your post!`}
+                <Link to={`/post/${contentId && contentId}`} className="cursor-pointer">
+                    <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
+                        <Avatar className="w-[45px] h-[45px] relative">
+                            <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
+                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <Icons.commentFill className="h-4 w-4 fill-white bg-green-600 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
+                        </Avatar>
+                        <div>
+                            <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
+                            {` and `}
+                            <span className="font-bold">{user1 && user1.firstName} {user1 && user1.lastName}</span>
+                            {` commented your post!`}
+                        </div>
                     </div>
-                </div>
+                </Link>
             );
         } else if(counterNotifications > 2) {
             return (
-                <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
-                    <Avatar className="w-[45px] h-[45px] relative flex flex-row justify-start items-start">
-                        <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                        <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
-                        <Icons.commentFill className="h-4 w-4 fill-white bg-green-600 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
-                    </Avatar>
-                    <div>
-                        {` and others commented your post!`}
+                <Link to={`/post/${contentId && contentId}`} className="cursor-pointer">
+                    <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
+                        <Avatar className="w-[45px] h-[45px] relative flex flex-row justify-start items-start">
+                            <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
+                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <Icons.commentFill className="h-4 w-4 fill-white bg-green-600 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
+                        </Avatar>
+                        <div>
+                            <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
+                            {` and `}
+                            <span className="font-bold">{user1 && user1.firstName} {user1 && user1.lastName}</span>
+                            {` and others commented your post!`}
+                        </div>
                     </div>
-                </div>
+                </Link>
             );
         }
 
@@ -133,49 +142,55 @@ const NotificationRowView = ({notificationGroup, ...props}) => {
 
         if(counterNotifications == 1) {
             return (
-                <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
-                    <Avatar className="w-[45px] h-[45px] relative">
-                        <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                        <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
-                        <Icons.likeFill className="h-4 w-4 fill-white bg-primary rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
-                    </Avatar>
-                    <div>
-                        <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
-                        {` reacted to your post!`}
+                <Link to={`/post/${contentId && contentId}`} className="cursor-pointer">
+                    <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
+                        <Avatar className="w-[45px] h-[45px] relative">
+                            <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
+                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <Icons.likeFill className="h-4 w-4 fill-white bg-primary rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
+                        </Avatar>
+                        <div>
+                            <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
+                            {` reacted to your post!`}
+                        </div>
                     </div>
-                </div>
+                </Link>
             );
         } else if(counterNotifications == 2) {
             return (
-                <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
-                    <Avatar className="w-[45px] h-[45px] relative">
-                        <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                        <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
-                        <Icons.likeFill className="h-4 w-4 fill-white bg-primary rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
-                    </Avatar>
-                    <div>
-                        <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
-                        {` and `}
-                        <span className="font-bold">{user1 && user1.firstName} {user1 && user1.lastName}</span>
-                        {` reacted to your post!`}
+                <Link to={`/post/${contentId && contentId}`} className="cursor-pointer">
+                    <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
+                        <Avatar className="w-[45px] h-[45px] relative">
+                            <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
+                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <Icons.likeFill className="h-4 w-4 fill-white bg-primary rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
+                        </Avatar>
+                        <div>
+                            <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
+                            {` and `}
+                            <span className="font-bold">{user1 && user1.firstName} {user1 && user1.lastName}</span>
+                            {` reacted to your post!`}
+                        </div>
                     </div>
-                </div>
+                </Link>
             );
         } else if(counterNotifications > 2) {
             return (
-                <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2">
-                    <Avatar className="w-[45px] h-[45px] relative">
-                        <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                        <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
-                        <Icons.likeFill className="h-4 w-4 fill-white bg-primary rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
-                    </Avatar>
-                    <div>
-                        <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
-                        {` and `}
-                        <span className="font-bold">{user1 && user1.firstName} {user1 && user1.lastName}</span>
-                        {` and others reacted to your post!`}
+                <Link to={`/post/${contentId && contentId}`} className="cursor-pointer">
+                    <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2">
+                        <Avatar className="w-[45px] h-[45px] relative">
+                            <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
+                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <Icons.likeFill className="h-4 w-4 fill-white bg-primary rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
+                        </Avatar>
+                        <div>
+                            <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
+                            {` and `}
+                            <span className="font-bold">{user1 && user1.firstName} {user1 && user1.lastName}</span>
+                            {` and others reacted to your post!`}
+                        </div>
                     </div>
-                </div>
+                </Link>
             );
         }
 
@@ -184,49 +199,55 @@ const NotificationRowView = ({notificationGroup, ...props}) => {
 
         if(counterNotifications == 1) {
             return (
-                <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
-                    <Avatar className="w-[45px] h-[45px] relative">
-                        <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                        <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
-                        <Icons.heartFill className="h-4 w-4 fill-white bg-red-500 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
-                    </Avatar>
-                    <div>
-                        <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
-                        {` reacted to your comment!`}
+                // <Link to={`/post/${contentId && contentId}`} className="cursor-pointer">
+                    <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
+                        <Avatar className="w-[45px] h-[45px] relative">
+                            <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
+                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <Icons.heartFill className="h-4 w-4 fill-white bg-red-500 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
+                        </Avatar>
+                        <div>
+                            <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
+                            {` reacted to your comment!`}
+                        </div>
                     </div>
-                </div>
+                // </Link>
             );
         } else if(counterNotifications == 2) {
             return (
-                <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
-                    <Avatar className="w-[45px] h-[45px] relative">
-                        <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                        <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
-                        <Icons.heartFill className="h-4 w-4 fill-white bg-red-500 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
-                    </Avatar>
-                    <div>
-                        <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
-                        {` and `}
-                        <span className="font-bold">{user1 && user1.firstName} {user1 && user1.lastName}</span>
-                        {` reacted to your comment!`}
+                // <Link to={`/post/${contentId && contentId}`} className="cursor-pointer">
+                    <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
+                        <Avatar className="w-[45px] h-[45px] relative">
+                            <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
+                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <Icons.heartFill className="h-4 w-4 fill-white bg-red-500 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
+                        </Avatar>
+                        <div>
+                            <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
+                            {` and `}
+                            <span className="font-bold">{user1 && user1.firstName} {user1 && user1.lastName}</span>
+                            {` reacted to your comment!`}
+                        </div>
                     </div>
-                </div>
+                // </Link>
             );
         } else if(counterNotifications > 2) {
             return (
-                <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
-                    <Avatar className="w-[45px] h-[45px] relative">
-                        <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                        <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
-                        <Icons.heartFill className="h-4 w-4 fill-white bg-red-500 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
-                    </Avatar>
-                    <div>
-                        <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
-                        {` and `}
-                        <span className="font-bold">{user1 && user1.firstName} {user1 && user1.lastName}</span>
-                        {` and others reacted to your comment!`}
+                // <Link to={`/post/${contentId && contentId}`} className="cursor-pointer">
+                    <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
+                        <Avatar className="w-[45px] h-[45px] relative">
+                            <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
+                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <Icons.heartFill className="h-4 w-4 fill-white bg-red-500 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
+                        </Avatar>
+                        <div>
+                            <span className="font-bold">{user0 && user0.firstName} {user0 && user0.lastName}</span>
+                            {` and `}
+                            <span className="font-bold">{user1 && user1.firstName} {user1 && user1.lastName}</span>
+                            {` and others reacted to your comment!`}
+                        </div>
                     </div>
-                </div>
+                // </Link>
             );
         }
 
@@ -236,75 +257,3 @@ const NotificationRowView = ({notificationGroup, ...props}) => {
 };
 
 export default NotificationRowView;
-
-{/*
-const RowView = ({user0 = null, user1 = null, children}) => {
-    const authHeader = useAuthHeader();
-
-
-    return (
-        <div className="w-full flex flex-row text-wrap justify-start items-center gap-3 mb-2 relative">
-
-            <Avatar className="w-[45px] h-[45px]">
-                <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
-            </Avatar>
-
-            
-            <div className="text-wrap">
-
-                <span className="font-bold">
-                    {`${user0.firstName} ${user0.lastName} `}
-                    {user1 }
-                </span>
-
-                {notifications.type == 0 && <Icons.commentFill className="h-4 w-4 fill-white bg-green-600 rounded-full box-content p-[3px] absolute bottom-[-5px] left-[25px]" />}
-                {notifications.type == 1 && <Icons.commentFill className="h-4 w-4 fill-white bg-green-600 rounded-full box-content p-[3px] absolute bottom-[-5px] left-[25px]" /> }
-                {notifications.type == 2 && <Icons.heartFill className="h-4 w-4 fill-white bg-red-500 rounded-full box-content p-[3px] absolute bottom-[-5px] left-[25px]" /> }
-                 
-                {children}
-            </div>
-            
-
-             {user && (notification.type == 0) && (
-                <div className="text-wrap">
-                    {notifications.length}
-
-                    <span className="font-bold">
-                        {`${user.firstName} ${user.lastName} `}
-                    </span>
-                    commented your post!
-                    <Icons.commentFill className="h-4 w-4 fill-white bg-green-600 rounded-full box-content p-[3px] absolute bottom-[-5px] left-[25px]" />
-
-                </div>
-            )}
-
-            {user && (notification.type == 1) && (
-                <div className="text-wrap">
-                    <span className="font-bold">
-                        {`${user.firstName} ${user.lastName} `}
-                    </span> 
-                    reacted to your post!
-                    <Icons.likeFill className="h-4 w-4 fill-white bg-primary rounded-full box-content p-[3px] absolute bottom-[-5px] left-[25px]" />
-
-                </div>
-            )}
-
-
-            {user && (notification.type == 2) && (
-                <div className="text-wrap">
-                    <span className="font-bold">
-                        {`${user.firstName} ${user.lastName} `}
-                    </span> 
-                    reacted to your comment!
-                    <Icons.heartFill className="h-4 w-4 fill-white bg-red-500 rounded-full box-content p-[3px] absolute bottom-[-5px] left-[25px]" />
-                </div>
-            )} 
-
-            
-        </div>
-    );
-
-};
-
-*/}

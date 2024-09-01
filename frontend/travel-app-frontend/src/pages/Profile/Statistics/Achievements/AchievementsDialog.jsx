@@ -14,6 +14,7 @@ import { Icons } from "@/components/icons";
 import AchievementView from "./AchievementView";
 import SpinLoading from '@/components/ui/SpinLoading';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
+import { cn } from '@/lib/utils';
 import{
     ChevronLeftIcon,
     ChevronRightIcon,
@@ -113,27 +114,27 @@ const AchievementsDialog = ({userId, userAchievements, setUserAchievements}) => 
                     )}
                 </div>
 
-                <div className="w-full flex flex-row justify-center items-center gap-1">
-                        <Button 
-                            onClick={() => prevPage()} 
-                            variant="secondary"
-                            className="w-fit"
-                            disabled={currentPage == 0}
-                        >
-                            <ChevronLeftIcon className="h-6 w-6 cursor-pointer rounded-md" />
-                        </Button>
-                        
-                        <div className="text-sm text-gray-400">{`${currentPage+1}/${totalPages}`}</div>
+                <div className={cn("w-full flex flex-row justify-center items-center gap-1", (totalPages == 1) && "hidden" )}>
+                    <Button 
+                        onClick={() => prevPage()} 
+                        variant="secondary"
+                        className="w-fit"
+                        disabled={currentPage == 0}
+                    >
+                        <ChevronLeftIcon className="h-6 w-6 cursor-pointer rounded-md" />
+                    </Button>
+                    
+                    <div className="text-sm text-gray-400">{`${currentPage+1}/${totalPages}`}</div>
 
-                        <Button 
-                            onClick={() => nextPage()}
-                            variant="secondary"
-                            className="w-fit"
-                            disabled={currentPage == (totalPages-1)}
-                        >
-                            <ChevronRightIcon className="h-6 w-6 cursor-pointer rounded-md"/>
-                        </Button>
-                    </div>
+                    <Button 
+                        onClick={() => nextPage()}
+                        variant="secondary"
+                        className="w-fit"
+                        disabled={currentPage == (totalPages-1)}
+                    >
+                        <ChevronRightIcon className="h-6 w-6 cursor-pointer rounded-md"/>
+                    </Button>
+                </div>
                 
             </DialogContent>
         </Dialog>

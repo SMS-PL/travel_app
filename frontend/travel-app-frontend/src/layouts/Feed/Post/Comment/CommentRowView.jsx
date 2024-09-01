@@ -170,6 +170,14 @@ const CommentRowView = ({commentId, commentData, commentsData, setCommentsData, 
                                 </DropdownMenuTrigger>
 
                                 <DropdownMenuContent align="end">
+
+                                    <DropdownMenuItem 
+                                        className="cursor-pointer"
+                                        onSelect={() => setIsEditDialogOpen(true)} 
+                                    >
+                                        Edit content
+                                    </DropdownMenuItem>
+
                                     <DropdownMenuItem 
                                         className="cursor-pointer"
                                         onSelect={() => setIsDeleteDialogOpen(true)}
@@ -177,23 +185,10 @@ const CommentRowView = ({commentId, commentData, commentsData, setCommentsData, 
                                         Delete
                                     </DropdownMenuItem>
 
-                                    <DropdownMenuItem 
-                                        className="cursor-pointer"
-                                        onSelect={() => setIsEditDialogOpen(true)} 
-                                    >
-                                        Edit post
-                                    </DropdownMenuItem>
+                                    
 
                                 </DropdownMenuContent>
                             </DropdownMenu>
-
-                            <DeleteCommentDialog 
-                                commentId={commentData.id}
-                                isOpen={isDeleteDialogOpen}
-                                onClose={() => setIsDeleteDialogOpen(false)}
-                                setCommentsData={setCommentsData}
-                                commentsData={commentsData}
-                            />
 
                             <EditCommentDialog
                                 commentId={commentData.id}
@@ -202,6 +197,14 @@ const CommentRowView = ({commentId, commentData, commentsData, setCommentsData, 
                                 setIsOpen={setIsEditDialogOpen}
                                 onClose={() => setIsEditDialogOpen(false)}
                                 setRefetch={setRefetch}
+                            />
+
+                            <DeleteCommentDialog 
+                                commentId={commentData.id}
+                                isOpen={isDeleteDialogOpen}
+                                onClose={() => setIsDeleteDialogOpen(false)}
+                                setCommentsData={setCommentsData}
+                                commentsData={commentsData}
                             />
                         </div>
                     )}

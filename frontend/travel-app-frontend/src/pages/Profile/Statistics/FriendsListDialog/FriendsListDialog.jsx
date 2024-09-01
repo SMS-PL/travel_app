@@ -16,8 +16,13 @@ import HoverUserInfo from "@/components/ui/HoverUserInfo";
 import SpinLoading from '@/components/ui/SpinLoading';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
+import { cn } from '@/lib/utils';
+import{
+    ChevronLeftIcon,
+    ChevronRightIcon,
+} from "@radix-ui/react-icons";
 
-const FriendsListDialog = ({userId, userFriendsList, setUserFriendsList }) => {
+const FriendsListDialog = ({userId, userFriendsList, setUserFriendsList, setCounterFriendships }) => {
     const authHeader = useAuthHeader();
 
 	const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
@@ -32,11 +37,12 @@ const FriendsListDialog = ({userId, userFriendsList, setUserFriendsList }) => {
     useEffect(() => {
 		getUserFriendsList();
 		setGlobalRefreshFriendship(false);
+        setRefetchData(false);
 
-	}, [userId, globalRefreshFriendship]);
+	}, [userId, globalRefreshFriendship, refetchData]);
 
     const getUserFriendsList = () => {
-		fetch(`http://localhost:5000/api/v1/friendship/${userId}`, {
+		fetch(`http://localhost:5000/api/v1/friendship/${userId}?pageNumber=${currentPage}&pageSize=${pageSize}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json', 
@@ -50,14 +56,30 @@ const FriendsListDialog = ({userId, userFriendsList, setUserFriendsList }) => {
 			return response.json();
 		})
 		.then(data => {
-			// console.log(data);
-			setUserFriendsList(data);
+			setUserFriendsList(data.content);
+            setTotalPages(data.totalPages);
+            setCounterFriendships(data.totalElements);
 		})
 		.catch(error => {
 			console.log(error.message);
 		});
 	};
-    
+
+    const nextPage = () => {
+        if(currentPage < (totalPages-1)) {
+            setUserFriendsList(null);
+            setCurrentPage(prev => prev + 1);
+            setRefetchData(true);
+        }
+    }
+
+    const prevPage = () => {
+        if(currentPage > 0) {
+            setUserFriendsList(null);
+            setCurrentPage(prev => prev - 1);
+            setRefetchData(true);
+        }
+    }
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -94,6 +116,28 @@ const FriendsListDialog = ({userId, userFriendsList, setUserFriendsList }) => {
                             <span className="text-sm mt-4">The user has not friends.</span>
                         </div>
                     )}
+                </div>
+
+                <div className={cn("w-full flex flex-row justify-center items-center gap-1", (totalPages == 1) && "hidden")}>
+                    <Button 
+                        onClick={() => prevPage()} 
+                        variant="secondary"
+                        className="w-fit"
+                        disabled={currentPage == 0}
+                    >
+                        <ChevronLeftIcon className="h-6 w-6 cursor-pointer rounded-md" />
+                    </Button>
+                    
+                    <div className="text-sm text-gray-400">{`${currentPage+1}/${totalPages}`}</div>
+
+                    <Button 
+                        onClick={() => nextPage()}
+                        variant="secondary"
+                        className="w-fit"
+                        disabled={currentPage == (totalPages-1)}
+                    >
+                        <ChevronRightIcon className="h-6 w-6 cursor-pointer rounded-md"/>
+                    </Button>
                 </div>
                 
             </DialogContent>

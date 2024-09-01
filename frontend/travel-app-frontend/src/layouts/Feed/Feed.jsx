@@ -29,6 +29,9 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
 	const [addNewPost, setAddNewPost] = useState(false);
 	const [isLastPage, setIsLastPage] = useState(false);
 
+	const [refetchPosts, setRefetchPosts] = useState(false);
+
+
 	const {ref, inView} = useInView();
 
     // do poprawnego ładowania postów
@@ -39,6 +42,14 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
     useEffect(() => {
 		if(inView) fetchNextPage();
 	}, [inView]);
+
+	useEffect(() => {
+		if(refetchPosts) {
+			refetch();
+			setRefetchPosts(false);
+		}
+
+	}, [refetchPosts]);
 
     const fetchPost = async (page) => {
 
@@ -99,7 +110,7 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
 				<AddPost setAddNewPost={setAddNewPost} /> 
 			}
             
-			{status == "pending" ? (
+			{(status == "pending" && !data) ? (
 				<SpinLoading className="w-full flex justify-center items-center py-5" />
 
 			) : (
@@ -109,18 +120,18 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
 						<p className="font-base text-sm text-gray-400">No posts...</p>
 					</div>
 				) : (
-					<>
+					<div className="flex flex-col w-full gap-5 mt-5">
 						{data.pages.map((group, i) => (
 							group.content.map((post) => (
 								<Post
 									key={post.id}
 									postData={post}
 									setAddNewPost={setAddNewPost}
-									refetch={refetch}
+									setRefetchPosts={setRefetchPosts}
 								/>
 							))
 						))}
-					</>
+					</div>
 				)
 			)}
 

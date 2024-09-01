@@ -51,7 +51,7 @@ import CommentRowView from '@/layouts/Feed/Post/Comment/CommentRowView';
 import EditCommentDialog from "@/layouts/Feed/Post/Comment/EditCommentDialog";
 import SpinLoading from '@/components/ui/SpinLoading';
 
-function Post({postData, setAddNewPost, refetch}) {    
+function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature = false}) {    
     const authHeader = useAuthHeader();
     const auth = useAuthUser();
 
@@ -65,7 +65,7 @@ function Post({postData, setAddNewPost, refetch}) {
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-    const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+    const [isCommentsOpen, setIsCommentsOpen] = useState(isCommentsOpenFeature);
     const [commentsData, setCommentsData] = useState([[]]);
     const [refetchComments, setRefetchComments] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -75,9 +75,9 @@ function Post({postData, setAddNewPost, refetch}) {
 
     const [isImageLoading, setIsImageLoading] = useState(true);
 
-    // paginacja
+    // paginacja komentarzy
     const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize, setPageSize] = useState(3);
+    const [pageSize, setPageSize] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [isLastPage, setIsLastPage] = useState(false);
@@ -93,7 +93,7 @@ function Post({postData, setAddNewPost, refetch}) {
     useEffect(() => {
         fetchComments();
         setRefetchComments(false);
-	}, [currentPage, refetchComments]);
+	}, [currentPage, refetchComments, postData]);
 
     
     useEffect(() => {
@@ -294,10 +294,11 @@ function Post({postData, setAddNewPost, refetch}) {
 
 
     return (
-        <Card className="mt-5 w-full">
+        <Card className="w-full">
             {/* AUTOR POSTA */}
             <CardHeader className="flex flex-row pb-1 justify-between">
                 {/* <Link to={`/profile/${user.id}`} className="flex flex-row"> */}
+                
                 <HoverUserInfo userData={user} >
                     <div className="flex flex-row justify-center items-start">
                         <Avatar>
@@ -362,7 +363,7 @@ function Post({postData, setAddNewPost, refetch}) {
                                 isOpen={isDeleteDialogOpen}
                                 setIsOpen={setIsDeleteDialogOpen}
                                 onClose={() => setIsDeleteDialogOpen(false)}
-                                refetch={refetch}     
+                                setRefetchPosts={setRefetchPosts}     
                             />
 
                             <EditPostDialog
@@ -371,7 +372,7 @@ function Post({postData, setAddNewPost, refetch}) {
                                 isOpen={isEditDialogOpen}
                                 setIsOpen={setIsEditDialogOpen}
                                 onClose={() => setIsEditDialogOpen(false)}
-                                refetch={refetch}
+                                setRefetchPosts={setRefetchPosts}
                             />
                         </>
                     )}
@@ -382,13 +383,15 @@ function Post({postData, setAddNewPost, refetch}) {
             {/* OPIS I ZDJĘCIE */}
             <CardContent className="break-all" >
                 {postData.content}
-                <img 
-                    src={postData.imageUrl} 
-                    alt="" 
-                    className={cn(isImageLoading ? "h-[400px] bg-secondary" : "h-fit max-h-[800px] bg-black", "w-full object-cover border-2 rounded-lg mt-4 ")} 
-                    onLoad={() => setIsImageLoading(false)} 
-                    loading="lazy" 
-                />
+                <Link to={`/post/${postData && postData.id}`} className="cursor-pointer">
+                    <img 
+                        src={postData.imageUrl} 
+                        alt="" 
+                        className={cn(isImageLoading ? "h-[400px] bg-secondary" : "h-fit max-h-[800px] bg-black", "w-full object-cover border-2 rounded-lg mt-4 ")} 
+                        onLoad={() => setIsImageLoading(false)} 
+                        loading="lazy" 
+                    />
+                </Link>
 
                 {/* przycisk do włączania/wyłączania komentarzy */}
                 <div className="flex justify-between h-fit mt-5">

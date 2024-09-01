@@ -20,7 +20,7 @@ import { Icons } from "@/components/icons";
 import { cn } from '@/lib/utils';
 import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
 
-const EditPostDialog = ({postId, prevContent, isOpen, setIsOpen, refetch, onClose}) => {
+const EditPostDialog = ({postId, prevContent, isOpen, setIsOpen, setRefetchPosts, onClose}) => {
     const authHeader = useAuthHeader();
 
     const {
@@ -30,7 +30,7 @@ const EditPostDialog = ({postId, prevContent, isOpen, setIsOpen, refetch, onClos
         reset,
         formState: { errors, isValid },
     } = useForm({defaultValues: {
-        description: prevContent,
+        editDescription: prevContent,
     }});
 
     const onSubmit = async (values) => {
@@ -43,7 +43,7 @@ const EditPostDialog = ({postId, prevContent, isOpen, setIsOpen, refetch, onClos
                     "Authorization": authHeader,
                 },
                 body: JSON.stringify({
-                    "content": values.description,
+                    "content": values.editDescription,
                 })
             })
             .then(response => {
@@ -55,9 +55,10 @@ const EditPostDialog = ({postId, prevContent, isOpen, setIsOpen, refetch, onClos
             })
             .then(data => {
                 console.log(data);
-                if (refetch) {
-                    refetch();
-                }
+                // if (refetch) {
+                //     refetch();
+                // }
+                setRefetchPosts(true);
 
                 onClose();
             })
@@ -110,10 +111,10 @@ const EditPostDialog = ({postId, prevContent, isOpen, setIsOpen, refetch, onClos
                     </AlertDialogFooter>
                 </form>
                 <div className="absolute right-2 top-[6px] z-40">
-                        <HoverPopoverInputInfo
-                            content={"To add a post, you must include a description (maximum length 255 characters), add a photo and the location of the photo you took. The photo cannot exceed 10MB and must have a .jpg, .jpeg, or .png extension."}
-                        />
-                    </div>
+                    <HoverPopoverInputInfo
+                        content={"To add a post, you must include a description (maximum length 255 characters), add a photo and the location of the photo you took. The photo cannot exceed 10MB and must have a .jpg, .jpeg, or .png extension."}
+                    />
+                </div>
             </AlertDialogContent>
         </AlertDialog>
     );

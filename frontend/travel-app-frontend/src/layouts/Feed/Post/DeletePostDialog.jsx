@@ -27,7 +27,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-const DeletePostDialog = ({postId, isOpen, setIsOpen, refetch, onClose}) => {
+const DeletePostDialog = ({postId, isOpen, setIsOpen, setRefetchPosts, onClose}) => {
     const authHeader = useAuthHeader();
 
     const deletePostOnClick = () => {
@@ -47,9 +47,7 @@ const DeletePostDialog = ({postId, isOpen, setIsOpen, refetch, onClose}) => {
         })
         .then(data => {
             console.log(data);
-            if (refetch) {
-                refetch();
-            }
+            setRefetchPosts(true);
 
         })
         .catch(error => {

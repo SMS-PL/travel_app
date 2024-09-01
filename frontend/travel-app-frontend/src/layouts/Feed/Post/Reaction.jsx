@@ -26,7 +26,7 @@ function Reaction({postId, likes, hearts}) {
     useEffect(() => {
         fetchReactionsStatus();
         fetchReactionCounter();
-	}, []);
+	}, [postId]);
 
     const fetchReactionCounter = () => {
         fetch(`http://localhost:5000/api/v1/posts/${postId}`, {

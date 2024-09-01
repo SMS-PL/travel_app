@@ -26,6 +26,7 @@ const ProfileStatistics = ({userId}) => {
 	const [userCountry, setUserCountry] = useState(null);
 	const [userAchievements, setUserAchievements] = useState(null);
 	const [userFriendsList, setUserFriendsList] = useState(null);
+	const [counterFriendships, setCounterFriendships] = useState(null);
     const [counterHistoryPins, setCounterHistoryPins] = useState(null);
 
 	useEffect(() => {
@@ -128,7 +129,7 @@ const ProfileStatistics = ({userId}) => {
 				<CardContent className="p-0 my-4">
 					<div className="flex flex-row gap-1 justify-start items-end text-5xl font-extrabold">
 						{!userFriendsList && <SpinLoading className="w-full flex justify-center items-center" /> }
-						{userFriendsList && userFriendsList.length}
+						{(userFriendsList !== null) && (counterFriendships !== null) && counterFriendships}
 					</div>
 				</CardContent>
 
@@ -137,6 +138,8 @@ const ProfileStatistics = ({userId}) => {
 						userId={userId} 
 						userFriendsList={userFriendsList} 
 						setUserFriendsList={setUserFriendsList} 
+						counterFriendships={counterFriendships}
+						setCounterFriendships={setCounterFriendships}
 					/>
 				</CardFooter>
 			</Card>
@@ -145,7 +148,7 @@ const ProfileStatistics = ({userId}) => {
 			<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-1 p-4 ">
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
 					<CardTitle className="text-base font-bold leading-[17px]">
-						History of all pins
+						History of pins
 					</CardTitle>
 				</CardHeader>
 
