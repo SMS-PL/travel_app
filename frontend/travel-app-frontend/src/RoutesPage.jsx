@@ -2,13 +2,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 // import RequireAuth from "@auth-kit/react-router/RequireAuth";
 import AuthOutlet from '@auth-kit/react-router/AuthOutlet'
-import Profile from "./pages/Profile/Profile";
-import Home from "./pages/Home/Home";
-import Login from "./pages/Login/Login";
-import Register from "./pages/Register/Register";
-import Logout from "./pages/Logout/Logout";
-import ErrorPage from "./pages/ErrorPage/ErrorPage";
-import FriendsFeed from "./pages/FriendsFeed/FriendsFeed";
+import Profile from "@/pages/Profile/Profile";
+import Home from "@/pages/Home/Home";
+import Login from "@/pages/Login/Login";
+import Register from "@/pages/Register/Register";
+import Logout from "@/pages/Logout/Logout";
+import ErrorPage from "@/pages/ErrorPage/ErrorPage";
+import FriendsFeed from "@/pages/FriendsFeed/FriendsFeed";
+import PostPage from "@/pages/PostPage/PostPage";
 import ScrollToTop from '@/components/ScrollToTop/ScrollToTop';
 
 const RoutesPage = () => {
@@ -25,8 +26,8 @@ const RoutesPage = () => {
                 <Route element={<AuthOutlet fallbackPath='/login' />}>
                     <Route path='/' element={<Home/>} />
                     <Route path='/friends-feed' element={<FriendsFeed/>} />
-                    {/* <Route path='/explore-feed' element={<ExploreFeed/>} /> */}
                     <Route path='/profile/:userId' element={<Profile />} />
+                    <Route path='/post/:postId' element={<PostPage />} />
                     <Route path='/logout' element={<Logout />} />
                 </Route>
 
@@ -39,13 +40,3 @@ const RoutesPage = () => {
 };
 
 export default RoutesPage;
-
-            {/* <Routes>
-                 <Route path={"/"} element={<Home />} />
-                <Route path={"/login"} element={<Login />} />
-                <Route path={"/secure"} element={
-                    <RequireAuth fallbackPath={"/login"}>
-                        <Secure />
-                    </RequireAuth>
-                }/>
-            </Routes> */}
