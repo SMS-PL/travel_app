@@ -4,6 +4,7 @@ import com.sms.travelapp.dto.Auth.UserResponseDto;
 import com.sms.travelapp.mapper.StringResponseMapper;
 import com.sms.travelapp.service.FriendshipService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,8 @@ public class FriendshipController {
     private final FriendshipService friendshipService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<UserResponseDto>> getFriendsOfUser(@PathVariable Long userId){
-        List<UserResponseDto> friends = friendshipService.getFriendsOfUser(userId);
+    public ResponseEntity<Page<UserResponseDto>> getFriendsOfUser(@PathVariable Long userId, @RequestParam int pageNumber, @RequestParam int pageSize){
+        Page<UserResponseDto> friends = friendshipService.getFriendsOfUserPaginated(userId,pageNumber,pageSize);
 
         return ResponseEntity.status(HttpStatus.OK).body(friends);
     }

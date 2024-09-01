@@ -12,6 +12,9 @@ import com.sms.travelapp.repository.UserRepository;
 import com.sms.travelapp.service.AuthService;
 import com.sms.travelapp.service.FriendshipService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -28,6 +31,7 @@ public class FriendshipServiceImpl implements FriendshipService {
     private final FriendshipRepository friendshipRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
+
 
     @Override
     public List<UserResponseDto> getFriendsOfUser(Long userId) {
@@ -49,6 +53,30 @@ public class FriendshipServiceImpl implements FriendshipService {
 
 
         return friends;
+    }
+    @Override
+    public Page<UserResponseDto> getFriendsOfUserPaginated(Long userId, int pageNumber, int pageSize) {
+        UserEntity user = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFound("User Not found!")
+        );
+
+        // Tworzenie obiektu PageRequest do paginacji
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+        // Pobieranie przyjaciół użytkownika z paginacją
+        Page<Friendship> friendshipsPage = friendshipRepository.findAllByUser(user, pageRequest);
+
+        // Mapowanie wyników na listę UserResponseDto
+        List<UserResponseDto> friends = new ArrayList<>();
+        for (Friendship f : friendshipsPage) {
+            if (friendshipRepository.existsByUserAndFriend(f.getFriend(), user) &&
+                    friendshipRepository.existsByUserAndFriend(user, f.getFriend())) {
+                friends.add(UserMapper.mapToUserResponseDto(f.getFriend()));
+            }
+        }
+
+        // Zwracanie wyników jako obiekt Page
+        return new PageImpl<>(friends, pageRequest, friendshipsPage.getTotalElements());
     }
 
     @Override

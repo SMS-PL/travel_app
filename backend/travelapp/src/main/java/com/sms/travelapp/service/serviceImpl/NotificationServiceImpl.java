@@ -35,6 +35,7 @@ public class NotificationServiceImpl implements NotificationService {
     public Notification createNotification(int type, Long authorId, Long receiverId, Long contentId) {
 
         if(notificationRepository.existsByAuthorIdAndAndContentIdAndType(authorId, contentId, type)) return null;
+        if(authorId.equals(receiverId)) return null;
 
         Notification notification = new Notification();
         notification.setType(type);
@@ -47,7 +48,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public Page<Map<String, Object>> getNotifications(int pageSize, int pageNumber) {
         UserEntity user = authService.getLoggedUser();
-        Page<Notification> notificationPage = notificationRepository.findAllByReceiverId(user.getId(), PageRequest.of(pageNumber, pageSize));
+        Page<Notification> notificationPage = notificationRepository.findAllByReceiverIdOrderByCreatedAtDesc(user.getId(), PageRequest.of(pageNumber, pageSize));
 
         // Grupowanie powiadomień według contentId i type
         Map<ContentTypeGroupKey, List<NotificationResponseDto>> groupedNotifications = notificationPage.stream()
