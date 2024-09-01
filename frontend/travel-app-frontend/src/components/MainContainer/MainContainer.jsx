@@ -38,7 +38,7 @@ function MainContainer({children, type = "default", setAddNewPost, ...props}) {
                             <div className=" col-span-1 self-center justify-center">
                                 <Link to="/">
                                     <Button 
-                                        variant="outline"
+                                        variant="link"
                                         className="w-fit pr-4 pl-2"
                                         to={"/"}
                                     >
