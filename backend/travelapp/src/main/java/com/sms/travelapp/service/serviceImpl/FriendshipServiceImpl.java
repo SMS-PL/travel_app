@@ -60,35 +60,21 @@ public class FriendshipServiceImpl implements FriendshipService {
                 () -> new UserNotFound("User Not found!")
         );
 
+       
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+
+        Page<Friendship> friendshipsPage = friendshipRepository.findAllByUser(user, pageRequest);
+
+
         List<UserResponseDto> friends = new ArrayList<>();
-        int currentPage = pageNumber;
-        long totalElements = 0;
-        
-        while (friends.size() < pageSize) {
-            PageRequest pageRequest = PageRequest.of(currentPage, pageSize);
-            Page<Friendship> friendshipsPage = friendshipRepository.findAllByUser(user, pageRequest);
-
-            if (friendshipsPage.isEmpty()) {
-                break;
-            }
-
-            for (Friendship f : friendshipsPage) {
-                if (friendshipRepository.existsByUserAndFriend(f.getFriend(), user) &&
-                        friendshipRepository.existsByUserAndFriend(user, f.getFriend())) {
-                    friends.add(UserMapper.mapToUserResponseDto(f.getFriend()));
-                    if (friends.size() == pageSize) {
-                        break;
-                    }
-                }
-            }
-
-            currentPage++;
-            totalElements = friendshipsPage.getTotalElements();
+        for (Friendship f : friendshipsPage) {
+                friends.add(UserMapper.mapToUserResponseDto(f.getFriend()));
         }
 
-        return new PageImpl<>(friends, PageRequest.of(pageNumber, pageSize), totalElements);
-    }
 
+        return new PageImpl<>(friends, pageRequest, friendshipsPage.getTotalElements());
+    }
 
     @Override
     public String sendFriendRequest(Long friendId) {
