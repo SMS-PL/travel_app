@@ -35,6 +35,7 @@ public class NotificationServiceImpl implements NotificationService {
     public Notification createNotification(int type, Long authorId, Long receiverId, Long contentId) {
 
         if(notificationRepository.existsByAuthorIdAndAndContentIdAndType(authorId, contentId, type)) return null;
+        if(authorId.equals(receiverId)) return null; 
 
         Notification notification = new Notification();
         notification.setType(type);
