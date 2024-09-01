@@ -60,24 +60,35 @@ public class FriendshipServiceImpl implements FriendshipService {
                 () -> new UserNotFound("User Not found!")
         );
 
-        // Tworzenie obiektu PageRequest do paginacji
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
-
-        // Pobieranie przyjaciół użytkownika z paginacją
-        Page<Friendship> friendshipsPage = friendshipRepository.findAllByUser(user, pageRequest);
-
-        // Mapowanie wyników na listę UserResponseDto
         List<UserResponseDto> friends = new ArrayList<>();
-        for (Friendship f : friendshipsPage) {
-            if (friendshipRepository.existsByUserAndFriend(f.getFriend(), user) &&
-                    friendshipRepository.existsByUserAndFriend(user, f.getFriend())) {
-                friends.add(UserMapper.mapToUserResponseDto(f.getFriend()));
+        int currentPage = pageNumber;
+        long totalElements = 0;
+        
+        while (friends.size() < pageSize) {
+            PageRequest pageRequest = PageRequest.of(currentPage, pageSize);
+            Page<Friendship> friendshipsPage = friendshipRepository.findAllByUser(user, pageRequest);
+
+            if (friendshipsPage.isEmpty()) {
+                break;
             }
+
+            for (Friendship f : friendshipsPage) {
+                if (friendshipRepository.existsByUserAndFriend(f.getFriend(), user) &&
+                        friendshipRepository.existsByUserAndFriend(user, f.getFriend())) {
+                    friends.add(UserMapper.mapToUserResponseDto(f.getFriend()));
+                    if (friends.size() == pageSize) {
+                        break;
+                    }
+                }
+            }
+
+            currentPage++;
+            totalElements = friendshipsPage.getTotalElements();
         }
 
-        // Zwracanie wyników jako obiekt Page
-        return new PageImpl<>(friends, pageRequest, friendshipsPage.getTotalElements());
+        return new PageImpl<>(friends, PageRequest.of(pageNumber, pageSize), totalElements);
     }
+
 
     @Override
     public String sendFriendRequest(Long friendId) {
