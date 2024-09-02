@@ -92,5 +92,13 @@ public class PostController {
     }
 
 
+    @GetMapping("/comment/{commentId}")
+    public ResponseEntity<Map<String,Long>> getPostIdByCommentId(@PathVariable Long commentId){
+        Long res = postService.getPostIdByCommentId(commentId);
+        Map<String,Long> responseBody = new HashMap<>();
+        responseBody.put("postId",res);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+    }
+
 
 }

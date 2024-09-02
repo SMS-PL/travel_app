@@ -60,19 +60,14 @@ public class FriendshipServiceImpl implements FriendshipService {
                 () -> new UserNotFound("User Not found!")
         );
 
-       
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
 
-
         Page<Friendship> friendshipsPage = friendshipRepository.findAllByUser(user, pageRequest);
-
 
         List<UserResponseDto> friends = new ArrayList<>();
         for (Friendship f : friendshipsPage) {
                 friends.add(UserMapper.mapToUserResponseDto(f.getFriend()));
         }
-
-
         return new PageImpl<>(friends, pageRequest, friendshipsPage.getTotalElements());
     }
 

@@ -26,4 +26,6 @@ public interface PostService {
     Page<PostResponseDto> getPostsByUser(Long userId, int pageSize, int pageNumber);
 
     Integer checkUserReaction(Long postId);
+
+    Long getPostIdByCommentId(Long commentId);
 }

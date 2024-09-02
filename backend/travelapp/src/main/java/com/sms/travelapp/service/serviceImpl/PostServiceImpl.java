@@ -268,4 +268,11 @@ public class PostServiceImpl implements PostService {
         }
 
     }
+
+    @Override
+    public Long getPostIdByCommentId(Long commentId) {
+        return commentRepository.findById(commentId).orElseThrow(
+                ()-> new IllegalArgumentException("Comment id-"+commentId+" not found")
+        ).getPost().getId();
+    }
 }
