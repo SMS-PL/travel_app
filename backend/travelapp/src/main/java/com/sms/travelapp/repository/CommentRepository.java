@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface CommentRepository extends JpaRepository<Comment,Long> {
 
-    Page<Comment> findAllByPost_Id(Long postId, PageRequest pg);
+    Page<Comment> findAllByPost_IdAndDeletedIsFalse(Long postId, PageRequest pg);
 
 
 

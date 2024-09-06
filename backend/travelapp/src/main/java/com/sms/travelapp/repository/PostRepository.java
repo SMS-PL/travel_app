@@ -11,8 +11,11 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post,Long> {
 
-    Page<Post> findAllByAuthorId(Long id, PageRequest pg);
+    Page<Post> findAllByAuthorIdAndDeletedIsFalse(Long id, PageRequest pg);
 
-    @Query("SELECT p FROM Post p WHERE p.authorId IN :friendIds")
+    @Query("Select p from Post p where p.deleted = false")
+    Page<Post> findAllPosts(Pageable pageable);
+
+    @Query("SELECT p FROM Post p WHERE p.authorId IN :friendIds AND p.deleted = false")
     Page<Post> findAllByUserEntity_IdIn(List<Long> friendIds, Pageable pageable);
 }

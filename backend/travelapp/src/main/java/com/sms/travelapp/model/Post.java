@@ -45,6 +45,9 @@ public class Post {
     @Column(name = "heart_count")
     private Long heartCount;
 
+    @Column(name = "deleted")
+    private boolean deleted = false;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private Timestamp createdAt;

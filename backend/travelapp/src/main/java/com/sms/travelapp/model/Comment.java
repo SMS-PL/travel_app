@@ -32,6 +32,10 @@ public class Comment {
     @Column(name = "reaction_count")
     private Long reactionCount;
 
+    @Column(name = "deleted")
+    private boolean deleted = false;
+
+
     @CreationTimestamp
     @Column(name = "created_at")
     private Timestamp createdAt;

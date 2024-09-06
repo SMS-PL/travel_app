@@ -52,7 +52,7 @@ public class CommentServiceImpl implements CommentService {
             sort = Sort.by("reactionCount").descending();
         }
 
-        Page<Comment> commentPage = commentRepository.findAllByPost_Id(postId, PageRequest.of(pageNumber,pageSize,sort));
+        Page<Comment> commentPage = commentRepository.findAllByPost_IdAndDeletedIsFalse(postId, PageRequest.of(pageNumber,pageSize,sort));
 
         return new PageImpl<>(
                 commentPage
@@ -97,8 +97,11 @@ public class CommentServiceImpl implements CommentService {
         }
 
         //commentReactionRepository.deleteByCommentId(commentId);
-        deleteReactionsByCommentId(commentId);
-        commentRepository.delete(comment);
+        //deleteReactionsByCommentId(commentId);
+
+        comment.setDeleted(true);
+        commentRepository.save(comment);
+
         return StringResponseMapper.mapToMap("Comment id-" + commentId + " deleted successfully");
 
     }

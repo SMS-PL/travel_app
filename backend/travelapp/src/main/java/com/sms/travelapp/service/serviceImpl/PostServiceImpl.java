@@ -92,9 +92,11 @@ public class PostServiceImpl implements PostService {
         }
 
 
-        deleteAllCascade(post);
+//        deleteAllCascade(post);
 
-        postRepository.deleteById(post.getId());
+        post.setDeleted(true);
+        postRepository.save(post);
+
         return "Post id-"+ id +" deleted";
     }
 
@@ -128,6 +130,9 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(id).orElseThrow(
                 ()-> new PostNotFound("Post id-"+id+" not found")
         );
+        if (post.isDeleted()) {
+            throw new PostNotFound("Post id-"+id+" not found");
+        }
         return PostMapper.mapToPostResponseDto(post);
     }
 
@@ -218,7 +223,7 @@ public class PostServiceImpl implements PostService {
            postsPage = postRepository.findAllByUserEntity_IdIn(friendsIds, PageRequest.of(pageNumber, pageSize,Sort.by("createdAt").descending()));
 
        }else if(feedType.equals("home")){
-            postsPage = postRepository.findAll(PageRequest.of(pageNumber,
+            postsPage = postRepository.findAllPosts(PageRequest.of(pageNumber,
                    pageSize,
                    Sort.by("createdAt").descending()));
        }else{
@@ -239,7 +244,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostResponseDto> getPostsByUser(Long userId, int pageSize, int pageNumber) {
-        Page<Post> postsPage = postRepository.findAllByAuthorId(userId,PageRequest.of(pageNumber,
+        Page<Post> postsPage = postRepository.findAllByAuthorIdAndDeletedIsFalse(userId,PageRequest.of(pageNumber,
                 pageSize,
                 Sort.by("createdAt").descending()));
 
