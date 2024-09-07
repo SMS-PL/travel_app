@@ -97,7 +97,7 @@ public class PinServiceImpl implements PinService {
 
     @Override
     public Page<Map.Entry<Long, List<PinResponseDto>>> getActiveFriendsPins(int pageNumber, int pageSize) {
-        List<Long> friendsIds = userService.getFriendList().stream().map(UserResponseDto::getId).toList();
+        List<Long> friendsIds = userService.getFriendList().stream().filter(friend->!friend.isBanned()).map(UserResponseDto::getId).toList();
         ZonedDateTime cutoff = ZonedDateTime.now().minusHours(24);
         Timestamp timestampCutoff = Timestamp.from(cutoff.toInstant());
 

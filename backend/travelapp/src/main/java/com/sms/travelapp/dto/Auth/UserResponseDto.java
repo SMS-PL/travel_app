@@ -19,5 +19,7 @@ public class UserResponseDto {
     private String photoUrl;
     private String backgroundUrl;
     private Timestamp createdAt;
+    private boolean isBanned;
+    private Timestamp bannedTo;
     private List<Role> roles;
 }

@@ -7,10 +7,12 @@ import com.sms.travelapp.dto.Post.PostResponseDto;
 import com.sms.travelapp.exception.AccessDenied;
 import com.sms.travelapp.exception.HeartAlreadyUsed;
 import com.sms.travelapp.exception.PostNotFound;
+import com.sms.travelapp.infrastructure.PermissionChecker;
 import com.sms.travelapp.mapper.PostMapper;
 import com.sms.travelapp.mapper.PostReactionMapper;
 import com.sms.travelapp.model.Post;
 import com.sms.travelapp.model.PostReaction;
+import com.sms.travelapp.model.Role;
 import com.sms.travelapp.model.UserEntity;
 import com.sms.travelapp.repository.*;
 import com.sms.travelapp.service.*;
@@ -39,9 +41,16 @@ public class PostServiceImpl implements PostService {
     private final NotificationService notificationService;
     private final CommentRepository commentRepository;
     private final CommentReactionRepository commentReactionRepository;
+
+    private final PermissionChecker pc;
     @Override
     public List<PostResponseDto> getAllPosts() {
-        return postRepository.findAll().stream().map(
+        return postRepository.findAll().stream().filter(post->{
+            UserEntity user = userRepository.findById(post.getAuthorId()).orElseThrow(
+                    ()-> new IllegalArgumentException("Post author not found")
+            );
+            return !user.getIsBanned();
+        }).map(
                 PostMapper::mapToPostResponseDto
         ).collect(Collectors.toList());
     }
@@ -87,13 +96,10 @@ public class PostServiceImpl implements PostService {
 
         UserEntity user = authService.getLoggedUser();
 
-        if(!Objects.equals(post.getAuthorId(), user.getId())){
-            throw new AccessDenied("You are not authorized to delete this post!");
+
+        if(!Objects.equals(post.getAuthorId(), user.getId()) && pc.isAdmin(user.getId())){
+                throw new AccessDenied("You are not authorized to delete this post!");
         }
-
-
-//        deleteAllCascade(post);
-
         post.setDeleted(true);
         postRepository.save(post);
 
@@ -133,6 +139,13 @@ public class PostServiceImpl implements PostService {
         if (post.isDeleted()) {
             throw new PostNotFound("Post id-"+id+" not found");
         }
+        UserEntity user = userRepository.findById(post.getAuthorId()).orElseThrow(
+                ()-> new IllegalArgumentException("Post author not found")
+        );
+        if(user.getIsBanned()){
+            throw new PostNotFound("Post id-"+id+" not found");
+        }
+
         return PostMapper.mapToPostResponseDto(post);
     }
 
@@ -217,6 +230,7 @@ public class PostServiceImpl implements PostService {
        if(Objects.equals(feedType, "friends")) {
            List<Long> friendsIds = userService.getFriendList()
                    .stream()
+                   .filter(friend->!friend.isBanned())
                    .map(UserResponseDto::getId)
                    .toList();
 
@@ -276,8 +290,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Long getPostIdByCommentId(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(
+        Post post = commentRepository.findById(commentId).orElseThrow(
                 ()-> new IllegalArgumentException("Comment id-"+commentId+" not found")
-        ).getPost().getId();
+        ).getPost();
+
+        UserEntity user = userRepository.findById(post.getAuthorId()).orElseThrow(
+                ()-> new IllegalArgumentException("Post author not found")
+        );
+        if(user.getIsBanned()) {
+            return -1L;
+        }
+        return post.getId();
     }
 }

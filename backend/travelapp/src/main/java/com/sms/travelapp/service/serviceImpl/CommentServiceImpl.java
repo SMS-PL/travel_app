@@ -6,6 +6,7 @@ import com.sms.travelapp.dto.Comment.CommentResponseDto;
 import com.sms.travelapp.exception.AccessDenied;
 import com.sms.travelapp.exception.CommentNotFound;
 import com.sms.travelapp.exception.PostNotFound;
+import com.sms.travelapp.infrastructure.PermissionChecker;
 import com.sms.travelapp.mapper.CommentMapper;
 import com.sms.travelapp.mapper.StringResponseMapper;
 import com.sms.travelapp.model.Comment;
@@ -40,6 +41,8 @@ public class CommentServiceImpl implements CommentService {
     private final PostRepository postRepository;
     private final CommentReactionRepository commentReactionRepository;
     private final NotificationService notificationService;
+
+    private final PermissionChecker pc;
 
     @Override
     public Page<CommentResponseDto> getCommentsByPostId(Long postId, int pageSize, int pageNumber, String sortBy) {
@@ -92,12 +95,9 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 ()-> new CommentNotFound("Comment not found!")
         );
-        if(!comment.getAuthor().equals(user)){
+        if(!comment.getAuthor().equals(user) && pc.isAdmin(user.getId())){
             throw new AccessDenied("This is not your comment!");
         }
-
-        //commentReactionRepository.deleteByCommentId(commentId);
-        //deleteReactionsByCommentId(commentId);
 
         comment.setDeleted(true);
         commentRepository.save(comment);

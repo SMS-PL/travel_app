@@ -30,4 +30,7 @@ public interface UserService {
 
     UserResponseDto updateUser(Long id, UserRequestPayload userRequestPayload);
 
+    UserResponseDto banUser(Long id, int days);
+
+    UserResponseDto unbanUser(Long id);
 }

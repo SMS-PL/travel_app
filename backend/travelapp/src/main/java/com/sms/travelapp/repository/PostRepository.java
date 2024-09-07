@@ -13,7 +13,7 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
     Page<Post> findAllByAuthorIdAndDeletedIsFalse(Long id, PageRequest pg);
 
-    @Query("Select p from Post p where p.deleted = false")
+    @Query("SELECT p FROM Post p WHERE p.deleted = false AND p.authorId IN (SELECT u.id FROM UserEntity u WHERE u.isBanned = false)")
     Page<Post> findAllPosts(Pageable pageable);
 
     @Query("SELECT p FROM Post p WHERE p.authorId IN :friendIds AND p.deleted = false")

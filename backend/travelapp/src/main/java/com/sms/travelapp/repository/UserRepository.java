@@ -22,9 +22,9 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
 //    Page<UserEntity> findByUsernameOrFirstNameOrLastNameContaining(@Param("query") String query, Pageable pageable);
 
     @Query("SELECT u FROM UserEntity u WHERE " +
-            "(u.username LIKE %:word1% OR u.firstName LIKE %:word1% OR u.lastName LIKE %:word1% OR u.email LIKE %:word1%) " +
+            "((u.username LIKE %:word1% OR u.firstName LIKE %:word1% OR u.lastName LIKE %:word1% OR u.email LIKE %:word1%) AND u.isBanned = false) " +
             "OR " +
-            "(u.username LIKE %:word2% OR u.firstName LIKE %:word2% OR u.lastName LIKE %:word2% OR u.email LIKE %:word2%)")
+            "((u.username LIKE %:word2% OR u.firstName LIKE %:word2% OR u.lastName LIKE %:word2% OR u.email LIKE %:word2%) AND u.isBanned = false)")
     Page<UserEntity> findByMultipleWords(@Param("word1") String word1, @Param("word2") String word2, Pageable pageable);
 
 }

@@ -4,6 +4,7 @@ import com.sms.travelapp.config.security.JWTGenerator;
 import com.sms.travelapp.dto.Auth.AuthResponseDto;
 import com.sms.travelapp.dto.Auth.LoginDto;
 import com.sms.travelapp.dto.Auth.RegisterDto;
+import com.sms.travelapp.exception.PermissionDenied;
 import com.sms.travelapp.mapper.StringResponseMapper;
 import com.sms.travelapp.mapper.UserMapper;
 import com.sms.travelapp.model.Role;
@@ -55,6 +56,9 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtGenerator.generateToken(authentication);
         UserEntity user = authService.getLoggedUser();
+        if(user.getIsBanned()){
+            throw new PermissionDenied("You are account has been banned until: "+user.getBannedTo());
+        }
         AuthResponseDto response = new AuthResponseDto(token);
         response.setUser(UserMapper.mapToUserResponseDto(user));
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -93,9 +97,12 @@ public class AuthController {
         user.setLastName(registerDto.getLastName());
         user.setEmail(registerDto.getEmail());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        user.setIsBanned(false);
+        user.setBannedAt(null);
+        user.setBannedTo(null);
         //user.setPhotoUrl("https://firebasestorage.googleapis.com/");
 
-        Role role = roleRepository.findByName("USER").get();
+        Role role = roleRepository.findByName("ROLE_USER").get();
         user.setRoles(Collections.singletonList(role));
 
         userRepository.save(user);

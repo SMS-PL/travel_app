@@ -20,6 +20,8 @@ public class UserMapper {
                 .backgroundUrl(userEntity.getBackgroundImage())
                 .createdAt(userEntity.getCreatedAt())
                 .roles(userEntity.getRoles())
+                .isBanned(userEntity.getIsBanned())
+                .bannedTo(userEntity.getBannedTo())
                 .build();
     }
 }

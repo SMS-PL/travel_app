@@ -33,6 +33,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(PermissionDenied.class)
+    public ResponseEntity<Object> handlePermissionDenied(PermissionDenied ex) {
+        Map<String, String> error = Collections.singletonMap("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
     @ExceptionHandler(PostNotFound.class)
     public ResponseEntity<Object> handlePostNotFoundException(PostNotFound ex) {
         Map<String, String> error = Collections.singletonMap("error", ex.getMessage());

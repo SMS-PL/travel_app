@@ -53,9 +53,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto getUserProfileById(Long userId) {
-        return UserMapper.mapToUserResponseDto(userRepository.findById(userId).orElseThrow(
-                ()-> new UserNotFound("User Not found!"))
+        UserEntity user = userRepository.findById(userId).orElseThrow(
+                ()-> new UserNotFound("User Not found!")
         );
+        if(user.getIsBanned()){
+            throw new UserNotFound("User is banned!");
+        }
+        return UserMapper.mapToUserResponseDto(user);
     }
 
     @Override
@@ -171,6 +175,29 @@ public class UserServiceImpl implements UserService {
 
         UserEntity updatedUser = userRepository.save(user);
         return UserMapper.mapToUserResponseDto(updatedUser);
+    }
+
+    @Override
+    public UserResponseDto banUser(Long id, int days) {
+
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFound("User Not found!"));
+        user.setIsBanned(true);
+        user.setBannedAt(Timestamp.from(Instant.now()));
+        user.setBannedTo(Timestamp.from(Instant.now().plusSeconds(days * 86400L)));
+        UserEntity bannedUser = userRepository.save(user);
+        return UserMapper.mapToUserResponseDto(bannedUser);
+    }
+
+    @Override
+    public UserResponseDto unbanUser(Long id) {
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFound("User Not found!"));
+        user.setIsBanned(false);
+        user.setBannedAt(null);
+        user.setBannedTo(null);
+        UserEntity bannedUser = userRepository.save(user);
+        return UserMapper.mapToUserResponseDto(bannedUser);
     }
 
 
