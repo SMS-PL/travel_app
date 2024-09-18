@@ -20,4 +20,6 @@ public class Friendship {
     @ManyToOne
     @JoinColumn(name = "friend_id")
     private UserEntity friend;
+
+
 }

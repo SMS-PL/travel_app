@@ -10,11 +10,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CommentMapper {
+    private final UserMapper userMapper;
 
-    public static CommentResponseDto MapToCommentResponseDto(Comment comment){
+    public  CommentResponseDto MapToCommentResponseDto(Comment comment){
         return CommentResponseDto.builder()
                 .id(comment.getId())
-                .author(UserMapper.mapToUserResponseDto(comment.getAuthor()))
+                .author(userMapper.mapToUserResponseDto(comment.getAuthor()))
                 .content(comment.getContent())
                 .reactionCount(comment.getReactionCount()==null ? 0L : comment.getReactionCount())
                 .createdAt(comment.getCreatedAt())

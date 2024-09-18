@@ -43,6 +43,7 @@ public class AuthController {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWTGenerator jwtGenerator;
+    private final UserMapper userMapper;
 
     private static final String EMAIL_PATTERN =
             "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@" +
@@ -60,7 +61,7 @@ public class AuthController {
             throw new PermissionDenied("You are account has been banned until: "+user.getBannedTo());
         }
         AuthResponseDto response = new AuthResponseDto(token);
-        response.setUser(UserMapper.mapToUserResponseDto(user));
+        response.setUser(userMapper.mapToUserResponseDto(user));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

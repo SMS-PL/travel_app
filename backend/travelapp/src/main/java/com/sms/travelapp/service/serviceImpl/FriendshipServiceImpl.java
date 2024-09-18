@@ -31,6 +31,7 @@ public class FriendshipServiceImpl implements FriendshipService {
     private final FriendshipRepository friendshipRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
+    private final UserMapper userMapper;
 
 
     @Override
@@ -46,7 +47,7 @@ public class FriendshipServiceImpl implements FriendshipService {
                 friendshipRepository.findAllByUser(user)) {
             if(friendshipRepository.existsByUserAndFriend(f.getFriend(),user)){
                 if(friendshipRepository.existsByUserAndFriend(user,f.getFriend())){
-                    friends.add(UserMapper.mapToUserResponseDto(f.getFriend()));
+                    friends.add(userMapper.mapToUserResponseDto(f.getFriend()));
                 }
             }
         }
@@ -66,7 +67,7 @@ public class FriendshipServiceImpl implements FriendshipService {
 
         List<UserResponseDto> friends = new ArrayList<>();
         for (Friendship f : friendshipsPage) {
-                friends.add(UserMapper.mapToUserResponseDto(f.getFriend()));
+                friends.add(userMapper.mapToUserResponseDto(f.getFriend()));
         }
         return new PageImpl<>(friends, pageRequest, friendshipsPage.getTotalElements());
     }
@@ -130,7 +131,7 @@ public class FriendshipServiceImpl implements FriendshipService {
         for (Friendship f:
                 friendshipRepository.findAllByUser(user)) {
             if(!friendshipRepository.existsByUserAndFriend(f.getFriend(),user)){
-                sentRequests.add(UserMapper.mapToUserResponseDto(f.getFriend()));
+                sentRequests.add(userMapper.mapToUserResponseDto(f.getFriend()));
             }
         }
 
@@ -147,7 +148,7 @@ public class FriendshipServiceImpl implements FriendshipService {
         for (Friendship f:
                 friendshipRepository.findAllByFriend(user)) {
             if(!friendshipRepository.existsByUserAndFriend(user,f.getUser())){
-                receivedRequests.add(UserMapper.mapToUserResponseDto(f.getUser()));
+                receivedRequests.add(userMapper.mapToUserResponseDto(f.getUser()));
             }
         }
 

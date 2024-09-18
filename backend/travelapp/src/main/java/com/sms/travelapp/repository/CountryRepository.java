@@ -16,5 +16,7 @@ public interface CountryRepository extends JpaRepository<Country,Integer> {
     @Query("SELECT c FROM Country c WHERE c.name LIKE :name% ")
     Page<Country> findAllByNameStartingWith(@Param("name") String queryCountry, PageRequest name);
 
+
+
     Country findByIso3(String iso3);
 }

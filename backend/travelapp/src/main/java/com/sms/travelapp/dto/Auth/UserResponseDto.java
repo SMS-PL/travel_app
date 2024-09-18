@@ -3,6 +3,8 @@ package com.sms.travelapp.dto.Auth;
 import com.sms.travelapp.model.Role;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -22,4 +24,10 @@ public class UserResponseDto {
     private boolean isBanned;
     private Timestamp bannedTo;
     private List<Role> roles;
+
+    private int visitedCountriesCount;
+    private int achievementsCount;
+    private int friendsCount;
+    private int pinsCount;
+    private String friendStatus;
 }

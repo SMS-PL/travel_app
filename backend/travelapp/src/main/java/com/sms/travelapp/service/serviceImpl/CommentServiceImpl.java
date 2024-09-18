@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
     private final PostRepository postRepository;
     private final CommentReactionRepository commentReactionRepository;
     private final NotificationService notificationService;
-
+    private final CommentMapper commentMapper;
     private final PermissionChecker pc;
 
     @Override
@@ -60,7 +60,7 @@ public class CommentServiceImpl implements CommentService {
         return new PageImpl<>(
                 commentPage
                         .stream()
-                        .map(CommentMapper::MapToCommentResponseDto)
+                        .map(commentMapper::MapToCommentResponseDto)
                         .collect(Collectors.toList()),PageRequest.of(pageNumber,pageSize,sort),
                 commentPage.getTotalElements()
         );
@@ -85,7 +85,7 @@ public class CommentServiceImpl implements CommentService {
         notificationService.createNotification(0,user.getId(),post.getAuthorId(),post.getId());
 
 
-        return CommentMapper.MapToCommentResponseDto(comment);
+        return commentMapper.MapToCommentResponseDto(comment);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class CommentServiceImpl implements CommentService {
 
         comment.setContent(commentRequestDto.getContent());
         commentRepository.save(comment);
-        return CommentMapper.MapToCommentResponseDto(comment);
+        return commentMapper.MapToCommentResponseDto(comment);
     }
 
     @Override

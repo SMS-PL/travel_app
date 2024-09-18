@@ -42,6 +42,7 @@ public class PinServiceImpl implements PinService {
     private final GeolocationService geolocationService;
     private final UserService userService;
     private final UserCountryService userCountryService;
+    private final PinMapper pinMapper;
     @Override
     public Page<PinResponseDto> getAllPins(int pageNumber,int pageSize) {
         Page<Pin> pins =  pinRepository.findAll(PageRequest.of(pageNumber,
@@ -49,7 +50,7 @@ public class PinServiceImpl implements PinService {
                 Sort.by("createdAt").descending()));
 
         return new PageImpl<>(
-                pins.getContent().stream().map(PinMapper::mapToPinResponseDto).collect(Collectors.toList()),
+                pins.getContent().stream().map(pinMapper::mapToPinResponseDto).collect(Collectors.toList()),
                 PageRequest.of(pageNumber,pageSize),
                 pins.getTotalElements());
 
@@ -76,7 +77,7 @@ public class PinServiceImpl implements PinService {
         pin.setCountry(placeDetails.getCountry());
         pin.setLocalization(pinRequestDto.getLocalization());
         pinRepository.save(pin);
-        return PinMapper.mapToPinResponseDto(pin);
+        return pinMapper.mapToPinResponseDto(pin);
     }
 
     @Override
@@ -107,7 +108,7 @@ public class PinServiceImpl implements PinService {
                 .collect(Collectors.groupingBy(
                         pin -> pin.getAuthor().getId(),
                         LinkedHashMap::new,
-                        Collectors.mapping(PinMapper::mapToPinResponseDto, Collectors.toList())
+                        Collectors.mapping(pinMapper::mapToPinResponseDto, Collectors.toList())
                 ));
 
         List<Map.Entry<Long, List<PinResponseDto>>> entries = new ArrayList<>(groupedPins.entrySet());
@@ -129,7 +130,7 @@ public class PinServiceImpl implements PinService {
         ZonedDateTime cutoff = ZonedDateTime.now().minusHours(24);
         Timestamp timestampCutoff = Timestamp.from(cutoff.toInstant());
         List<Pin> pins = pinRepository.findAllByAuthorIdAndCreatedAtAfter(user.getId(), timestampCutoff);
-        return pins.stream().map(PinMapper::mapToPinResponseDto).collect(Collectors.toList());
+        return pins.stream().map(pinMapper::mapToPinResponseDto).collect(Collectors.toList());
 
     }
 
@@ -141,7 +142,7 @@ public class PinServiceImpl implements PinService {
                 Sort.by("createdAt").descending()));
 
         return new PageImpl<>(
-                pins.getContent().stream().map(PinMapper::mapToPinResponseDto).collect(Collectors.toList()),
+                pins.getContent().stream().map(pinMapper::mapToPinResponseDto).collect(Collectors.toList()),
                 PageRequest.of(pageNumber,pageSize),
                 pins.getTotalElements());
     }

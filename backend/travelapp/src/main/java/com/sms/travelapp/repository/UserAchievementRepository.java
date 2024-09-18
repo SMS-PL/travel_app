@@ -11,4 +11,5 @@ public interface UserAchievementRepository extends JpaRepository<UserAchievement
 
     Page<UserAchievement> findAllByUserId(Long userId, PageRequest pg);
 
+    int countAllByUserId(Long id);
 }

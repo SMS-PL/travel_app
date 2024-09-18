@@ -1,6 +1,7 @@
 package com.sms.travelapp.repository;
 
 import com.sms.travelapp.model.Pin;
+import com.sms.travelapp.model.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,4 +21,6 @@ public interface PinRepository extends JpaRepository<Pin,Long> {
     List<Pin> findAllByAuthorIdAndCreatedAtAfter(Long id, Timestamp timestampCutoff);
 
     Page<Pin> findAllByAuthorIdOrderByCreatedAtDesc(Long id, PageRequest pg);
+
+    int countAllByAuthor(UserEntity user);
 }

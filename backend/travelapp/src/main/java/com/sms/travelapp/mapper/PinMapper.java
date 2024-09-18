@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class PinMapper {
+    private final UserMapper userMapper;
 
-    public static PinResponseDto mapToPinResponseDto(Pin pin){
+    public  PinResponseDto mapToPinResponseDto(Pin pin){
         return PinResponseDto.builder()
                 .id(pin.getId())
                 .localization(pin.getLocalization())
@@ -19,7 +20,7 @@ public class PinMapper {
                 .countryId(pin.getCountry().getId())
                 .city(pin.getCity())
                 .createdAt(pin.getCreatedAt())
-                .author(UserMapper.mapToUserResponseDto(pin.getAuthor()))
+                .author(userMapper.mapToUserResponseDto(pin.getAuthor()))
                 .build();
     }
 }

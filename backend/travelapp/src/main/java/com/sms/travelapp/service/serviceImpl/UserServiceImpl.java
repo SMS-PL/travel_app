@@ -6,7 +6,9 @@ import com.sms.travelapp.exception.UserNotFound;
 import com.sms.travelapp.mapper.UserMapper;
 import com.sms.travelapp.model.Friendship;
 import com.sms.travelapp.model.UserEntity;
+import com.sms.travelapp.repository.CountryRepository;
 import com.sms.travelapp.repository.FriendshipRepository;
+import com.sms.travelapp.repository.UserCountryRepository;
 import com.sms.travelapp.repository.UserRepository;
 import com.sms.travelapp.service.AuthService;
 import com.sms.travelapp.service.UserService;
@@ -34,6 +36,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AuthService authService;
     private final FriendshipRepository friendshipRepository;
+    private final UserMapper userMapper;
+
 
     @Override
     public Long getUserId() {
@@ -59,7 +63,23 @@ public class UserServiceImpl implements UserService {
         if(user.getIsBanned()){
             throw new UserNotFound("User is banned!");
         }
-        return UserMapper.mapToUserResponseDto(user);
+
+        UserResponseDto userResponseDto = userMapper.mapToUserResponseDto(user);
+        UserEntity loggedUser = authService.getLoggedUser();
+        if(friendshipRepository.existsByUserAndFriend(loggedUser,user)
+                && friendshipRepository.existsByUserAndFriend(user,loggedUser)){
+            userResponseDto.setFriendStatus("FRIEND");
+        }else if(friendshipRepository.existsByUserAndFriend(loggedUser,user)
+                && !friendshipRepository.existsByUserAndFriend(user,loggedUser)){
+            userResponseDto.setFriendStatus("SENT");
+        }else if(!friendshipRepository.existsByUserAndFriend(loggedUser,user)
+                && friendshipRepository.existsByUserAndFriend(user,loggedUser)){
+            userResponseDto.setFriendStatus("RECEIVED");
+        }else{
+            userResponseDto.setFriendStatus("STRANGER");
+        }
+
+        return userResponseDto;
     }
 
     @Override
@@ -80,7 +100,7 @@ public class UserServiceImpl implements UserService {
                 friendshipRepository.findAllByUser(user)) {
             if(friendshipRepository.existsByUserAndFriend(f.getFriend(),user)){
                 if(friendshipRepository.existsByUserAndFriend(user,f.getFriend())){
-                    friends.add(UserMapper.mapToUserResponseDto(f.getFriend()));
+                    friends.add(userMapper.mapToUserResponseDto(f.getFriend()));
                 }
             }
         }
@@ -113,7 +133,7 @@ public class UserServiceImpl implements UserService {
         }
 
         return new PageImpl<>(
-                users.getContent().stream().map(UserMapper::mapToUserResponseDto).collect(Collectors.toList()),
+                users.getContent().stream().map(userMapper::mapToUserResponseDto).collect(Collectors.toList()),
                 pageRequest,
                 users.getTotalElements()
         );
@@ -174,7 +194,7 @@ public class UserServiceImpl implements UserService {
         }
 
         UserEntity updatedUser = userRepository.save(user);
-        return UserMapper.mapToUserResponseDto(updatedUser);
+        return userMapper.mapToUserResponseDto(updatedUser);
     }
 
     @Override
@@ -186,7 +206,7 @@ public class UserServiceImpl implements UserService {
         user.setBannedAt(Timestamp.from(Instant.now()));
         user.setBannedTo(Timestamp.from(Instant.now().plusSeconds(days * 86400L)));
         UserEntity bannedUser = userRepository.save(user);
-        return UserMapper.mapToUserResponseDto(bannedUser);
+        return userMapper.mapToUserResponseDto(bannedUser);
     }
 
     @Override
@@ -197,7 +217,7 @@ public class UserServiceImpl implements UserService {
         user.setBannedAt(null);
         user.setBannedTo(null);
         UserEntity bannedUser = userRepository.save(user);
-        return UserMapper.mapToUserResponseDto(bannedUser);
+        return userMapper.mapToUserResponseDto(bannedUser);
     }
 
 

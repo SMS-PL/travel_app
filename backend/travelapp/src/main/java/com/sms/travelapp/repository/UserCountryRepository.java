@@ -7,10 +7,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.security.cert.CertPathBuilder;
+
 public interface UserCountryRepository extends JpaRepository<UserCountry,Long> {
 
     boolean existsByUserIdAndCountryIdAndCountNotNull(Long userId, int countryId);
     UserCountry findByUserIdAndCountryIdAndCountNotNull(Long userId, int countryId);
 
+    int countAllByUserIdAndCountNotNull(Long userId);
     Page<UserCountry> findAllByUserId(Long userId, Pageable pageable);
+
+
 }
