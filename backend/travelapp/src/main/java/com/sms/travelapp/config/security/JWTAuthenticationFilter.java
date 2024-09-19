@@ -1,5 +1,8 @@
 package com.sms.travelapp.config.security;
 
+import com.sms.travelapp.exception.PermissionDenied;
+import com.sms.travelapp.model.UserEntity;
+import com.sms.travelapp.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -19,6 +23,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private  JWTGenerator tokenGenerator;
+    @Autowired
+    private UserRepository userRepository;
 
    @Autowired
     private  CustomUserDetailsService customUserDetailsService;
@@ -29,6 +35,13 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             String username = tokenGenerator.getUsernameFromJwt(token);
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
+            UserEntity userEntity = userRepository.findByEmail(userDetails.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
+
+            if (userEntity.getIsBanned() != null && userEntity.getIsBanned()) {
+                throw new PermissionDenied("User is banned");
+
+            }
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(userDetails,
                             null, userDetails.getAuthorities());

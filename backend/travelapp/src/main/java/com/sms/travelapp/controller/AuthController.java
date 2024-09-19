@@ -58,7 +58,7 @@ public class AuthController {
         String token = jwtGenerator.generateToken(authentication);
         UserEntity user = authService.getLoggedUser();
         if(user.getIsBanned()){
-            throw new PermissionDenied("You are account has been banned until: "+user.getBannedTo());
+            throw new PermissionDenied("You are account has been banned until: "+ user.getBannedTo());
         }
         AuthResponseDto response = new AuthResponseDto(token);
         response.setUser(userMapper.mapToUserResponseDto(user));
