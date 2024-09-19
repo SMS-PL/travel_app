@@ -27,18 +27,22 @@ public class JWTGenerator {
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + JWT_EXPIRATION);
 
-        String roles = authorities.stream()
+
+        String role = authorities.stream()
                 .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(",")); 
+                .filter(r -> r.equals("ROLE_ADMIN"))
+                .findFirst()
+                .orElse("ROLE_USER");
 
         String token = Jwts.builder()
                 .setSubject(username)
-                .claim("roles", roles) // Dodaj role jako claim
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
                 .compact();
 
+        return token;
     }
     public String getUsernameFromJwt(String token){
         Claims claims = Jwts.parser()
