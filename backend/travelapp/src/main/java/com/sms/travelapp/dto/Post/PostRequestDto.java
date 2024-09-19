@@ -13,7 +13,7 @@ public class PostRequestDto {
     private String content;
 
     @NotNull(message = "Country id cannot be empty")
-    private Long countryId;
+    private Integer countryId;
 
     @NotBlank(message = "ImageUrl cannot be empty")
     private String imageUrl;

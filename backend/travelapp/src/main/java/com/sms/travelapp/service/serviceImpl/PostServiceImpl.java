@@ -41,6 +41,7 @@ public class PostServiceImpl implements PostService {
     private final NotificationService notificationService;
     private final CommentRepository commentRepository;
     private final CommentReactionRepository commentReactionRepository;
+    private final PostMapper postMapper;
 
     private final PermissionChecker pc;
     @Override
@@ -51,7 +52,7 @@ public class PostServiceImpl implements PostService {
             );
             return !user.getIsBanned();
         }).map(
-                PostMapper::mapToPostResponseDto
+                postMapper::mapToPostResponseDto
         ).collect(Collectors.toList());
     }
 
@@ -128,7 +129,7 @@ public class PostServiceImpl implements PostService {
 
        postRepository.save(postDb);
 
-        return PostMapper.mapToPostResponseDto(postDb);
+        return postMapper.mapToPostResponseDto(postDb);
     }
 
     @Override
@@ -146,7 +147,7 @@ public class PostServiceImpl implements PostService {
             throw new PostNotFound("Post id-"+id+" not found");
         }
 
-        return PostMapper.mapToPostResponseDto(post);
+        return postMapper.mapToPostResponseDto(post);
     }
 
     @Override
@@ -245,11 +246,10 @@ public class PostServiceImpl implements PostService {
            postsPage = null;
        }
 
-
         return new PageImpl<>(
                 postsPage
                         .stream()
-                        .map(PostMapper::mapToPostResponseDto)
+                        .map(postMapper::mapToPostResponseDto)
                         .collect(Collectors.toList()),
                 PageRequest.of(pageNumber,pageSize),
                 postsPage.getTotalElements()
@@ -258,16 +258,19 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostResponseDto> getPostsByUser(Long userId, int pageSize, int pageNumber) {
+
         Page<Post> postsPage = postRepository.findAllByAuthorIdAndDeletedIsFalse(userId,PageRequest.of(pageNumber,
                 pageSize,
                 Sort.by("createdAt").descending()));
 
+        UserEntity loggedInUser = authService.getLoggedUser();
+
         return new PageImpl<>(
                 postsPage
                         .stream()
-                        .map(PostMapper::mapToPostResponseDto)
+                        .map(post -> postMapper.mapToPostResponseDto(post, loggedInUser))
                         .collect(Collectors.toList()),
-                PageRequest.of(pageNumber,pageSize),
+                PageRequest.of(pageNumber, pageSize),
                 postsPage.getTotalElements()
         );
 

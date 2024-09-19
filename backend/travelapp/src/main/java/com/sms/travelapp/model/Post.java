@@ -31,7 +31,7 @@ public class Post {
 
 
     @Column(name = "country_id")
-    private Long countryId;
+    private Integer countryId;
 
     @Column(name = "image_url")
     private String imageUrl;

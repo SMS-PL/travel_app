@@ -12,7 +12,7 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
 
     Page<Comment> findAllByPost_IdAndDeletedIsFalse(Long postId, PageRequest pg);
 
-
+    Long countByPost_Id(Long postId);
 
     @Modifying
     @Transactional

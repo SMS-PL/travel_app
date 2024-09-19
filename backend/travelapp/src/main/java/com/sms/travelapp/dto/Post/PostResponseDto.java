@@ -13,11 +13,18 @@ import java.sql.Timestamp;
 public class PostResponseDto {
     private Long id;
     private String content;
-    private Long countryId;
+    private Integer countryId;
+    private String countryIso3;
+    private String countryName;
+    private Long commentsCount;
+    private boolean isLiked;
+    private boolean isHearted;
     private String imageUrl;
     private Long authorId;
     private Long likes;
     private Long hearts;
     private Timestamp createdAt;
     private Timestamp lastUpdated;
+
+
 }
