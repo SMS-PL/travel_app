@@ -9,24 +9,24 @@ import ConfettiExplosion from 'react-confetti-explosion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {useInfiniteQuery } from "@tanstack/react-query";
 
-function Reaction({postId, likes, hearts}) {
+function Reaction({postId, likes = 0, hearts = 0, liked = false, hearted = false}) {
     const [isExploding, setIsExploding] = useState(false);
 
 	const authHeader = useAuthHeader();
     const { toast } = useToast();
 
-    const [isLiked, setIsLiked] = useState(false);              // tutaj wstaw czy polubiony
-    const [isHearted, setIsHearted] = useState(false);          // tutaj wstaw czy posercowany
+    const [isLiked, setIsLiked] = useState(liked);              // tutaj wstaw czy polubiony
+    const [isHearted, setIsHearted] = useState(hearted);          // tutaj wstaw czy posercowany
 
-    const [likesCounter, setLikesCounter] = useState(0);
-    const [heartsCounter, setHeartsCounter] = useState(0);
+    const [likesCounter, setLikesCounter] = useState(likes);
+    const [heartsCounter, setHeartsCounter] = useState(hearts);
 
     // do poprawnego ładowania postów
     
-    useEffect(() => {
-        fetchReactionsStatus();
-        fetchReactionCounter();
-	}, [postId]);
+    // useEffect(() => {
+    //     fetchReactionsStatus();
+    //     fetchReactionCounter();
+	// }, [postId]);
 
     const fetchReactionCounter = () => {
         fetch(`http://localhost:5000/api/v1/posts/${postId}`, {

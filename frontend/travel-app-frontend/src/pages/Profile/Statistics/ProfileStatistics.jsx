@@ -17,48 +17,13 @@ import VectorMapDialog from "@/pages/Profile/Statistics/VisitedCountriesMap/Vect
 import HistoryPinsDialog from "@/pages/Profile/Statistics/HistoryPins/HistoryPinsDialog";
 import SpinLoading from '@/components/ui/SpinLoading';
 
-const ProfileStatistics = ({userId}) => {
+const ProfileStatistics = ({userId, visitedCountriesCount, achievementsCount, friendsCount, pinsCount}) => {
 	const authHeader = useAuthHeader();
-
-    const [countriesLength, setCountriesLength] = useState(0);
-
-	// zmienne które otrzymują wartość od swoich dzieci
-	const [userCountry, setUserCountry] = useState(null);
-	const [userAchievements, setUserAchievements] = useState(null);
-	const [userFriendsList, setUserFriendsList] = useState(null);
-	const [counterFriendships, setCounterFriendships] = useState(null);
-    const [counterHistoryPins, setCounterHistoryPins] = useState(null);
-
-	useEffect(() => {
-		fetchCountries();
-	}, [userId]);
-
-
-	const fetchCountries = () => {
-        fetch(`http://localhost:5000/api/v1/countries/`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json', 
-                "Authorization": authHeader,
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Błąd sieci!');
-            }
-            return response.json();
-        })
-        .then(data => {
-            setCountriesLength(data.length);
-        })
-        .catch(error => {
-            console.log(error.message);
-        });
-    };
-
 
     return (
 		<div className="w-full mt-4 grid gap-4 md:gap-6 md:mt-8 grid-cols-2 sm:grid-cols-4 backdrop-blur-[150px]">
+			
+			
 			{/* VISITED COUNTRIES */}
 			<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-1 sm:col-span-1 p-4 ">
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
@@ -69,30 +34,29 @@ const ProfileStatistics = ({userId}) => {
 
 				<CardContent className="p-0 my-4">
 					<div className="flex items-baseline gap-1 text-5xl font-extrabold tabular-nums leading-none mb-2">
-						{!userCountry && <SpinLoading className="w-full flex justify-center items-center" /> }
+						{/* {!userCountry && <SpinLoading className="w-full flex justify-center items-center" /> } */}
 
-						{userCountry && (
+						
 							<div className="flex flex-col w-full justify-center items-center">
 								<div className="flex flex-row items-end justify-start w-full mb-2">
-									{userCountry.totalElements}
+									{visitedCountriesCount}
 									<span className="text-base font-normal text-muted-foreground">
-										{`/${countriesLength}`}
+										{`/${239}`}
 									</span>
 								</div>
-								<HorizontalBarChart value={userCountry && userCountry.totalElements} countriesLength={countriesLength}/>
+								<HorizontalBarChart value={visitedCountriesCount} countriesLength={239}/>
 							</div>
-						)}
+						
 					</div>
 				</CardContent>
 
 				<CardFooter className="p-0 w-full">
 					<VectorMapDialog 
 						userId={userId} 
-						userCountry={userCountry} 
-						setUserCountry={setUserCountry} 
 					/>
 				</CardFooter>
 			</Card>
+
 
 			{/* ACHIEVEMENTS EARNED*/}
 			<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-1 p-4">
@@ -104,19 +68,16 @@ const ProfileStatistics = ({userId}) => {
 
 				<CardContent className="p-0 my-4">
 					<div className="flex flex-row gap-1 justify-start items-end text-5xl font-extrabold">
-						{!userAchievements && <SpinLoading className="w-full flex justify-center items-center" /> }
-						{userAchievements && userAchievements.totalElements}
+						{/* {!userAchievements && <SpinLoading className="w-full flex justify-center items-center" /> } */}
+						{achievementsCount}
 					</div>
 				</CardContent>
 
 				<CardFooter className="p-0 w-full">
-					<AchievementsDialog 
-						userId={userId} 
-						userAchievements={userAchievements} 
-						setUserAchievements={setUserAchievements} 
-					/>
+					<AchievementsDialog userId={userId} />
 				</CardFooter>
 			</Card>
+
 
 			{/* FRIENDS */}
 			<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-1 p-4 ">
@@ -128,21 +89,17 @@ const ProfileStatistics = ({userId}) => {
 
 				<CardContent className="p-0 my-4">
 					<div className="flex flex-row gap-1 justify-start items-end text-5xl font-extrabold">
-						{!userFriendsList && <SpinLoading className="w-full flex justify-center items-center" /> }
-						{(userFriendsList !== null) && (counterFriendships !== null) && counterFriendships}
+						{/* {!userFriendsList && <SpinLoading className="w-full flex justify-center items-center" /> } */}
+						{/* {(userFriendsList !== null) && (counterFriendships !== null) && counterFriendships} */}
+						{friendsCount}
 					</div>
 				</CardContent>
 
 				<CardFooter className="p-0">
-					<FriendsListDialog 
-						userId={userId} 
-						userFriendsList={userFriendsList} 
-						setUserFriendsList={setUserFriendsList} 
-						counterFriendships={counterFriendships}
-						setCounterFriendships={setCounterFriendships}
-					/>
+					<FriendsListDialog userId={userId} />
 				</CardFooter>
 			</Card>
+
 
 			{/* History */}
 			<Card x-chunk="dashboard-01-chunk-2" className="w-full flex flex-col justify-between col-span-1 p-4 ">
@@ -154,16 +111,20 @@ const ProfileStatistics = ({userId}) => {
 
 				<CardContent className="p-0 my-4">
 					<div className="flex flex-row gap-1 justify-start items-end text-5xl font-extrabold">
-						{!counterHistoryPins && <SpinLoading className="w-full flex justify-center items-center" /> }
-						{counterHistoryPins && counterHistoryPins}
+						{/* {(counterHistoryPins === null) && <SpinLoading className="w-full flex justify-center items-center" /> }
+						{counterHistoryPins && counterHistoryPins} */}
+						{pinsCount}
 					</div>
 				</CardContent>
 
 				<CardFooter className="p-0">
 					{/* <FriendsListDialog userFriendsList={userFriendsList} /> */}
-					<HistoryPinsDialog userId={userId} setCounterHistoryPins={setCounterHistoryPins}/>
+					<HistoryPinsDialog userId={userId} />
+
 				</CardFooter>
 			</Card>
+
+
 		</div>
     );
 };

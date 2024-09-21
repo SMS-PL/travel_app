@@ -31,7 +31,7 @@ import{
     ChevronRightIcon,
 } from "@radix-ui/react-icons";
 
-const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
+const HistoryPinsDialog = ({userId}) => {
 	const authHeader = useAuthHeader();
 
     const [open, setOpen] = useState(false);
@@ -46,9 +46,11 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
 
 
 	useEffect(() => {
-		setRefetchData(false);
-        getAllUserPins();
-	}, [userId, refetchData]);
+        if(open) {
+            setRefetchData(false);
+            getAllUserPins();
+        }
+	}, [userId, open, refetchData]);
 
 
     const getAllUserPins = async () => {
@@ -68,7 +70,6 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
 		.then(data => {
             setPinsData(data.content);
             setTotalPages(data.totalPages);
-            setCounterHistoryPins(data.totalElements);
 		})
 		.catch(error => {
 			console.log(error.message);
@@ -92,16 +93,17 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
     }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog 
+            open={open} 
+            onOpenChange={setOpen}
+        >
             <DialogTrigger asChild>
-                {pinsData && 
-                    <div>
-                        <Button className="text-white gap-[4px] px-[10px] text-sm" >
-                            <Icons.historyFill className="h-[15px] w-[15px] fill-white" />
-                            Show
-                        </Button>
-                    </div>
-                }
+                <div>
+                    <Button className="text-white gap-[4px] px-[10px] text-sm" >
+                        <Icons.historyFill className="h-[15px] w-[15px] fill-white" />
+                        Show
+                    </Button>
+                </div>
             </DialogTrigger>
 
             <DialogContent className="flex flex-col justify-center items-center max-w-full w-[700px] rounded-lg px-2 py-10 sm:p-10">
@@ -113,49 +115,56 @@ const HistoryPinsDialog = ({userId, setCounterHistoryPins}) => {
                 <div className="w-full">
                      
                     {!pinsData && <SpinLoading className="w-full flex justify-center items-center" /> }
-
-                    <Table>
-                        {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-fit">Flag</TableHead>
-                                <TableHead className="w-fit">Country</TableHead>
-                                <TableHead className="w-full">City</TableHead>
-                                <TableHead className="text-right text-nowrap">Created At</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-
-                            {pinsData && pinsData.length != 0 && (pinsData.map((pin, i) => {
-                                return (
-                                    <HistoryPinRowView key={`historyPinRowView${i}`} pin={pin} />
-                                )
-                            }))}
-                        </TableBody>
-                    </Table>
                     
-                    <div className={cn("w-full flex flex-row justify-center items-center gap-1", (totalPages == 1) && "hidden")} >
-                        <Button 
-                            onClick={() => prevPage()} 
-                            variant="secondary"
-                            className="w-fit"
-                            disabled={currentPage == 0}
-                        >
-                            <ChevronLeftIcon className="h-6 w-6 cursor-pointer rounded-md" />
-                        </Button>
-                        
-                        <div className="text-sm text-gray-400">{`${currentPage+1}/${totalPages}`}</div>
+                    {(pinsData && pinsData.length == 0) ? (
+                        <div className="text-gray-400 flex flex-col justify-center items-center leading-[140px] pt-2 relative">
+                            <Icons.historyFill className="h-[100px] w-[100px] fill-white opacity-20" />
+                            <span className="text-sm mt-4">The user did not add any pins.</span>
+                        </div>
+                    ) : (
+                        <>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead className="w-fit">Flag</TableHead>
+                                        <TableHead className="w-fit">Country</TableHead>
+                                        <TableHead className="w-full">City</TableHead>
+                                        <TableHead className="text-right text-nowrap">Created At</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
 
-                        <Button 
-                            onClick={() => nextPage()}
-                            variant="secondary"
-                            className="w-fit"
-                            disabled={currentPage == (totalPages-1)}
-                        >
-                            <ChevronRightIcon className="h-6 w-6 cursor-pointer rounded-md"/>
-                        </Button>
-                    </div>
+                                    {pinsData && pinsData.length != 0 && (pinsData.map((pin, i) => {
+                                        return (
+                                            <HistoryPinRowView key={`historyPinRowView${i}`} pin={pin} />
+                                        )
+                                    }))}
+                                </TableBody>
+                            </Table>
+                            
+                            <div className={cn("w-full flex flex-row justify-center items-center gap-1", (totalPages == 1) && "hidden")} >
+                                <Button 
+                                    onClick={() => prevPage()} 
+                                    variant="secondary"
+                                    className="w-fit"
+                                    disabled={currentPage == 0}
+                                >
+                                    <ChevronLeftIcon className="h-6 w-6 cursor-pointer rounded-md" />
+                                </Button>
+                                
+                                <div className="text-sm text-gray-400">{`${currentPage+1}/${totalPages}`}</div>
 
+                                <Button 
+                                    onClick={() => nextPage()}
+                                    variant="secondary"
+                                    className="w-fit"
+                                    disabled={currentPage == (totalPages-1)}
+                                >
+                                    <ChevronRightIcon className="h-6 w-6 cursor-pointer rounded-md"/>
+                                </Button>
+                            </div>
+                        </>
+                    )}
                 </div>
             </DialogContent>
         </Dialog>

@@ -50,7 +50,7 @@ const CommentRowView = ({commentId, commentData, commentsData, setCommentsData, 
     }, [isReacted, commentsData]);
 
 
-
+    
     const checkIsReacted = () => {
         fetch(`http://localhost:5000/api/v1/comments/${commentId}/reacted`, {
 			method: 'GET',

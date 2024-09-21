@@ -21,23 +21,30 @@ import { Icons } from "@/components/icons";
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 import SpinLoading from '@/components/ui/SpinLoading';
 
-const FriendshipButton = ({userId, type = "default", ...props}) => {
+const FriendshipButton = ({userId, friendStatus, ...props}) => {
 	const authHeader = useAuthHeader();
 	const auth = useAuthUser();
 
-	const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
-	const [localRefetchFriedship, setLocalRefetchFriedship] = useState(false);
+	// const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
+	// const [localRefetchFriedship, setLocalRefetchFriedship] = useState(false);
 
-    const [friendshipStatus, setFriendshipStatus] = useState("");
+    const [friendshipStatus, setFriendshipStatus] = useState(friendStatus);
 
 
 	// wczytywanie danych o friends
-	useEffect(() => {
-		fetchFriendshipStatus();
-		setLocalRefetchFriedship(false);
-		setGlobalRefreshFriendship(false);
+	// useEffect(() => {
+	// 	fetchFriendshipStatus();
+	// 	setLocalRefetchFriedship(false);
+	// 	setGlobalRefreshFriendship(false);
 		
-	}, [localRefetchFriedship, globalRefreshFriendship, userId]);
+	// }, [localRefetchFriedship, globalRefreshFriendship, userId]);
+	// useEffect(() => {
+	// 	fetchFriendshipStatus();
+	// 	setLocalRefetchFriedship(false);
+	// 	setGlobalRefreshFriendship(false);
+		
+	// }, [localRefetchFriedship, globalRefreshFriendship, userId]);
+
 
 	const fetchFriendshipStatus = () => {
 		fetch(`http://localhost:5000/api/v1/friendship/status/${userId}`, {
@@ -79,8 +86,9 @@ const FriendshipButton = ({userId, type = "default", ...props}) => {
 		})
 		.then(data => {
 			console.log(data);
-			setLocalRefetchFriedship(true);
-			setGlobalRefreshFriendship(true);
+			fetchFriendshipStatus();
+			// setLocalRefetchFriedship(true);
+			// setGlobalRefreshFriendship(true);
 		})
 		.catch(error => {
 			console.log(error.message);
@@ -103,8 +111,9 @@ const FriendshipButton = ({userId, type = "default", ...props}) => {
 		})
 		.then(data => {
 			console.log(data);
-			setLocalRefetchFriedship(true);
-			setGlobalRefreshFriendship(true);
+			fetchFriendshipStatus();
+			// setLocalRefetchFriedship(true);
+			// setGlobalRefreshFriendship(true);
 		})
 		.catch(error => {
 			console.log(error.message);

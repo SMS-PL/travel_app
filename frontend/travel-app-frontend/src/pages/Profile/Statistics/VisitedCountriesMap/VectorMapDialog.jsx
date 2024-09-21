@@ -15,13 +15,18 @@ import VectorWorldMap from './VectorWorldMap';
 import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import SpinLoading from '@/components/ui/SpinLoading';
 
-const VectorMapDialog = ({userId, userCountry, setUserCountry}) => {
+const VectorMapDialog = ({userId}) => {
 	const authHeader = useAuthHeader();
+    
+    const [open, setOpen] = useState(false);
+
+	const [userCountry, setUserCountry] = useState(null);
 
     useEffect(() => {
-        getUserCountries(300, 0);
-
-	}, [userId]);
+        if(open) {
+            getUserCountries(300, 0);
+        }
+	}, [open, userId]);
 
     const getUserCountries = (pageSize, pageNumber) => {
 		fetch(`http://localhost:5000/api/v1/visited-countries/${userId}?pageSize=${pageSize}&pageNumber=${pageNumber}`, {
@@ -46,17 +51,19 @@ const VectorMapDialog = ({userId, userCountry, setUserCountry}) => {
 		});
 	};
 
+
     return (
-        <Dialog>
+        <Dialog
+            open={open}
+            onOpenChange={setOpen}
+        >
             <DialogTrigger className="text-white gap-1" asChild>
-                {userCountry && 
-                    <div>
-                        <Button className="text-white gap-[4px] px-[10px]">
-                            <Icons.locationPinFill className="fill-current w-4 h-4" /> 
-                            Open map
-                        </Button>
-                    </div>
-                }
+                <div>
+                    <Button className="text-white gap-[4px] px-[10px]">
+                        <Icons.locationPinFill className="fill-current w-4 h-4" /> 
+                        Open map
+                    </Button>
+                </div>
             </DialogTrigger>
 
             <DialogContent className="flex flex-col justify-center items-center max-w-full w-[800px] rounded-lg py-8 px-5 sm:p-10">

@@ -24,7 +24,6 @@ function Profile() {
 	const navigate = useNavigate();
 	const auth = useAuthUser();
 
-
 	// dane o użytkowniku
 	const [userData, setUserData] = useState(null);
 	
@@ -33,7 +32,6 @@ function Profile() {
 	const [imageProfileURL, setImageProfileURL] = useState("");
 	const [uploadingImageBackground, setUploadingImageBackground] = useState(false);
 	const [imageBackgroundURL, setImageBackgroundURL] = useState("");
-
 
 	// ładowanie danych o użytkowniku
 	useEffect(() => {
@@ -120,11 +118,24 @@ function Profile() {
 
 					</div>
 
-					<FriendshipButton userId={userId} className="mt-3"/>
+					<FriendshipButton 
+						userId={userData.id}
+						friendStatus={userData.friendStatus}
+						className="mt-3"
+					/>
 				</div>
 			}
-			<ProfileStatistics userId={userId} />
+			
+			{userData && 
+				<ProfileStatistics 
+					userId={userId}
+					visitedCountriesCount={userData.visitedCountriesCount}
+					achievementsCount={userData.achievementsCount}
+					friendsCount={userData.friendsCount}
+					pinsCount={userData.pinsCount}
 
+				/>
+			}
 			<div className="w-full flex flex-col ">
 				<h3 className=" text-lg font-extrabold text-center pt-4">Posts</h3>
 				<Feed type="profile" userId={userId} />

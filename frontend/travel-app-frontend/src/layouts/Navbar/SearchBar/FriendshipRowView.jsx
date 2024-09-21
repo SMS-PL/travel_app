@@ -20,36 +20,36 @@ import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 const FriendshipRowView = ({user}) => {
     const authHeader = useAuthHeader();
 
-    const [friendshipStatus, setFriendshipStatus] = useState("");
-    const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
+    // const [friendshipStatus, setFriendshipStatus] = useState("");
+    // const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
 
-    useEffect(() => {
-		getStatusOfFriendship();
-        setGlobalRefreshFriendship(false);
-	}, [globalRefreshFriendship]);
+    // useEffect(() => {
+	// 	getStatusOfFriendship();
+    //     setGlobalRefreshFriendship(false);
+	// }, [globalRefreshFriendship]);
 
-    const getStatusOfFriendship = () => {
-        fetch(`http://localhost:5000/api/v1/friendship/status/${user.id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json', 
-                "Authorization": authHeader,
-            },
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Błąd sieci!');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // console.log(data.message);
-            setFriendshipStatus(data.message);
-        })
-        .catch(error => {
-            console.log(error.message);
-        });
-    };
+    // const getStatusOfFriendship = () => {
+    //     fetch(`http://localhost:5000/api/v1/friendship/status/${user.id}`, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json', 
+    //             "Authorization": authHeader,
+    //         },
+    //     })
+    //     .then(response => {
+    //         if (!response.ok) {
+    //             throw new Error('Błąd sieci!');
+    //         }
+    //         return response.json();
+    //     })
+    //     .then(data => {
+    //         // console.log(data.message);
+    //         setFriendshipStatus(data.message);
+    //     })
+    //     .catch(error => {
+    //         console.log(error.message);
+    //     });
+    // };
 
     return (
         <div className="w-full flex flex-row items-center bg-secondary px-2 py-[5px] rounded-2xl mb-2 hover:underline">
@@ -63,13 +63,13 @@ const FriendshipRowView = ({user}) => {
             </div>
 
             <div>
-                {friendshipStatus === "FRIEND" ? (
+                {/* {friendshipStatus === "FRIEND" ? (
                     <Icons.userCheckFill className="h-5 w-5 fill-current" />
                 ) : null }
 
                 {friendshipStatus === "SENT" ? (
                     <Icons.envelopeCheckFill className="h-5 w-5 fill-current" />
-                ) : null }
+                ) : null } */}
 
             </div>
         </div>

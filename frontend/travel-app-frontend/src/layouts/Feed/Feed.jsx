@@ -19,6 +19,7 @@ import AddPost from "@/layouts/Feed/Post/AddPost/AddPost";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 import SpinLoading from '@/components/ui/SpinLoading';
+import { cn } from '@/lib/utils';
 
 const Feed = ({type = "home", userId = null}) => { // type = home/friends/profile
 	const authHeader = useAuthHeader();
@@ -31,16 +32,14 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
 
 	const [refetchPosts, setRefetchPosts] = useState(false);
 
-
 	const {ref, inView} = useInView();
 
     // do poprawnego ładowania postów
     const location = useLocation().pathname;    
     // const key = "home";
 
-
     useEffect(() => {
-		if(inView) fetchNextPage();
+		if(inView && hasNextPage) fetchNextPage();
 	}, [inView]);
 
 	useEffect(() => {
@@ -99,10 +98,10 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
 		}
 	}, [addNewPost]);
 
-	useEffect(() => {
-		refetch({ refetchPage: (page, index) => index === 0 });
-		setGlobalRefreshFriendship(false);
-	}, [globalRefreshFriendship]);
+	// useEffect(() => {
+	// 	refetch({ refetchPage: (page, index) => index === 0 });
+	// 	setGlobalRefreshFriendship(false);
+	// }, [globalRefreshFriendship]);
 
     return (
         <div>
@@ -135,7 +134,7 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
 				)
 			)}
 
-			{hasNextPage && <div ref={ref} className=""></div>}
+			{hasNextPage && <div ref={ref}></div>}
         </div>
     )
 };

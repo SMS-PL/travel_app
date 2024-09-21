@@ -59,19 +59,20 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
     const { toast } = useToast();
 
     const [user, setUser] = useState({});
-    const [countryISO, setCountryISO] = useState(null);
-    const [countryName, setCountryName] = useState(null);
+    const [countryISO, setCountryISO] = useState(postData.countryIso3);
+    const [countryName, setCountryName] = useState(postData.countryName);
 
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
+    // komentarze
     const [isCommentsOpen, setIsCommentsOpen] = useState(isCommentsOpenFeature);
     const [commentsData, setCommentsData] = useState([[]]);
     const [refetchComments, setRefetchComments] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
     const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
-    const [friendshipStatus, setFriendshipStatus] = useState(null);
+    // const [friendshipStatus, setFriendshipStatus] = useState(null);
 
     const [isImageLoading, setIsImageLoading] = useState(true);
 
@@ -82,6 +83,8 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
     const [totalElements, setTotalElements] = useState(0);
     const [isLastPage, setIsLastPage] = useState(false);
 
+    console.log(postData);
+
     const {
         register,
         handleSubmit,
@@ -91,9 +94,11 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
     } = useForm();
 
     useEffect(() => {
-        fetchComments();
-        setRefetchComments(false);
-	}, [currentPage, refetchComments, postData]);
+        if(isCommentsOpen) {
+            fetchComments();
+            setRefetchComments(false);
+        }
+	}, [currentPage, isCommentsOpen, refetchComments, postData]);
 
     
     useEffect(() => {
@@ -101,39 +106,39 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
 
 	}, [postData.authorId]);
     
-    useEffect(() => {
-		getStatusOfFriendship();
-        setGlobalRefreshFriendship(false);
-	}, [user, globalRefreshFriendship]);
+    // useEffect(() => {
+	// 	getStatusOfFriendship();
+    //     setGlobalRefreshFriendship(false);
+	// }, [user, globalRefreshFriendship]);
 
-    useEffect(() => {
-        fetchCountryData();
-    }, [postData.countryId]);
+    // useEffect(() => {
+    //     fetchCountryData();
+    // }, [postData.countryId]);
 
-    const getStatusOfFriendship = () => {
-        if(user.id !== undefined && auth !== null) {
-            fetch(`http://localhost:5000/api/v1/friendship/status/${auth && user.id}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json', 
-                    "Authorization": authHeader,
-                },
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Błąd sieci!');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // console.log(data.message);
-                setFriendshipStatus(data.message);
-            })
-            .catch(error => {
-                console.log(error.message);
-            });
-        }
-    };
+    // const getStatusOfFriendship = () => {
+    //     if(user.id !== undefined && auth !== null) {
+    //         fetch(`http://localhost:5000/api/v1/friendship/status/${auth && user.id}`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json', 
+    //                 "Authorization": authHeader,
+    //             },
+    //         })
+    //         .then(response => {
+    //             if (!response.ok) {
+    //                 throw new Error('Błąd sieci!');
+    //             }
+    //             return response.json();
+    //         })
+    //         .then(data => {
+    //             // console.log(data.message);
+    //             setFriendshipStatus(data.message);
+    //         })
+    //         .catch(error => {
+    //             console.log(error.message);
+    //         });
+    //     }
+    // };
 
     const fetchComments = async () => {
         setIsLoading(true);
@@ -161,7 +166,6 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
             setTotalElements(data.totalElements);
             setTotalPages(data.totalPages);
             setIsLastPage(data.last);
-            setTotalElements(data.totalElements);
             setIsLoading(false);
 
             // toast({
@@ -176,32 +180,32 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
     };
 
     
-    const fetchCountryData = () => {
-        if(postData.countryId > 0) {
-            fetch(`http://localhost:5000/api/v1/countries/${postData.countryId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json', 
-                    "Authorization": authHeader,
-                },
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Błąd sieci!');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setCountryISO(data.iso);
-                setCountryName(data.nicename)
-            })
-            .catch(error => {
-                console.log(error.message);
-            });
-        } else {
-            setCountryISO(null);
-        }
-    };
+    // const fetchCountryData = () => {
+    //     if(postData.countryId > 0) {
+    //         fetch(`http://localhost:5000/api/v1/countries/${postData.countryId}`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json', 
+    //                 "Authorization": authHeader,
+    //             },
+    //         })
+    //         .then(response => {
+    //             if (!response.ok) {
+    //                 throw new Error('Błąd sieci!');
+    //             }
+    //             return response.json();
+    //         })
+    //         .then(data => {
+    //             setCountryISO(data.iso);
+    //             setCountryName(data.nicename)
+    //         })
+    //         .catch(error => {
+    //             console.log(error.message);
+    //         });
+    //     } else {
+    //         setCountryISO(null);
+    //     }
+    // };
 
     const fetchAuthorData = () => {
         fetch(`http://localhost:5000/api/v1/users/${postData.authorId}`, {
@@ -311,7 +315,7 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
                             <CardTitle className="flex-wrap flex flex-row justify-start items-center gap-2 hover:underline">
                                 <p className="text-sm md:text-base">{user.firstName} {user.lastName}</p>
 
-                                {friendshipStatus == "FRIEND" ? (
+                                {user.friendStatus == "FRIEND" ? (
                                     <Icons.userCheckFill className="h-5 w-5 fill-lime-600" />
                                 ) : null }
 
@@ -379,7 +383,6 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
                 </div>
             </CardHeader>
             
-
             {/* OPIS I ZDJĘCIE */}
             <CardContent className="break-all" >
                 {postData.content}
@@ -395,7 +398,13 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
 
                 {/* przycisk do włączania/wyłączania komentarzy */}
                 <div className="flex justify-between h-fit mt-5">
-                    <Reaction likes={postData.likes} hearts={postData.hearts} postId={postData.id} />
+                    <Reaction 
+                        postId={postData.id}
+                        likes={postData.likes}
+                        hearts={postData.hearts}
+                        liked={postData.liked}
+                        hearted={postData.hearted}
+                    />
                     
                     <Button 
                         type="button" 
@@ -463,10 +472,7 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
                         </form>
                             
                             {(isLoading || (commentsData == [[]])) ? (
-                                // <div className="flex flex-row items-center gap-3 w-full my-3">
-                                    <SpinLoading className="w-full flex justify-center items-center py-2" />
-                                // </div>
-
+                                <SpinLoading className="w-full flex justify-center items-center py-2" />
 
                             ) : (
                                 commentsData.map((group, i) => (
@@ -484,9 +490,13 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
                             )}
 
                             {(!isLoading && !isLastPage) &&
-                                <Button variant="ghost" onClick={() => {handleNextPage()}}>Load more...</Button>
-                            } 
-
+                                <Button 
+                                    variant="link" 
+                                    onClick={() => {handleNextPage()}}
+                                >
+                                    Load more...
+                                </Button>
+                            }
                     </div>
                     
                 ) : null}

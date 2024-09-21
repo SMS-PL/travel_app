@@ -13,9 +13,13 @@ import {
 import { Link } from "react-router-dom";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import { jwtDecode } from "jwt-decode";
+import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 
 export function UserNav() {
     const auth = useAuthUser();
+    const token = useAuthHeader();
+    const user = jwtDecode(token);
 
     return (
         <DropdownMenu className="mx-5">
@@ -50,9 +54,17 @@ export function UserNav() {
                     <Link to={`/profile/${auth.id}`}>
                         <DropdownMenuItem className="cursor-pointer hover:bg-secondary">
                             Profile
-                            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                            {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
                         </DropdownMenuItem>
                     </Link>
+
+                    {user.role == "ROLE_ADMIN" && (
+                        <Link to="/admin">
+                            <DropdownMenuItem className="cursor-pointer hover:bg-secondary">
+                                Admin Panel
+                            </DropdownMenuItem>
+                        </Link>
+                    )}
                     {/* <DropdownMenuItem>
                         Billing
                         <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
@@ -67,7 +79,7 @@ export function UserNav() {
                 <Link to="/logout">
                     <DropdownMenuItem className="cursor-pointer hover:bg-red-800">
                         Log out
-                        <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                        {/* <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut> */}
                     </DropdownMenuItem>
                 </Link>
             </DropdownMenuContent>

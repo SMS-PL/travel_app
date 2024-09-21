@@ -27,16 +27,19 @@ const ActivityNotification = () => {
 
 	// obsługa paginacji
 	const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize, setPageSize] = useState(99);
+    const [pageSize, setPageSize] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
-    const [numberOfElements, setNumberOfElements] = useState(0);
+    const [totalElements, setTotalElements] = useState(0);
 	const [isFirstPage, setIsFirstPage] = useState(false);
     const [isLastPage, setIsLastPage] = useState(false);
 
 
 	useEffect(() => {
-		fetchNotifications();
-	}, [open]);
+		if(open) {
+			fetchNotifications();
+		}
+		
+	}, [open, currentPage]);
 
 	const fetchNotifications = async () => {
 		setIsLoading(true);
@@ -57,9 +60,16 @@ const ActivityNotification = () => {
 		.then(data => {
 			// console.log(data);
 
-			setData(data);
+			setData(prevData => {
+                if(data.first) {
+                    return data.content
+                }
+                return [...prevData, ...data.content]
+            });
+
+			// setData(data);
 			setTotalPages(data.totalPages);
-			setNumberOfElements(data.numberOfElements);
+			setTotalElements(data.totalElements); //numberOfElements
 			setIsFirstPage(data.first);
 			setIsLastPage(data.last);
 
@@ -71,10 +81,24 @@ const ActivityNotification = () => {
 		});
 	};
 
-
+    const handlePrevPage = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+    
+    const handleNextPage = () => {
+        if (currentPage < (totalPages-1)) {
+            setCurrentPage(prev => prev + 1);
+        }
+    };
 
     return (
-		<DropdownMenu className="mx-5" open={open} onOpenChange={setOpen} >
+		<DropdownMenu 
+			className="mx-5" 
+			open={open} 
+			onOpenChange={setOpen} 
+		>
 			<DropdownMenuTrigger 
 				className="flex items-center justify-center rounded-full cursor-pointer" 
 				// onPointerDown={() => setLocalRefetch(true)}
@@ -93,8 +117,8 @@ const ActivityNotification = () => {
 				
 				<DropdownMenuGroup className="py-2 max-h-[500px] h-fit overflow-y-auto">
 
-				{(data && data.content.length != 0) ? (
-						data.content.map((notificationGroup, i) => (
+					{(data && data.length != 0) ? (
+						data.map((notificationGroup, i) => (
 							<NotificationRowView 
 								key={`notification${i}`}
 								notificationGroup={notificationGroup}
@@ -106,6 +130,16 @@ const ActivityNotification = () => {
 							<p className="text-sm text-gray-400 mt-3">No notifications!</p>
 						</div>
 					)}
+
+					{(!isLoading && !isLastPage) &&
+						<Button 
+							variant="link" 
+							onClick={() => {handleNextPage()}}
+							className="w-full p-0 h-fit"
+						>
+							Load more...
+						</Button>
+					} 
 
 				</DropdownMenuGroup>
 

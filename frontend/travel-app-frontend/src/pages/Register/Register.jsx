@@ -163,7 +163,7 @@ const Register = () => {
 
                                         <Input
                                             id="firstName"
-                                            placeholder="Nowak"
+                                            placeholder="Jan"
                                             {...register("firstName", {
                                                 required: "First name is required",
                                                 pattern: {
@@ -183,7 +183,7 @@ const Register = () => {
                                         </Label>
                                         <Input
                                             id="lastName"
-                                            placeholder="Jan"
+                                            placeholder="Nowak"
                                             {...register("lastName", {
                                                 required: "Last name is required",
                                                 pattern: {

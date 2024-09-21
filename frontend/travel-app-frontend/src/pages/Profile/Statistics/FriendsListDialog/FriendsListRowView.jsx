@@ -46,11 +46,11 @@ const FriendsListRowView = ({user, setOpen, ...props}) => {
 			console.log(error.message);
 		});
 	};
-
+    console.log(user)
     return (
         <div className="p-2 w-full flex flex-row items-center justify-between hover:bg-secondary rounded-md hover:underline" {...props} >
-            <Link to={`/profile/${user.id}`} onClick={() => setOpen(false)} className="flex flex-row justify-center items-center cursor-pointer">
-                <Avatar className="w-[45px] h-[45px]">
+            <Link to={`/profile/${user.id}`} onClick={() => setOpen(false)} className="flex flex-row w-full justify-start items-center cursor-pointer">
+                <Avatar className="w-[35px] h-[35px]">
                     <AvatarImage 
                         src={user && user.photoUrl} 
                         alt={user && `${user.firstName} ${user.lastName}`}
@@ -63,7 +63,7 @@ const FriendsListRowView = ({user, setOpen, ...props}) => {
                     <CardTitle className="text-base text-start">{user.firstName} {user.lastName}</CardTitle>
                 </div>
             </Link>
-            <FriendshipButton userId={user.id} />
+            <FriendshipButton userId={user.id} friendStatus={user.friendStatus} />
             {/* <Icons.trashEmpty className="fill-current w-[25px] h-[25px]" />  */}
 
         </div>

@@ -30,12 +30,13 @@ const FriendshipNotification = () => {
 
 
 	useEffect(() => {
-		
-		fetchReceivedFriendship();
-		setLocalRefetch(false);
-		setGlobalRefreshFriendship(false);
-
-	}, [localRefetch, globalRefreshFriendship]); // aktualnie wczytuje nowe powiadomienia, po refreshu strony
+		if(open) {
+			fetchReceivedFriendship();
+			setLocalRefetch(false);
+			// setGlobalRefreshFriendship(false);
+		}
+	}, [localRefetch, open]);
+	// }, [localRefetch, open, globalRefreshFriendship]);
 
 	const fetchReceivedFriendship = async () => {
 		setIsLoading(true);
@@ -63,7 +64,11 @@ const FriendshipNotification = () => {
 	};
 
     return (
-		<DropdownMenu className="mx-5" open={open} onOpenChange={setOpen} >
+		<DropdownMenu 
+			className="mx-5" 
+			open={open} 
+			onOpenChange={setOpen}
+		>
 			<DropdownMenuTrigger 
 				className="flex items-center justify-center rounded-full cursor-pointer" 
 				onPointerDown={() => setLocalRefetch(true)}
