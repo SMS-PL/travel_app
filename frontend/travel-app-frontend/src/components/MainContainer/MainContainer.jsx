@@ -12,12 +12,12 @@ import{
 import { Link } from "react-router-dom";
 
 function MainContainer({children, type = "default", setAddNewPost, ...props}) {
+
     return (
         <div className="flex flex-col items-start min-h-screen w-full" {...props}>
             <Navbar />
 
-            <main className={cn(
-                    (type == "loginRegister") && "my-auto" ,
+            <main className={cn((type == "loginRegister") && "my-auto",
                     "w-full flex flex-col justify-center items-center"
                 )}
             >

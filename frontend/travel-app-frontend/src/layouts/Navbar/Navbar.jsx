@@ -12,10 +12,12 @@ import { useState } from 'react';
 import FriendshipNotification from "@/layouts/Navbar/Notifications/Friendship/FriendshipNotification";
 import ActivityNotification from "@/layouts/Navbar/Notifications/Activity/ActivityNotification";
 
-export function Navbar() {
+export function Navbar({type = "default"}) {
     const isAuthenticated = useIsAuthenticated();
     const location = useLocation();
     
+
+
     return (
         <nav className="flex flex-col sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="px-3 grid grid-cols-3 h-10 sm:h-14 items-center">
@@ -27,7 +29,7 @@ export function Navbar() {
                         <span className="text-xl font-normal flex justify-center items-center md:hidden">T<span className=" font-bold text-primary">S</span></span>
                     </Link>
                     
-                    { isAuthenticated() && (
+                    {isAuthenticated() && (type != "admin") && (
                         <>
                             <SearchBar className="" placeholder="Search users on TravShare"/>
                             {/* <Icons.searchEmpty className="flex fill-current h-10 w-10 text-muted-foreground" /> */}
@@ -40,7 +42,7 @@ export function Navbar() {
                 {/* 2 kolumna */}
                 <div className="col-span-1 flex justify-center">
                     <div className="flex-row w-[120px] justify-around hidden sm:flex">
-                        {isAuthenticated() && (
+                        {isAuthenticated() && (type != "admin") && (
                             <div className="flex flex-row gap-5">
                                 <Link to="/">
                                     {location.pathname == "/" ? <Icons.homeFeedFill className="h-7 w-7 fill-primary" /> : <Icons.homeFeedEmpty className="h-7 w-7 fill-foreground" />}
@@ -64,18 +66,20 @@ export function Navbar() {
             </div>
 
             {/* mobile view */}
-            <div className="h-8 flex flex-row justify-center items-center sm:hidden border-t border-border/40 py-5">
-                {isAuthenticated() && (
-                    <div className="flex flex-row gap-5 ">
-                        <Link to="/">
-                            {location.pathname == "/" ? <Icons.homeFeedFill className="h-7 w-7 fill-primary" /> : <Icons.homeFeedEmpty className="h-7 w-7 fill-foreground" />}
-                        </Link>
-                        <Link to="/friends-feed">
-                            {location.pathname == "/friends-feed" ? <Icons.friendsFeedFill className="h-7 w-7 fill-primary" /> : <Icons.friendsFeedEmpty className="h-7 w-7 fill-foreground" />}
-                        </Link>
-                    </div>
-                )}
-            </div>
+            {(type != "admin") && (
+                <div className="h-8 flex flex-row justify-center items-center sm:hidden border-t border-border/40 py-5">
+                    {isAuthenticated() && (
+                        <div className="flex flex-row gap-5 ">
+                            <Link to="/">
+                                {location.pathname == "/" ? <Icons.homeFeedFill className="h-7 w-7 fill-primary" /> : <Icons.homeFeedEmpty className="h-7 w-7 fill-foreground" />}
+                            </Link>
+                            <Link to="/friends-feed">
+                                {location.pathname == "/friends-feed" ? <Icons.friendsFeedFill className="h-7 w-7 fill-primary" /> : <Icons.friendsFeedEmpty className="h-7 w-7 fill-foreground" />}
+                            </Link>
+                        </div>
+                    )}
+                </div>
+            )}
         </nav>
     );
 }
