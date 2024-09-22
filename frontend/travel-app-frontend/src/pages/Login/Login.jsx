@@ -45,6 +45,8 @@ const Login = () => {
                 );
 
                 if (!response.ok) {
+                    if(response.status === 401) throw new Error("Incorrect data!");
+
                     const errorData = await response.json();
                     throw new Error(errorData.error);
                 }
