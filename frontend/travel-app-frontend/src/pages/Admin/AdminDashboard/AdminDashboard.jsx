@@ -11,6 +11,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import AdminContainer from '@/components/AdminContainer/AdminContainer';
+import AdminsList from "./AdminsList";
 
 const AdminDashboard = () => {
     // const token = useAuthHeader();
@@ -23,7 +24,7 @@ const AdminDashboard = () => {
     return (
         <AdminContainer>
             
-            <div className="w-full grid gap-4 md:gap-8 grid-cols-4">
+            <div className="w-full grid gap-4 md:gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
                 <Card
                     x-chunk="dashboard-01-chunk-2"
                     className="w-full flex flex-col justify-between col-span-1 sm:col-span-1 p-4 "
@@ -36,7 +37,7 @@ const AdminDashboard = () => {
 
                     <CardContent className="p-0 my-4">
                         <div className="flex items-baseline gap-1 text-5xl font-extrabold tabular-nums leading-none mb-2">
-                            4129
+                            ???
                         </div>
                     </CardContent>
 
@@ -55,7 +56,7 @@ const AdminDashboard = () => {
 
                     <CardContent className="p-0 my-4">
                         <div className="flex items-baseline gap-1 text-5xl font-extrabold tabular-nums leading-none mb-2">
-                            38
+                            ???
                         </div>
                     </CardContent>
 
@@ -74,7 +75,7 @@ const AdminDashboard = () => {
 
                     <CardContent className="p-0 my-4">
                         <div className="flex items-baseline gap-1 text-5xl font-extrabold tabular-nums leading-none mb-2">
-                            8231
+                            ???
                         </div>
                     </CardContent>
 
@@ -94,12 +95,17 @@ const AdminDashboard = () => {
 
                     <CardContent className="p-0 my-4">
                         <div className="flex items-baseline gap-1 text-5xl font-extrabold tabular-nums leading-none mb-2">
-                            11543
+                            ???
                         </div>
                     </CardContent>
                         
                     <CardFooter className="p-0"></CardFooter>
                 </Card>
+            </div>
+
+            <div className="w-full flex justify-center items-center">
+                <AdminsList />
+
             </div>
         </AdminContainer>
     );
