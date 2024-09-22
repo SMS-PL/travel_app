@@ -26,27 +26,18 @@ import { Link } from "react-router-dom";
 import PostDetailsAlert from "./PostDetailsAlert";
 import DeletePostAlert from "./DeletePostAlert";
 
-const PostRowView = ({ post }) => {
+const PostRowView = ({ post, onOpenDelete, onOpenDetails }) => {
     const authHeader = useAuthHeader();
-
-    const [isLoading, setIsLoading] = useState(false);
-
-    const [isPostDetailsOpen, setIsPostDetailsOpen] = useState(false);
-    const [isDeletePostDialogOpen, setIsDeletePostDialogOpen] = useState(false);
-
-    console.log(post);
 
     return (
         <TableRow>
-            <TableCell className="w-fit font-medium">
-                {/* <Link to={`/post/${post.id}`} className="cursor-pointer w-fit"> */}
+            <TableCell className="font-medium">
                 <img 
                     src={post.imageUrl} 
                     alt="" 
-                    className="w-[50px] h-[70px]  bg-black object-cover border-2 rounded-lg"
+                    className="w-[100px] h-[70px]  bg-black object-cover border-2 rounded-lg"
                     loading="lazy" 
                 />
-                {/* </Link> */}
             </TableCell>
             <TableCell className="w-fit font-medium">{post.id}</TableCell>
             <TableCell className="w-fit font-medium">{post.authorId}</TableCell>
@@ -57,13 +48,13 @@ const PostRowView = ({ post }) => {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem onSelect={() => setIsPostDetailsOpen(true)} className=" cursor-pointer">
+                        <DropdownMenuItem onSelect={onOpenDetails} className=" cursor-pointer">
                             Show details
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <Link to={`/post/${post.id}`}>Open post</Link>
+                        <DropdownMenuItem >
+                            <Link to={`/post/${post.id}`} className="w-full">Open post</Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => setIsDeletePostDialogOpen(true)} className=" cursor-pointer" >
+                        <DropdownMenuItem onSelect={onOpenDelete} className=" cursor-pointer" >
                             Delete post
                         </DropdownMenuItem>
                         {/* <DropdownMenuItem onSelect="" className=" cursor-pointer" >
@@ -72,14 +63,7 @@ const PostRowView = ({ post }) => {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </TableCell>
-            
-            <DeletePostAlert post={post} onOpen={isDeletePostDialogOpen} onClose={() => setIsDeletePostDialogOpen(false)} />
-            <PostDetailsAlert post={post} onOpen={isPostDetailsOpen} onClose={() => setIsPostDetailsOpen(false)} />
-
-            {/* <UnbanUserAlert post={post} onOpen={isUnbanUserDialogOpen} onClose={() => setIsUnbanUserDialogOpen(false)} /> */}
-
-        </TableRow>
-                    
+        </TableRow>         
     );
 };
 

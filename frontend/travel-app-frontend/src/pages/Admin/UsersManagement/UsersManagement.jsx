@@ -22,6 +22,9 @@ import { Button } from '@/components/ui/button';
 import SpinLoading from '@/components/ui/SpinLoading';
 import UserRowView from './UserRowView/UserRowView';
 import { cn } from '@/lib/utils';
+import UserDetailsAlert from './UserRowView/UserDetailsAlert';
+import BanUserAlert from './UserRowView/BanUserAlert';
+import UnbanUserAlert from './UserRowView/UnbanUserAlert';
 
 const UsersManagement = () => {
 	const authHeader = useAuthHeader();
@@ -35,6 +38,27 @@ const UsersManagement = () => {
     const [pageSize, setPageSize] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
     const [refetchData, setRefetchData] = useState(false);
+
+    // Funkcje otwierania dialogów z ustawieniem wybranego użytkownika
+    const [isUserDetailsOpen, setIsUserDetailsOpen] = useState(false);
+    const [isBanUserDialogOpen, setIsBanUserDialogOpen] = useState(false);
+    const [isUnbanUserDialogOpen, setIsUnbanUserDialogOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+
+    const openUserDetails = (user) => {
+        setSelectedUser(user);
+        setIsUserDetailsOpen(true);
+    };
+
+    const openBanUserDialog = (user) => {
+        setSelectedUser(user);
+        setIsBanUserDialogOpen(true);
+    };
+
+    const openUnbanUserDialog = (user) => {
+        setSelectedUser(user);
+        setIsUnbanUserDialogOpen(true);
+    };
 
     const fetchUsers = () => {
         if(inputValue.trim() != "") {
@@ -143,12 +167,34 @@ const UsersManagement = () => {
                                 <UserRowView 
                                     key={`userManagementAdmin${user.id}${i}`}
                                     user={user}
+                                    onOpenDetails={() => openUserDetails(user)}
+                                    onOpenBan={() => openBanUserDialog(user)}
+                                    onOpenUnban={() => openUnbanUserDialog(user)}
                                 />
                             )
                         }))}
                     </TableBody>
 
                 </Table>
+                {selectedUser && (
+                    <>
+                        <UserDetailsAlert
+                            user={selectedUser}
+                            onOpen={isUserDetailsOpen}
+                            onClose={() => setIsUserDetailsOpen(false)}
+                        />
+                        <BanUserAlert
+                            user={selectedUser}
+                            onOpen={isBanUserDialogOpen}
+                            onClose={() => setIsBanUserDialogOpen(false)}
+                        />
+                        <UnbanUserAlert
+                            user={selectedUser}
+                            onOpen={isUnbanUserDialogOpen}
+                            onClose={() => setIsUnbanUserDialogOpen(false)}
+                        />
+                    </>
+                )}
 
                 {!isLoading && (usersData === null) && (
                     <div className="w-full text-center mt-5" >

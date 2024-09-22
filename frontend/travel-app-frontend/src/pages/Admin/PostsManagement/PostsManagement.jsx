@@ -22,6 +22,8 @@ import { Button } from '@/components/ui/button';
 import SpinLoading from '@/components/ui/SpinLoading';
 import PostRowView from './PostRowView/PostRowView';
 import { cn } from '@/lib/utils';
+import DeletePostAlert from './PostRowView/DeletePostAlert';
+import PostDetailsAlert from './PostRowView/PostDetailsAlert';
 
 const PostsManagement = () => {
 	const authHeader = useAuthHeader();
@@ -31,6 +33,10 @@ const PostsManagement = () => {
     const [authorData, setAuthorData] = useState(null);
 
     const [postsData, setPostsData] = useState(null);
+
+    const [selectedPost, setSelectedPost] = useState(null);
+    const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+    const [isDetailsAlertOpen, setIsDetailsAlertOpen] = useState(false);
 
     // paginacja
     const [currentPage, setCurrentPage] = useState(0);
@@ -80,7 +86,7 @@ const PostsManagement = () => {
             setCurrentPage(prev => prev + 1);
             setRefetchData(true);
         }
-    }
+    };
 
     const prevPage = () => {
         if(currentPage > 0) {
@@ -88,7 +94,17 @@ const PostsManagement = () => {
             setCurrentPage(prev => prev - 1);
             setRefetchData(true);
         }
-    }
+    };
+
+    const openDeleteAlert = (post) => {
+        setSelectedPost(post);
+        setIsDeleteAlertOpen(true);
+    };
+
+    const openDetailsAlert = (post) => {
+        setSelectedPost(post);
+        setIsDetailsAlertOpen(true);
+    };
 
     return (
         <AdminContainer title="Posts management">
@@ -129,10 +145,10 @@ const PostsManagement = () => {
                 <Table className="h-full overflow-hidden">
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-fit">Image</TableHead>
-                            <TableHead className="w-fit">PostID</TableHead>
-                            <TableHead className="w-fit">AuthorID</TableHead>
-                            <TableHead className="w-full text-right"></TableHead>
+                            <TableHead className="w-[100px] text-[13px] sm:text-sm">Image</TableHead>
+                            <TableHead className="w-[60px] sm:w-[75px] text-[13px] sm:text-sm">PostID</TableHead>
+                            <TableHead className="w-[60px] sm:w-[75px] text-[13px] sm:text-sm">AuthorID</TableHead>
+                            <TableHead className="w-fit text-right text-[13px] sm:text-sm"></TableHead>
                         </TableRow>
                     </TableHeader>
 
@@ -142,12 +158,29 @@ const PostsManagement = () => {
                                 <PostRowView 
                                     key={`userManagementAdmin${post.id}${i}`}
                                     post={post}
+                                    onOpenDelete={() => openDeleteAlert(post)}
+                                    onOpenDetails={() => openDetailsAlert(post)}
                                 />
                             )
                         }))}
                     </TableBody>
 
                 </Table>
+
+                {selectedPost && (
+                    <>
+                        <DeletePostAlert
+                            post={selectedPost}
+                            onOpen={isDeleteAlertOpen}
+                            onClose={() => setIsDeleteAlertOpen(false)}
+                        />
+                        <PostDetailsAlert
+                            post={selectedPost}
+                            onOpen={isDetailsAlertOpen}
+                            onClose={() => setIsDetailsAlertOpen(false)}
+                        />
+                    </>
+                )}
 
                 {!isLoading && (postsData === null) && (
                     <div className="w-full text-center mt-5" >

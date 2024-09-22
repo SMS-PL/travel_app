@@ -25,7 +25,7 @@ import BanUserAlert from './BanUserAlert';
 import UnbanUserAlert from './UnbanUserAlert';
 import UserDetailsAlert from './UserDetailsAlert';
 
-const UserRowView = ({ user }) => {
+const UserRowView = ({ user, onOpenDetails, onOpenBan, onOpenUnban }) => {
     const authHeader = useAuthHeader();
 
     const [isBanUserDialogOpen, setIsBanUserDialogOpen] = useState(false);
@@ -87,25 +87,18 @@ const UserRowView = ({ user }) => {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem onSelect={() => setIsUserDetailsOpen(true)} className=" cursor-pointer">
+                        <DropdownMenuItem onSelect={onOpenDetails}>
                             Show details
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <Link to={`/profile/${user.id}`}>Open Profile</Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => setIsBanUserDialogOpen(true)} className=" cursor-pointer" >
+                        <DropdownMenuItem onSelect={onOpenBan}>
                             Ban user
                         </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => setIsUnbanUserDialogOpen(true)} className=" cursor-pointer" >
+                        <DropdownMenuItem onSelect={onOpenUnban}>
                             Unban user
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </TableCell>
-            
-            <UserDetailsAlert user={user} onOpen={isUserDetailsOpen} onClose={() => setIsUserDetailsOpen(false)} />
-            <BanUserAlert user={user} onOpen={isBanUserDialogOpen} onClose={() => setIsBanUserDialogOpen(false)} />
-            <UnbanUserAlert user={user} onOpen={isUnbanUserDialogOpen} onClose={() => setIsUnbanUserDialogOpen(false)} />
 
         </TableRow>
                     

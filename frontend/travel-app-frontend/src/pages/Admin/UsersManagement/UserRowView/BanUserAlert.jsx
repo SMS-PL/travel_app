@@ -19,7 +19,7 @@ import {
 const BanUserAlert = ({ user, onOpen, onClose}) => {
     const authHeader = useAuthHeader();
 
-    const [daysOfBan, setDaysOfBan] = useState(null);
+    const [daysOfBan, setDaysOfBan] = useState(0);
 
     const banUser = () => {
         if((daysOfBan > 0) && (daysOfBan < 1827)) {
@@ -56,6 +56,7 @@ const BanUserAlert = ({ user, onOpen, onClose}) => {
                     onSubmit={(e) => {
                         e.preventDefault();
                         banUser();
+                        onClose();
                     }}
                 >
                     <AlertDialogHeader>
