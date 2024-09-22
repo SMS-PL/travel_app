@@ -117,6 +117,13 @@ const NotificationRowView = ({notificationGroup, ...props}) => {
                         <Avatar className="w-[45px] h-[45px] relative">
                             <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
                             <AvatarFallback>
+                                {user0 === null && (
+                                    <div className="text-current text-2xl">
+                                        T
+                                        <span className="text-primary">S</span>
+                                    </div>
+                                )}
+
                                 {user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}
                             </AvatarFallback>
                             <Icons.commentFill className="h-4 w-4 fill-white bg-green-600 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
@@ -137,7 +144,15 @@ const NotificationRowView = ({notificationGroup, ...props}) => {
                     <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
                         <Avatar className="w-[45px] h-[45px] relative">
                             <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <AvatarFallback>
+                                {user0 === null && (
+                                    <div className="text-current text-2xl">
+                                        T
+                                        <span className="text-primary">S</span>
+                                    </div>
+                                )}
+                                {user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}
+                            </AvatarFallback>
                             <Icons.commentFill className="h-4 w-4 fill-white bg-green-600 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
                         </Avatar>
                         <div>
@@ -161,7 +176,15 @@ const NotificationRowView = ({notificationGroup, ...props}) => {
                     <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
                         <Avatar className="w-[45px] h-[45px] relative flex flex-row justify-start items-start">
                             <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <AvatarFallback>
+                                {user0 === null && (
+                                    <div className="text-current text-2xl">
+                                        T
+                                        <span className="text-primary">S</span>
+                                    </div>
+                                )}
+                                {user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}
+                            </AvatarFallback>
                             <Icons.commentFill className="h-4 w-4 fill-white bg-green-600 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
                         </Avatar>
                         <div>
@@ -190,7 +213,15 @@ const NotificationRowView = ({notificationGroup, ...props}) => {
                     <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
                         <Avatar className="w-[45px] h-[45px] relative">
                             <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <AvatarFallback>
+                                {user0 === null && (
+                                    <div className="text-current text-2xl">
+                                        T
+                                        <span className="text-primary">S</span>
+                                    </div>
+                                )}
+                                {user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}
+                            </AvatarFallback>
                             <Icons.likeFill className="h-4 w-4 fill-white bg-primary rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
                         </Avatar>
                         <div>
@@ -209,7 +240,15 @@ const NotificationRowView = ({notificationGroup, ...props}) => {
                     <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
                         <Avatar className="w-[45px] h-[45px] relative">
                             <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <AvatarFallback>
+                                {user0 === null && (
+                                    <div className="text-current text-2xl">
+                                        T
+                                        <span className="text-primary">S</span>
+                                    </div>
+                                )}
+                                {user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}
+                            </AvatarFallback>
                             <Icons.likeFill className="h-4 w-4 fill-white bg-primary rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
                         </Avatar>
                         <div>
@@ -233,7 +272,15 @@ const NotificationRowView = ({notificationGroup, ...props}) => {
                     <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2">
                         <Avatar className="w-[45px] h-[45px] relative">
                             <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <AvatarFallback>
+                                {user0 === null && (
+                                    <div className="text-current text-2xl">
+                                        T
+                                        <span className="text-primary">S</span>
+                                    </div>
+                                )}
+                                {user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}
+                            </AvatarFallback>
                             <Icons.likeFill className="h-4 w-4 fill-white bg-primary rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
                         </Avatar>
                         <div>
@@ -262,7 +309,15 @@ const NotificationRowView = ({notificationGroup, ...props}) => {
                     <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
                         <Avatar className="w-[45px] h-[45px] relative">
                             <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <AvatarFallback>
+                                {user0 === null && (
+                                    <div className="text-current text-2xl">
+                                        T
+                                        <span className="text-primary">S</span>
+                                    </div>
+                                )}
+                                {user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}
+                            </AvatarFallback>
                             <Icons.heartFill className="h-4 w-4 fill-white bg-red-500 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
                         </Avatar>
                         <div>
@@ -281,7 +336,15 @@ const NotificationRowView = ({notificationGroup, ...props}) => {
                     <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
                         <Avatar className="w-[45px] h-[45px] relative">
                             <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <AvatarFallback>
+                                {user0 === null && (
+                                    <div className="text-current text-2xl">
+                                        T
+                                        <span className="text-primary">S</span>
+                                    </div>
+                                )}
+                                {user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}
+                            </AvatarFallback>
                             <Icons.heartFill className="h-4 w-4 fill-white bg-red-500 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
                         </Avatar>
                         <div>
@@ -305,7 +368,15 @@ const NotificationRowView = ({notificationGroup, ...props}) => {
                     <div className="bg-secondary p-2 rounded-lg mb-2 w-full flex flex-row justify-start items-center gap-2 relative">
                         <Avatar className="w-[45px] h-[45px] relative">
                             <AvatarImage src={user0 && user0.photoUrl} alt="stock img" className="object-cover bg-black" />
-                            <AvatarFallback>{user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}</AvatarFallback>
+                            <AvatarFallback>
+                                {user0 === null && (
+                                    <div className="text-current text-2xl">
+                                        T
+                                        <span className="text-primary">S</span>
+                                    </div>
+                                )}
+                                {user0 && `${String(user0.firstName)[0]}${String(user0.lastName)[0]}`}
+                            </AvatarFallback>
                             <Icons.heartFill className="h-4 w-4 fill-white bg-red-500 rounded-full box-content p-[3px] absolute bottom-[0px] right-[10px]" />
                         </Avatar>
                         <div>
