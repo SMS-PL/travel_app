@@ -12,6 +12,11 @@ import {
 } from "@/components/ui/card";
 import AdminContainer from '@/components/AdminContainer/AdminContainer';
 import AdminsList from "./AdminsList";
+import {
+    Package,
+    Package2,
+    Users2,
+} from "lucide-react";
 
 const AdminDashboard = () => {
     // const token = useAuthHeader();
@@ -31,7 +36,7 @@ const AdminDashboard = () => {
                 >
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                         <CardTitle className="text-base font-bold leading-[17px]">
-                            Registered users
+                            User count
                         </CardTitle>
                     </CardHeader>
 
@@ -41,7 +46,14 @@ const AdminDashboard = () => {
                         </div>
                     </CardContent>
 
-                    <CardFooter className="p-0 w-full"></CardFooter>
+                    <CardFooter className="p-0 w-full">
+                        <Link to="/admin/users">
+                            <Button className="text-white gap-1"  >
+                                <Users2 className="h-5 w-5 text-white" />
+                                Manage
+                            </Button>
+                        </Link>
+                    </CardFooter>
                 </Card>
 
                 <Card
@@ -50,7 +62,7 @@ const AdminDashboard = () => {
                 >
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                         <CardTitle className="text-base font-bold leading-[17px]">
-                            Banned users
+                            Post count
                         </CardTitle>
                     </CardHeader>
 
@@ -60,7 +72,14 @@ const AdminDashboard = () => {
                         </div>
                     </CardContent>
 
-                    <CardFooter className="p-0 w-full"></CardFooter>
+                    <CardFooter className="p-0 w-full">
+                        <Link to="/admin/posts">
+                            <Button className="text-white gap-1"  >
+                                <Package className="h-5 w-5 text-white" />
+                                Manage
+                            </Button>
+                        </Link>
+                    </CardFooter>
                 </Card>
 
                 <Card
@@ -69,7 +88,7 @@ const AdminDashboard = () => {
                 >
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                         <CardTitle className="text-base font-bold leading-[17px]">
-                            Count of posts
+                            Pin count
                         </CardTitle>
                     </CardHeader>
 
@@ -89,7 +108,7 @@ const AdminDashboard = () => {
                 >
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                         <CardTitle className="text-base font-bold leading-[17px]">
-                            Count of pins
+                            Banned User count
                         </CardTitle>
                     </CardHeader>
 
