@@ -17,10 +17,7 @@ function MainContainer({children, type = "default", setAddNewPost, ...props}) {
         <div className="flex flex-col items-start min-h-screen w-full" {...props}>
             <Navbar />
 
-            <main className={cn((type == "loginRegister") && "my-auto",
-                    "w-full flex flex-col justify-center items-center"
-                )}
-            >
+            <main className={cn((type == "loginRegister") && "my-auto","w-full flex flex-col justify-center items-center")} >
                 <div className="max-w-full w-[660px]">
                     
                     <h2 className={cn(
@@ -31,6 +28,7 @@ function MainContainer({children, type = "default", setAddNewPost, ...props}) {
                         {type == "homeFeed" && "Home"}
                         {type == "friendsFeed" && "Friends"}
                         {type == "profile" && "Profile"}
+                        {type == "settings" && "Settings"}
                     </h2>
 
                     {type == "postPage" && (

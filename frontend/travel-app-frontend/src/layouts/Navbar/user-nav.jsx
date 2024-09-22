@@ -54,7 +54,12 @@ export function UserNav() {
                     <Link to={`/profile/${auth.id}`}>
                         <DropdownMenuItem className="cursor-pointer hover:bg-secondary">
                             Profile
-                            {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
+                        </DropdownMenuItem>
+                    </Link>
+
+                    <Link to="/settings">
+                        <DropdownMenuItem className="cursor-pointer hover:bg-secondary">
+                            Settings
                         </DropdownMenuItem>
                     </Link>
 

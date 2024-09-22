@@ -4,6 +4,7 @@ import AuthOutlet from '@auth-kit/react-router/AuthOutlet'
 import AdminOutlet from "@/pages/Admin/AdminOutlet";
 
 import Profile from "@/pages/Profile/Profile";
+import Settings from "@/pages/Settings/Settings";
 import Home from "@/pages/Home/Home";
 import Login from "@/pages/Login/Login";
 import Register from "@/pages/Register/Register";
@@ -31,6 +32,7 @@ const RoutesPage = () => {
                     <Route path='/' element={<Home/>} />
                     <Route path='/friends-feed' element={<FriendsFeed/>} />
                     <Route path='/profile/:userId' element={<Profile />} />
+                    <Route path='/settings' element={<Settings />} />
                     <Route path='/post/:postId' element={<PostPage />} />
                     <Route path='/logout' element={<Logout />} />
                 </Route>
