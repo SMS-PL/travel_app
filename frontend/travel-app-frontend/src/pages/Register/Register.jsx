@@ -30,6 +30,7 @@ const Register = () => {
     const navigate = useNavigate();
     const { toast } = useToast();
 
+    const [usernameAvailabilityInfo, setUsernameAvailabilityInfo] = useState(null);
     const [emailAvailabilityInfo, setEmailAvailabilityInfo] = useState(null);
 
     const {
@@ -43,7 +44,6 @@ const Register = () => {
 
     const onSubmit = async (values) => {
         if(isValid) {
-			
             try {
                 const response = await fetch("http://localhost:5000/api/v1/auth/register", {
                     method: 'POST',
@@ -86,6 +86,35 @@ const Register = () => {
 
     };
 
+    const checkUsernameAvailability = (usernameValue) => {
+        if(usernameValue) {
+            fetch(`http://localhost:5000/api/v1/auth/username/${usernameValue}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json', 
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Błąd sieci!');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if(data.available == true) {
+                    setUsernameAvailabilityInfo(null);
+                } else {
+                    setUsernameAvailabilityInfo("Username is taken");
+                }
+            })
+            .catch(error => {
+                console.log(error.message);
+            });
+        } else {
+            setUsernameAvailabilityInfo(null);
+        }
+    };
+
     const checkEmailAvailability = (emailValue) => {
         if(emailValue) {
             fetch(`http://localhost:5000/api/v1/auth/email/${emailValue}`, {
@@ -113,12 +142,10 @@ const Register = () => {
         } else {
             setEmailAvailabilityInfo(null);
         }
-    }
+    };
 
 
     if (isAuthenticated()) {
-        // If authenticated user, then redirect to secure dashboard
-
         return <Navigate to={"/"} replace />;
     } else {
         return (
@@ -149,8 +176,10 @@ const Register = () => {
                                                     message: "Username is not validated",
                                                 },
                                             })}
+                                            onChange={(e) => checkUsernameAvailability(e.target.value)}
                                             className="m-0"
                                         />
+                                        <p className={cn(usernameAvailabilityInfo === null ? "hidden" : "flex" ,"text-red-500 h-2 text-xs")} >{usernameAvailabilityInfo !== null && usernameAvailabilityInfo}</p>
                                         <p className={cn(errors.username == null ? "hidden" : "flex" ,"text-red-500 text-xs h-5")}>{errors.username && errors.username.message}</p>
                                     </div>
 
@@ -203,8 +232,7 @@ const Register = () => {
                                         <Input 
                                             id="email"
                                             placeholder="example@gmail.com"
-                                            onChange={(e) => checkEmailAvailability(e.target.value)}
-
+                                            
                                             {...register("email", {
                                                 required: "Email is required",
                                                 pattern: {
@@ -212,6 +240,8 @@ const Register = () => {
                                                     message: "Email is not validated",
                                                 },
                                             })}
+
+                                            onChange={(e) => checkEmailAvailability(e.target.value)}
                                         />
                                         <p className={cn(emailAvailabilityInfo === null ? "hidden" : "flex" ,"text-red-500 h-2 text-xs")} >{emailAvailabilityInfo !== null && emailAvailabilityInfo}</p>
                                         <p className={cn(errors.email == null ? "hidden" : "flex" ,"text-red-500 h-5 text-xs")} >{errors.email && errors.email.message}</p>
