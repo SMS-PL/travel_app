@@ -44,6 +44,11 @@ const Login = () => {
                     }
                 );
 
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error);
+                }
+
                 const data = await response.json();
                 // console.log(values);
 
@@ -58,9 +63,6 @@ const Login = () => {
                         about: `${data.user.about}`,
                         photoUrl: `${data.user.photoUrl}`,
                         backgroundUrl: `${data.user.backgroundUrl}`,
-                        // createdAt: `${data.user.createdAt}`,
-                        // roles: `${data.user.photoUrl}`,
-
                     },
                 });
 
