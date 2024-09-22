@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import {
@@ -21,7 +20,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import BanUserAlert from './BanUserAlert';
 import UnbanUserAlert from './UnbanUserAlert';

@@ -10,17 +10,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/icons";
-import HoverUserInfo from "@/components/ui/HoverUserInfo";
-import SpinLoading from '@/components/ui/SpinLoading';
-import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
-import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 import { cn } from '@/lib/utils';
-import{
-    ChevronLeftIcon,
-    ChevronRightIcon,
-} from "@radix-ui/react-icons";
 
 const UserDetailsAlert = ({user, onOpen, onClose }) => {
 

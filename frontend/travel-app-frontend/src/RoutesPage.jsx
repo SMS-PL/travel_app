@@ -1,8 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-// import RequireAuth from "@auth-kit/react-router/RequireAuth";
 import AuthOutlet from '@auth-kit/react-router/AuthOutlet'
-import AdminOutlet from "@/pages/Admin/AdminOutlet"; // Import nowego komponentu
+import AdminOutlet from "@/pages/Admin/AdminOutlet";
 
 import Profile from "@/pages/Profile/Profile";
 import Home from "@/pages/Home/Home";
@@ -12,7 +11,7 @@ import Logout from "@/pages/Logout/Logout";
 import ErrorPage from "@/pages/ErrorPage/ErrorPage";
 import FriendsFeed from "@/pages/FriendsFeed/FriendsFeed";
 import PostPage from "@/pages/PostPage/PostPage";
-import AdminDashboard from "@/pages/Admin/AdminDashboard";
+import AdminDashboard from "@/pages/Admin/AdminDashboard/AdminDashboard";
 import UsersManagement from "@/pages/Admin/UsersManagement/UsersManagement";
 import PostsManagement from "@/pages/Admin/PostsManagement/PostsManagement";
 import ScrollToTop from '@/components/ScrollToTop/ScrollToTop';
@@ -33,8 +32,6 @@ const RoutesPage = () => {
                     <Route path='/friends-feed' element={<FriendsFeed/>} />
                     <Route path='/profile/:userId' element={<Profile />} />
                     <Route path='/post/:postId' element={<PostPage />} />
-                    {/* <Route path='/post/:postId/comment/:commentId' element={<PostPage />} /> */}
-
                     <Route path='/logout' element={<Logout />} />
                 </Route>
 

@@ -40,9 +40,8 @@ import {
 } from "lucide-react";
 import { useLocation } from 'react-router-dom';
 
-const AdminContainer = ({children, title = "Admin", ...props}) => {
+const AdminContainer = ({children, title = "Dashboard", ...props}) => {
     const location = useLocation();
-
 
     return (
         <div className="w-screen flex flex-col justify-center items-center h-screen min-h-screen">
