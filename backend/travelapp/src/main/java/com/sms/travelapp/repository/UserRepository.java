@@ -2,6 +2,7 @@ package com.sms.travelapp.repository;
 
 import com.sms.travelapp.model.UserEntity;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +29,17 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
     Page<UserEntity> findByMultipleWords(@Param("word1") String word1, @Param("word2") String word2, Pageable pageable);
 
     Long countByIsBannedTrue();
+
+    @Query(
+            "SELECT u FROM UserEntity u " +
+                    "JOIN u.roles r " +
+                    "WHERE (" +
+                    "((u.username LIKE %:word% OR u.firstName LIKE %:word% OR u.lastName LIKE %:word% OR u.email LIKE %:word%) " +
+                    "OR " +
+                    "(u.username LIKE %:word1% OR u.firstName LIKE %:word1% OR u.lastName LIKE %:word1% OR u.email LIKE %:word1%)) " +
+                    "AND u.isBanned = false) " +
+                    "AND r.name = 'ROLE_ADMIN'"
+    )
+    Page<UserEntity> findAdminsByMultipleWords(@Param("word") String word, @Param("word1") String word1, PageRequest pageRequest);
+
 }

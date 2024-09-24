@@ -109,10 +109,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserResponseDto> searchForUser(String query, int pageNumber, int pageSize) {
-        System.out.println("Query");
-        System.out.println(query);
-
-
         if(query.contains("-")){
             query = query.replace("-", " ");
         }
