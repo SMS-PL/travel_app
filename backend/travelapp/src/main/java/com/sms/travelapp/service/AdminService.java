@@ -6,8 +6,12 @@ import com.sms.travelapp.model.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Map;
+
 public interface AdminService {
     StatsDto getDashboardStats();
 
     Page<UserResponseDto> getAdmins(String query, int pageNumber, int pageSize);
+
+    Map<String, String> makeAdmin(Long userId);
 }

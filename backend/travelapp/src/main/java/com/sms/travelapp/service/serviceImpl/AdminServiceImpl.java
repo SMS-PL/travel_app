@@ -3,11 +3,14 @@ package com.sms.travelapp.service.serviceImpl;
 import com.sms.travelapp.dto.Admin.StatsDto;
 import com.sms.travelapp.dto.Auth.UserResponseDto;
 import com.sms.travelapp.mapper.UserMapper;
+import com.sms.travelapp.model.Role;
 import com.sms.travelapp.model.UserEntity;
 import com.sms.travelapp.repository.PinRepository;
 import com.sms.travelapp.repository.PostRepository;
+import com.sms.travelapp.repository.RoleRepository;
 import com.sms.travelapp.repository.UserRepository;
 import com.sms.travelapp.service.AdminService;
+import com.sms.travelapp.service.AuthService;
 import com.sms.travelapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +20,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -27,6 +32,8 @@ public class AdminServiceImpl implements AdminService {
     private final PostRepository postRepository;
     private final PinRepository pinRepository;
     private final UserMapper userMapper;
+    private final RoleRepository roleRepository;
+    private final AuthService authService;
 
     @Override
     public StatsDto getDashboardStats() {
@@ -70,6 +77,28 @@ public class AdminServiceImpl implements AdminService {
                 pageRequest,
                 users.getTotalElements()
         );
+
+    }
+
+    @Override
+    public Map<String, String> makeAdmin(Long userId) {
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        if(Objects.equals( authService.getLoggedUser().getId(),userId)){
+            return Map.of("message", "You can't change your own role");
+        }
+
+        Role adminRole = roleRepository.findByName("ROLE_ADMIN").orElseThrow(() -> new RuntimeException("Role not found"));
+        if(user.getRoles().contains(adminRole)){
+            user.getRoles().remove(adminRole);
+            userRepository.save(user);
+            return Map.of("message", "User id:"+userId+" is no longer an admin");
+
+        }else{
+            user.addRole(adminRole);
+            userRepository.save(user);
+            return Map.of("message", "User id:"+userId+" is now an admin");
+
+        }
 
     }
 }

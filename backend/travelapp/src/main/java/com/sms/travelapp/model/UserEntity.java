@@ -74,4 +74,12 @@ public class UserEntity {
 
     @Column(name = "banned_to")
     private Timestamp bannedTo;
+
+    public void addRole(Role role){
+        roles.add(role);
+    }
+
+    public void removeRole(Role role){
+        roles.remove(role);
+    }
 }

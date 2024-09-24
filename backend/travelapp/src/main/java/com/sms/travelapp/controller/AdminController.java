@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor
@@ -30,5 +32,11 @@ public class AdminController {
     public ResponseEntity<Page<UserResponseDto>> getAdmins(@RequestParam String query,
                                                            @RequestParam int pageNumber, @RequestParam int pageSize){
         return ResponseEntity.status(HttpStatus.OK).body(adminService.getAdmins(query,pageNumber,pageSize));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/admins/make/{userId}")
+    public ResponseEntity<Map<String,String>> toggleAdmin(@PathVariable Long userId){
+        return ResponseEntity.status(HttpStatus.OK).body(adminService.makeAdmin(userId));
     }
 }
