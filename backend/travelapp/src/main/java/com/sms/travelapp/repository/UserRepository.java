@@ -27,4 +27,5 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
             "((u.username LIKE %:word2% OR u.firstName LIKE %:word2% OR u.lastName LIKE %:word2% OR u.email LIKE %:word2%) AND u.isBanned = false)")
     Page<UserEntity> findByMultipleWords(@Param("word1") String word1, @Param("word2") String word2, Pageable pageable);
 
+    Long countByIsBannedTrue();
 }
