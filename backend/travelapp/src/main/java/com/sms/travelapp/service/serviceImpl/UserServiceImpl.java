@@ -6,10 +6,7 @@ import com.sms.travelapp.exception.UserNotFound;
 import com.sms.travelapp.mapper.UserMapper;
 import com.sms.travelapp.model.Friendship;
 import com.sms.travelapp.model.UserEntity;
-import com.sms.travelapp.repository.CountryRepository;
-import com.sms.travelapp.repository.FriendshipRepository;
-import com.sms.travelapp.repository.UserCountryRepository;
-import com.sms.travelapp.repository.UserRepository;
+import com.sms.travelapp.repository.*;
 import com.sms.travelapp.service.AuthService;
 import com.sms.travelapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -37,6 +35,7 @@ public class UserServiceImpl implements UserService {
     private final AuthService authService;
     private final FriendshipRepository friendshipRepository;
     private final UserMapper userMapper;
+    private final RoleRepository roleRepository;
 
 
     @Override
@@ -109,6 +108,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserResponseDto> searchForUser(String query, int pageNumber, int pageSize) {
+        UserEntity loggedUser = authService.getLoggedUser();
+        boolean isAdmin = loggedUser.getRoles()
+                .stream()
+                .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+
         if(query.contains("-")){
             query = query.replace("-", " ");
         }
@@ -122,11 +126,20 @@ public class UserServiceImpl implements UserService {
         );
 
         Page<UserEntity> users;
-        if (words.length > 1) {
-            users = userRepository.findByMultipleWords(words[0], words[1], pageRequest);
-        } else {
-            users = userRepository.findByMultipleWords(words[0], words[0], pageRequest);
+        if(isAdmin){
+            if (words.length > 1) {
+                users = userRepository.findByMultipleWordsWithBanned(words[0], words[1], pageRequest);
+            } else {
+                users = userRepository.findByMultipleWordsWithBanned(words[0], words[0], pageRequest);
+            }
+        }else{
+            if (words.length > 1) {
+                users = userRepository.findByMultipleWords(words[0], words[1], pageRequest);
+            } else {
+                users = userRepository.findByMultipleWords(words[0], words[0], pageRequest);
+            }
         }
+
 
         return new PageImpl<>(
                 users.getContent().stream().map(userMapper::mapToUserResponseDto).collect(Collectors.toList()),

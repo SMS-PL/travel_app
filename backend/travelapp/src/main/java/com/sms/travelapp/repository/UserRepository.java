@@ -42,4 +42,10 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
     )
     Page<UserEntity> findAdminsByMultipleWords(@Param("word") String word, @Param("word1") String word1, PageRequest pageRequest);
 
+
+    @Query("SELECT u FROM UserEntity u WHERE " +
+            "((u.username LIKE %:word1% OR u.firstName LIKE %:word1% OR u.lastName LIKE %:word1% OR u.email LIKE %:word1%)) " +
+            "OR " +
+            "((u.username LIKE %:word2% OR u.firstName LIKE %:word2% OR u.lastName LIKE %:word2% OR u.email LIKE %:word2%))")
+    Page<UserEntity> findByMultipleWordsWithBanned(@Param("word1") String word1, @Param("word2") String word2, Pageable pageable);
 }
