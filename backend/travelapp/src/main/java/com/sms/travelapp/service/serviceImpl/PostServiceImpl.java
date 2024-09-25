@@ -97,10 +97,11 @@ public class PostServiceImpl implements PostService {
 
         UserEntity user = authService.getLoggedUser();
 
-
-        if(!Objects.equals(post.getAuthorId(), user.getId()) && pc.isAdmin(user.getId())){
-                throw new AccessDenied("You are not authorized to delete this post!");
+        if(!Objects.equals(post.getAuthorId(), user.getId()) && !pc.isAdmin(user.getId())){
+            throw new AccessDenied("You are not authorized to delete this post!");
         }
+
+
         post.setDeleted(true);
         postRepository.save(post);
 
