@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 
-const DeletePostAlert = ({ post, onOpen, onClose}) => {
+const DeletePostAlert = ({ post, onOpen, onClose, setRefetchPostData}) => {
     const authHeader = useAuthHeader();
 
     const deletePost = () => {   
@@ -53,6 +53,7 @@ const DeletePostAlert = ({ post, onOpen, onClose}) => {
                     onSubmit={(e) => {
                         e.preventDefault();
                         onClose();
+                        setRefetchPostData(true);
                         deletePost();
                     }}
                 >

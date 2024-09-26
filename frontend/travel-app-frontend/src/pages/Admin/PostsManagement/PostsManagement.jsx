@@ -42,7 +42,14 @@ const PostsManagement = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
-    const [refetchData, setRefetchData] = useState(false);
+    const [refetchPostData, setRefetchPostData] = useState(false);
+
+    useEffect(() => {
+        if(refetchPostData) {
+            fetchPosts();
+            setRefetchPostData(false);
+        }
+    }, [refetchPostData]);
 
     const fetchPosts = () => {
         if(inputValue != "") {
@@ -84,7 +91,7 @@ const PostsManagement = () => {
         if(currentPage < (totalPages-1)) {
             setPostsData(null);
             setCurrentPage(prev => prev + 1);
-            setRefetchData(true);
+            setRefetchPostData(true);
         }
     };
 
@@ -92,7 +99,7 @@ const PostsManagement = () => {
         if(currentPage > 0) {
             setPostsData(null);
             setCurrentPage(prev => prev - 1);
-            setRefetchData(true);
+            setRefetchPostData(true);
         }
     };
 
@@ -173,6 +180,7 @@ const PostsManagement = () => {
                             post={selectedPost}
                             onOpen={isDeleteAlertOpen}
                             onClose={() => setIsDeleteAlertOpen(false)}
+                            setRefetchPostData={setRefetchPostData}
                         />
                         <PostDetailsAlert
                             post={selectedPost}
