@@ -22,10 +22,10 @@ const PostPage = () => {
 	
 		getPostData();
 
-		if(refetchPosts) {
-			setRefetchPosts(false);
-		}
-	}, [postId, refetchPosts]);
+		// if(refetchPosts) {
+		// 	setRefetchPosts(false);
+		// }
+	}, [postId]);
 
 	const getPostData = () => {
 		
@@ -70,8 +70,6 @@ const PostPage = () => {
 					</AlertDescription>
 				</Alert>
 			)}
-
-			{/* {console.log(postData)} */}
 
             {postData && 
                 <Post

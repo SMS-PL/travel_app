@@ -58,23 +58,21 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
     const navigate = useNavigate();
     const { toast } = useToast();
 
+    // dane użytkownika i postu
     const [user, setUser] = useState({});
     const [countryISO, setCountryISO] = useState(postData.countryIso3);
     const [countryName, setCountryName] = useState(postData.countryName);
+    const [isImageLoading, setIsImageLoading] = useState(true);
 
+    // zmienne stanowe ustawień postu
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-    // komentarze
+    // dane i obsługa komentarzy
     const [isCommentsOpen, setIsCommentsOpen] = useState(isCommentsOpenFeature);
     const [commentsData, setCommentsData] = useState([[]]);
     const [refetchComments, setRefetchComments] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-
-    const { globalRefreshFriendship, setGlobalRefreshFriendship } = useContext(RefreshFriendshipContext);
-    // const [friendshipStatus, setFriendshipStatus] = useState(null);
-
-    const [isImageLoading, setIsImageLoading] = useState(true);
+    const [isLoadingComments, setIsLoadingComments] = useState(true);
 
     // paginacja komentarzy
     const [currentPage, setCurrentPage] = useState(0);
@@ -83,12 +81,10 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
     const [totalElements, setTotalElements] = useState(0);
     const [isLastPage, setIsLastPage] = useState(false);
 
-    console.log(postData);
-
+    // obsługa pobierania komentarzy
     const {
         register,
         handleSubmit,
-        // watch,
         reset,
         formState: { errors, isValid },
     } = useForm();
@@ -98,50 +94,15 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
             fetchComments();
             setRefetchComments(false);
         }
-	}, [currentPage, isCommentsOpen, refetchComments, postData]);
+	}, [isCommentsOpen, refetchComments]);
 
-    
     useEffect(() => {
         fetchAuthorData();
-
 	}, [postData.authorId]);
     
-    // useEffect(() => {
-	// 	getStatusOfFriendship();
-    //     setGlobalRefreshFriendship(false);
-	// }, [user, globalRefreshFriendship]);
-
-    // useEffect(() => {
-    //     fetchCountryData();
-    // }, [postData.countryId]);
-
-    // const getStatusOfFriendship = () => {
-    //     if(user.id !== undefined && auth !== null) {
-    //         fetch(`http://localhost:5000/api/v1/friendship/status/${auth && user.id}`, {
-    //             method: 'GET',
-    //             headers: {
-    //                 'Content-Type': 'application/json', 
-    //                 "Authorization": authHeader,
-    //             },
-    //         })
-    //         .then(response => {
-    //             if (!response.ok) {
-    //                 throw new Error('Błąd sieci!');
-    //             }
-    //             return response.json();
-    //         })
-    //         .then(data => {
-    //             // console.log(data.message);
-    //             setFriendshipStatus(data.message);
-    //         })
-    //         .catch(error => {
-    //             console.log(error.message);
-    //         });
-    //     }
-    // };
 
     const fetchComments = async () => {
-        setIsLoading(true);
+        setIsLoadingComments(true);
 
         fetch(`http://localhost:5000/api/v1/comments/${postData.id}?pageSize=${pageSize}&pageNumber=${currentPage}&sortBy=datedesc`, {
 			method: 'GET',
@@ -166,46 +127,14 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
             setTotalElements(data.totalElements);
             setTotalPages(data.totalPages);
             setIsLastPage(data.last);
-            setIsLoading(false);
-
-            // toast({
-            //     title: "Hurrah!",
-            //     description: "Fetch comments!",
-            //     className: "bg-green-800"
-            // })
 		})
 		.catch(error => {
 			console.log(error.message);
-		});
+		})
+        .finally(() => {
+            setIsLoadingComments(false);
+        });
     };
-
-    
-    // const fetchCountryData = () => {
-    //     if(postData.countryId > 0) {
-    //         fetch(`http://localhost:5000/api/v1/countries/${postData.countryId}`, {
-    //             method: 'GET',
-    //             headers: {
-    //                 'Content-Type': 'application/json', 
-    //                 "Authorization": authHeader,
-    //             },
-    //         })
-    //         .then(response => {
-    //             if (!response.ok) {
-    //                 throw new Error('Błąd sieci!');
-    //             }
-    //             return response.json();
-    //         })
-    //         .then(data => {
-    //             setCountryISO(data.iso);
-    //             setCountryName(data.nicename)
-    //         })
-    //         .catch(error => {
-    //             console.log(error.message);
-    //         });
-    //     } else {
-    //         setCountryISO(null);
-    //     }
-    // };
 
     const fetchAuthorData = () => {
         fetch(`http://localhost:5000/api/v1/users/${postData.authorId}`, {
@@ -230,12 +159,6 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
 		});
     };
 
-    // edit content of POST
-    // const editPost = (newContent) => {
-
-    // };
-
- 
 
     const handlePrevPage = () => {
         if (currentPage > 0) {
@@ -246,6 +169,7 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
     const handleNextPage = () => {
         if (currentPage < (totalPages-1)) {
             setCurrentPage(currentPage + 1);
+            setRefetchComments(true);
         }
     };
 
@@ -296,13 +220,10 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
         }
     };
 
-
     return (
         <Card className="w-full">
             {/* AUTOR POSTA */}
-            <CardHeader className="flex flex-row pb-1 justify-between">
-                {/* <Link to={`/profile/${user.id}`} className="flex flex-row"> */}
-                
+            <CardHeader className="flex flex-row pb-1 justify-between">               
                 <HoverUserInfo userData={user} >
                     <div className="flex flex-row justify-center items-start">
                         <Avatar>
@@ -404,6 +325,7 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
                         hearts={postData.hearts}
                         liked={postData.liked}
                         hearted={postData.hearted}
+                        setRefetchPosts={setRefetchPosts}
                     />
                     
                     <Button 
@@ -471,7 +393,7 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
                             </Button>
                         </form>
                             
-                            {(isLoading || (commentsData == [[]])) ? (
+                            {(isLoadingComments || (commentsData == [[]])) ? (
                                 <SpinLoading className="w-full flex justify-center items-center py-2" />
 
                             ) : (
@@ -489,7 +411,7 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
                                 ))
                             )}
 
-                            {(!isLoading && !isLastPage) &&
+                            {(!isLoadingComments && !isLastPage) &&
                                 <Button 
                                     variant="link" 
                                     onClick={() => {handleNextPage()}}
