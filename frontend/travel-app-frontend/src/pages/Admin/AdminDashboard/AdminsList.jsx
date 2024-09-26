@@ -30,17 +30,20 @@ const AdminsList = () => {
 
     // paginacja
     const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(8);
     const [totalPages, setTotalPages] = useState(1);
-    const [refetchData, setRefetchData] = useState(false);
+    const [refetchAdmins, setRefetchAdmins] = useState(false);
 
     useEffect(() => {
-    
-    }, []);
+        fetchAdmins();
+        if(refetchAdmins){
+            setRefetchAdmins(false);
+        }
+    }, [refetchAdmins]);
 
     const fetchAdmins = () => {
         setIsLoading(true);
-        fetch(`http://localhost:5000/api/v1/users/search/${replacedStr}?pageNumber=${currentPage}&pageSize=${pageSize}`, {
+        fetch(`http://localhost:5000/api/v1/admin/admins?query=&pageSize=${pageSize}&pageNumber=${currentPage}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json', 
@@ -74,7 +77,7 @@ const AdminsList = () => {
         if(currentPage < (totalPages-1)) {
             setAdminsData(null);
             setCurrentPage(prev => prev + 1);
-            setRefetchData(true);
+            setRefetchAdmins(true);
         }
     }
 
@@ -82,7 +85,7 @@ const AdminsList = () => {
         if(currentPage > 0) {
             setAdminsData(null);
             setCurrentPage(prev => prev - 1);
-            setRefetchData(true);
+            setRefetchAdmins(true);
         }
     }
 
@@ -92,7 +95,7 @@ const AdminsList = () => {
                 Admins List
             </h2>
 
-            <Table className="h-full overflow-hidden">
+            <Table className="">
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-fit">AdminID</TableHead>
@@ -100,7 +103,7 @@ const AdminsList = () => {
                         <TableHead className="w-fit">Last Name</TableHead>
                         <TableHead className="w-fit hidden md:table-cell">Username</TableHead>
                         <TableHead className="w-fit hidden sm:table-cell">Email</TableHead>
-                        <TableHead className="w-fit text-right"></TableHead>
+                        <TableHead className="w-fit "></TableHead>
                     </TableRow>
                 </TableHeader>
 
@@ -109,21 +112,20 @@ const AdminsList = () => {
                         return (
                             <AdminRowView 
                                 key={`userManagementAdmin${user.id}${i}`}
-                                user={user}
+                                admin={user}
                             />
                         )
                     }))}
                 </TableBody>
-
             </Table>
 
-            {/* {!isLoading && (adminsData === null) && (
+            {!isLoading && ((adminsData === null) || (adminsData.length == 0)) && (
                 <div className="w-full text-center mt-5" >
                     <span className="text-base text-muted-foreground">No admins...</span>
                 </div>
             )}
 
-            {!isLoading && (adminsData !== null) && (adminsData.length == 0) && (
+            {/* {!isLoading && (adminsData !== null) && (adminsData.length == 0) && (
                 <div className="text-gray-400 flex flex-col justify-center items-center leading-[140px] mt-5 relative">
                     <CircleOff className="h-[100px] w-[100px]" color="hsl(var(--muted-foreground))"/>
                     <span className="text-base mt-2 text-muted-foreground">No results</span>                                    
