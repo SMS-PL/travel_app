@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 
-const UnbanUserAlert = ({ user, onOpen, onClose}) => {
+const UnbanUserAlert = ({ user, onOpen, onClose, setRefetchUsers}) => {
     const authHeader = useAuthHeader();
 
     const unbanUser = () => {   
@@ -50,8 +50,9 @@ const UnbanUserAlert = ({ user, onOpen, onClose}) => {
                 <form 
                     onSubmit={(e) => {
                         e.preventDefault();
-                        onClose();
                         unbanUser();
+                        setRefetchUsers(true);
+                        onClose();
                     }}
                 >
                     <AlertDialogHeader>

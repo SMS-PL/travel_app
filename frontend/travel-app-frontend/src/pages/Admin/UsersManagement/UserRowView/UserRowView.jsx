@@ -25,44 +25,14 @@ import BanUserAlert from './BanUserAlert';
 import UnbanUserAlert from './UnbanUserAlert';
 import UserDetailsAlert from './UserDetailsAlert';
 
-const UserRowView = ({ user, onOpenDetails, onOpenBan, onOpenUnban }) => {
-    const authHeader = useAuthHeader();
-
-    const [isBanUserDialogOpen, setIsBanUserDialogOpen] = useState(false);
-    const [isUnbanUserDialogOpen, setIsUnbanUserDialogOpen] = useState(false);
-    const [isUserDetailsOpen, setIsUserDetailsOpen] = useState(false);
-    // const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
-
-    const [isLoading, setIsLoading] = useState(false);
-    const [daysOfBan, setDaysOfBan] = useState(null);
-
-    const banUser = () => {
-        if((daysOfBan > 0) && (daysOfBan < 1827)) {
-            fetch(`http://localhost:5000/api/v1/users/${user.id}/ban/${daysOfBan}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: authHeader,
-                },
-            })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Błąd sieci!");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                console.log(data);
-            })
-            .catch((error) => {
-                console.log(error.message);
-            });
-        }
-    };
+const UserRowView = ({ user, onOpenDetails, onOpenBan, onOpenUnban, onOpenAdminOrUser }) => {
 
     return (
-        <TableRow>
+        <TableRow className={cn(user.banned && "bg-red-600 bg-opacity-40 hover:bg-red-900 ")}>
             <TableCell className="font-medium">{user.id}</TableCell>
+            <TableCell className="font-medium">
+                {(user.roles[1] != null) ? user.roles[1].name.split("_")[1] : user.roles[0].name.split("_")[1]  }
+            </TableCell>
             <TableCell className="font-medium">{user.firstName}</TableCell>
             <TableCell className="font-medium">{user.lastName}</TableCell>
             <TableCell className="font-medium hidden md:table-cell">
@@ -70,9 +40,6 @@ const UserRowView = ({ user, onOpenDetails, onOpenBan, onOpenUnban }) => {
             </TableCell>
             <TableCell className="font-medium hidden sm:table-cell">
                 {user.email}
-            </TableCell>
-            <TableCell className="font-medium hidden md:table-cell">
-                {user.createdAt}
             </TableCell>
             <TableCell className="w-fit cursor-pointer flex justify-end">
                 <DropdownMenu>
@@ -96,12 +63,14 @@ const UserRowView = ({ user, onOpenDetails, onOpenBan, onOpenUnban }) => {
                         <DropdownMenuItem onSelect={onOpenUnban}>
                             Unban user
                         </DropdownMenuItem>
+                        <DropdownMenuItem onSelect={onOpenAdminOrUser}>
+                            Make admin/user
+                        </DropdownMenuItem>
+                        
                     </DropdownMenuContent>
                 </DropdownMenu>
             </TableCell>
-
         </TableRow>
-                    
     );
 };
 

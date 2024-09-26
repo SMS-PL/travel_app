@@ -25,6 +25,7 @@ import { cn } from '@/lib/utils';
 import UserDetailsAlert from './UserRowView/UserDetailsAlert';
 import BanUserAlert from './UserRowView/BanUserAlert';
 import UnbanUserAlert from './UserRowView/UnbanUserAlert';
+import MakeAdminOrUserAlert from './UserRowView/MakeAdminOrUserAlert';
 
 const UsersManagement = () => {
 	const authHeader = useAuthHeader();
@@ -37,13 +38,23 @@ const UsersManagement = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
-    const [refetchData, setRefetchData] = useState(false);
+    const [refetchUsers, setRefetchUsers] = useState(false);
 
     // Funkcje otwierania dialogów z ustawieniem wybranego użytkownika
     const [isUserDetailsOpen, setIsUserDetailsOpen] = useState(false);
     const [isBanUserDialogOpen, setIsBanUserDialogOpen] = useState(false);
     const [isUnbanUserDialogOpen, setIsUnbanUserDialogOpen] = useState(false);
+    const [isMakeAdminOrUserDialogOpen, setIsMakeAdminOrUserDialogOpen] = useState(false);
+
     const [selectedUser, setSelectedUser] = useState(null);
+
+    useEffect(() => {
+        if(refetchUsers) {
+            setUsersData(null);
+            fetchUsers();
+            setRefetchUsers(false);
+        }
+    }, [refetchUsers]);
 
     const openUserDetails = (user) => {
         setSelectedUser(user);
@@ -58,6 +69,11 @@ const UsersManagement = () => {
     const openUnbanUserDialog = (user) => {
         setSelectedUser(user);
         setIsUnbanUserDialogOpen(true);
+    };
+
+    const openMakeAdminOrUserDialog = (user) => {
+        setSelectedUser(user);
+        setIsMakeAdminOrUserDialogOpen(true);
     };
 
     const fetchUsers = () => {
@@ -100,7 +116,7 @@ const UsersManagement = () => {
         if(currentPage < (totalPages-1)) {
             setUsersData(null);
             setCurrentPage(prev => prev + 1);
-            setRefetchData(true);
+            setRefetchUsers(true);
         }
     }
 
@@ -108,7 +124,7 @@ const UsersManagement = () => {
         if(currentPage > 0) {
             setUsersData(null);
             setCurrentPage(prev => prev - 1);
-            setRefetchData(true);
+            setRefetchUsers(true);
         }
     }
 
@@ -124,7 +140,6 @@ const UsersManagement = () => {
                         fetchUsers();
                     }}
                 >
-                    
                     <Input
                         type="search"
                         placeholder="Search users by name..."
@@ -139,24 +154,22 @@ const UsersManagement = () => {
                         <Search className="h-4 w-4 " />
                     </Button>
                 </form>
-
             </div>
-
 
             <div className="mt-4 md:mt-8 w-full max-w-[900px] h-full">
                 <h2 className="font-extrabold text-xl pb-5 text-center" >
                     Results
                 </h2>
 
-                <Table className="h-full overflow-hidden">
+                <Table className="h-full overflow-x">
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-fit">UserID</TableHead>
-                            <TableHead className="w-fit">First Name</TableHead>
-                            <TableHead className="w-fit">Last Name</TableHead>
+                            <TableHead className="w-fit text-nowrap">UserID</TableHead>
+                            <TableHead className="w-fit">Role</TableHead>
+                            <TableHead className="w-fit text-nowrap">First Name</TableHead>
+                            <TableHead className="w-fit text-nowrap">Last Name</TableHead>
                             <TableHead className="w-fit hidden md:table-cell">Username</TableHead>
                             <TableHead className="w-fit hidden sm:table-cell">Email</TableHead>
-                            <TableHead className="w-fit hidden md:table-cell">Created At</TableHead>
                             <TableHead className="w-fit text-right"></TableHead>
                         </TableRow>
                     </TableHeader>
@@ -170,6 +183,7 @@ const UsersManagement = () => {
                                     onOpenDetails={() => openUserDetails(user)}
                                     onOpenBan={() => openBanUserDialog(user)}
                                     onOpenUnban={() => openUnbanUserDialog(user)}
+                                    onOpenAdminOrUser={() => openMakeAdminOrUserDialog(user)}
                                 />
                             )
                         }))}
@@ -187,12 +201,20 @@ const UsersManagement = () => {
                             user={selectedUser}
                             onOpen={isBanUserDialogOpen}
                             onClose={() => setIsBanUserDialogOpen(false)}
+                            setRefetchUsers={setRefetchUsers}
                         />
                         <UnbanUserAlert
                             user={selectedUser}
                             onOpen={isUnbanUserDialogOpen}
                             onClose={() => setIsUnbanUserDialogOpen(false)}
+                            setRefetchUsers={setRefetchUsers}
                         />
+                        <MakeAdminOrUserAlert
+                            user={selectedUser}
+                            onOpen={isMakeAdminOrUserDialogOpen}
+                            onClose={() => setIsMakeAdminOrUserDialogOpen(false)}
+                            setRefetchUsers={setRefetchUsers}
+                        />                     
                     </>
                 )}
 
