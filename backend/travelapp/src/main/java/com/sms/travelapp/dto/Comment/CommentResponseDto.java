@@ -18,4 +18,5 @@ public class CommentResponseDto {
     private Long reactionCount;
     private Timestamp createdAt;
     private Timestamp lastUpdated;
+    private boolean reacted;
 }
