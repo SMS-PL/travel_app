@@ -17,7 +17,7 @@ public interface FriendshipService {
 
     List<UserResponseDto> getSentFriendRequest();
 
-    List<UserResponseDto> getReceivedFriendRequest();
+    Page<UserResponseDto> getReceivedFriendRequest(int pageNumber, int pageSize);
 
     String removeFriend(Long friendId);
 }

@@ -25,8 +25,16 @@ public interface FriendshipRepository extends JpaRepository<Friendship,Long> {
 
     Friendship findByUserAndFriend(UserEntity user, UserEntity friend);
 
-    //count friends
+
+    @Query("SELECT f FROM Friendship f WHERE f.friend = :user AND " +
+            "NOT EXISTS (SELECT 1 FROM Friendship f2 WHERE f2.user = :user AND f2.friend = f.user)")
+    Page<Friendship> findReceivedRequestsByUser(@Param("user") UserEntity user, Pageable pageable);
+
     @Query("SELECT COUNT(f) FROM Friendship f WHERE f.user = :user AND " +
             "EXISTS (SELECT 1 FROM Friendship f2 WHERE f2.user = f.friend AND f2.friend = :user)")
     int countFriends(@Param("user") UserEntity user);
+
+//    @Query("SELECT f FROM Friendship f WHERE f.user = :user AND " +
+//            "EXISTS (SELECT 1 FROM Friendship f2 WHERE f2.user = f.friend AND f2.friend = :user)")
+//    Page<Friendship> findAllByFriendId(@Param("friendId") Long friendId, Pageable pageable);
 }

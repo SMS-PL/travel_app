@@ -56,8 +56,8 @@ public class FriendshipController {
     }
 
     @GetMapping("/receivedRequests")
-    public ResponseEntity<List<UserResponseDto>> getReceivedRequests(){
-        List<UserResponseDto> receivedRequests = friendshipService.getReceivedFriendRequest();
+    public ResponseEntity<Page<UserResponseDto>> getReceivedRequests(@RequestParam int pageNumber, @RequestParam int pageSize){
+        Page<UserResponseDto> receivedRequests = friendshipService.getReceivedFriendRequest(pageNumber,pageSize);
 
         return ResponseEntity.status(HttpStatus.OK).body(receivedRequests);
     }

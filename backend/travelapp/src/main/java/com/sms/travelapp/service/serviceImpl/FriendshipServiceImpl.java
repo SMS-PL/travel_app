@@ -42,7 +42,6 @@ public class FriendshipServiceImpl implements FriendshipService {
 
 
         List<UserResponseDto> friends = new ArrayList<>();
-
         for (Friendship f :
                 friendshipRepository.findAllByUser(user)) {
             if(friendshipRepository.existsByUserAndFriend(f.getFriend(),user)){
@@ -51,8 +50,6 @@ public class FriendshipServiceImpl implements FriendshipService {
                 }
             }
         }
-
-
         return friends;
     }
     @Override
@@ -140,19 +137,17 @@ public class FriendshipServiceImpl implements FriendshipService {
 
 
     @Override
-    public List<UserResponseDto> getReceivedFriendRequest() {
+    public Page<UserResponseDto> getReceivedFriendRequest(int pageNumber, int pageSize) {
         UserEntity user = authService.getLoggedUser();
 
-        List<UserResponseDto> receivedRequests = new ArrayList<>();
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+        Page<Friendship> requestPage = friendshipRepository.findReceivedRequestsByUser(user, pageRequest);
 
-        for (Friendship f:
-                friendshipRepository.findAllByFriend(user)) {
-            if(!friendshipRepository.existsByUserAndFriend(user,f.getUser())){
-                receivedRequests.add(userMapper.mapToUserResponseDto(f.getUser()));
-            }
-        }
-
-        return receivedRequests;
+        return new PageImpl<>(
+                requestPage.stream().map(f -> userMapper.mapToUserResponseDto(f.getUser())).collect(Collectors.toList()),
+                pageRequest,
+                requestPage.getTotalElements()
+        );
     }
 
 
