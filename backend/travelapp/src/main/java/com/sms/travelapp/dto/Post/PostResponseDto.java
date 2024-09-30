@@ -14,7 +14,7 @@ public class PostResponseDto {
     private Long id;
     private String content;
     private Integer countryId;
-    private String countryIso3;
+    private String countryIso;
     private String countryName;
     private Long commentsCount;
     private boolean isLiked;

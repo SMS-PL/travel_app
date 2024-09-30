@@ -29,7 +29,7 @@ public class PostMapper {
                 .authorId(post.getAuthorId())
                 .countryId(post.getCountryId())
                 .imageUrl(post.getImageUrl())
-                .countryIso3(country.getIso3())
+                .countryIso(country.getIso())
                 .countryName(country.getName())
                 .commentsCount(commentsCount)
                 .likes(post.getLikeCount())
