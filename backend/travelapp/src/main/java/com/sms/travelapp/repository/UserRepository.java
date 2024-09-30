@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserEntity,Long> {
@@ -48,4 +50,8 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
             "OR " +
             "((u.username LIKE %:word2% OR u.firstName LIKE %:word2% OR u.lastName LIKE %:word2% OR u.email LIKE %:word2%))")
     Page<UserEntity> findByMultipleWordsWithBanned(@Param("word1") String word1, @Param("word2") String word2, Pageable pageable);
+
+    @Query("SELECT u FROM UserEntity u WHERE u.isBanned = true AND u.bannedTo <= :currentDate")
+    List<UserEntity> findUsersToUnban(@Param("currentDate") Timestamp currentDate);
+
 }
