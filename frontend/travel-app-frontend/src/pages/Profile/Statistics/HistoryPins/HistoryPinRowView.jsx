@@ -49,7 +49,6 @@ const HistoryPinRowView = ({userId, pin}) => {
 
     return (
         <TableRow >
-            
             <TableCell className="font-medium">
                 {countryISO === null ? (
                     <div className="w-[40px] h-[25px] bg-gray-700 flex justify-center items-center text-xl text-white font-bold rounded-[1px]">?</div>
@@ -57,8 +56,8 @@ const HistoryPinRowView = ({userId, pin}) => {
                     <img src={`https://flagsapi.com/${countryISO}/flat/64.png`} alt="" className="w-[40px] cursor-pointer" />
                 }
             </TableCell>
-            <TableCell className="font-medium">{pin.countryName}</TableCell>
-            <TableCell>{(pin.city == null) ? ("-") : pin.city}</TableCell>
+            <TableCell className="font-medium text-nowrap">{pin.countryName}</TableCell>
+            <TableCell className="text-nowrap">{(pin.city == null) ? ("-") : pin.city}</TableCell>
             <TableCell className="text-right text-nowrap">
                 <ReactTimeAgo timeStyle="round" date={new Date(pin.createdAt)} locale="en-US" className="text-sm text-gray-500"/>
             </TableCell>

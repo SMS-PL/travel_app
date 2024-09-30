@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { cn } from "@/lib/utils";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -15,11 +16,11 @@ import {
 } from "@/components/ui/alert-dialog";
 
 
-const UnbanUserAlert = ({ user, onOpen, onClose, setRefetchUsers}) => {
+const MakeAdminOrUserAlert = ({ user, onOpen, onClose, setRefetchUsers}) => {
     const authHeader = useAuthHeader();
 
-    const unbanUser = () => {   
-        fetch(`http://localhost:5000/api/v1/users/${user.id}/unban`, {
+    const makeAdminOrUser = () => {
+        fetch(`http://localhost:5000/api/v1/admin/admins/make/${user.id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -50,17 +51,17 @@ const UnbanUserAlert = ({ user, onOpen, onClose, setRefetchUsers}) => {
                 <form 
                     onSubmit={(e) => {
                         e.preventDefault();
-                        unbanUser();
+                        makeAdminOrUser();
                         setRefetchUsers(true);
                         onClose();
                     }}
                 >
                     <AlertDialogHeader>
                         <AlertDialogTitle>
-                            Unban user
+                            Switch ROLE_ADMIN or ROLE_USER
                         </AlertDialogTitle>
                         <AlertDialogDescription className="">
-                            Are you sure you want to undo a ban?
+                            Are you sure you want to switch roles?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
 
@@ -78,13 +79,13 @@ const UnbanUserAlert = ({ user, onOpen, onClose, setRefetchUsers}) => {
                             type="submit"
                             className="text-white"
                         >
-                            Unban
+                            Switch
                         </Button>
                     </AlertDialogFooter>
                 </form>
             </AlertDialogContent>
-        </AlertDialog>    
+        </AlertDialog>      
     );
 };
 
-export default UnbanUserAlert;
+export default MakeAdminOrUserAlert;

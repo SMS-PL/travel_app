@@ -1,4 +1,4 @@
-import react, { useEffect } from "react";
+import react, { useEffect, useState } from "react";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -19,30 +19,60 @@ import {
 } from "lucide-react";
 
 const AdminDashboard = () => {
+    const authHeader = useAuthHeader();
+
     // const token = useAuthHeader();
     // console.log(jwtDecode(token));
+    const [isLoading, setIsLoading] = useState(false);
+    const [statsData, setStatsData] = useState(null);
 
     useEffect(() => {
-        // console.log(token);
+        fetchStats();
     }, []);
 
+    
+    const fetchStats = () => {
+        setIsLoading(true);
+        fetch(`http://localhost:5000/api/v1/admin/dashboard-stats`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json', 
+                "Authorization": authHeader,
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Błąd sieci!');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setStatsData(data);
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
+        .finally(() => {
+            setIsLoading(false);
+        });
+    };
     return (
         <AdminContainer>
             
-            <div className="w-full grid gap-4 md:gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+            <div className="w-full grid gap-4 md:gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 box-border">
                 <Card
                     x-chunk="dashboard-01-chunk-2"
-                    className="w-full flex flex-col justify-between col-span-1 sm:col-span-1 p-4 "
+                    className=" flex flex-col justify-between col-span-1 p-4 box-border"
                 >
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
-                        <CardTitle className="text-base font-bold leading-[17px]">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2 p-0">
+                        <CardTitle className="text-base font-bold ">
                             User count
                         </CardTitle>
                     </CardHeader>
 
                     <CardContent className="p-0 my-4">
                         <div className="flex items-baseline gap-1 text-5xl font-extrabold tabular-nums leading-none mb-2">
-                            ???
+                            {(statsData !== null) && statsData.userCount}
                         </div>
                     </CardContent>
 
@@ -56,9 +86,9 @@ const AdminDashboard = () => {
                     </CardFooter>
                 </Card>
 
-                <Card
+                 <Card
                     x-chunk="dashboard-01-chunk-2"
-                    className="w-full flex flex-col justify-between col-span-1 p-4"
+                    className="flex flex-col justify-between col-span-1 p-4 box-border"
                 >
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                         <CardTitle className="text-base font-bold leading-[17px]">
@@ -68,7 +98,7 @@ const AdminDashboard = () => {
 
                     <CardContent className="p-0 my-4">
                         <div className="flex items-baseline gap-1 text-5xl font-extrabold tabular-nums leading-none mb-2">
-                            ???
+                            {(statsData !== null) && statsData.postCount}
                         </div>
                     </CardContent>
 
@@ -84,7 +114,7 @@ const AdminDashboard = () => {
 
                 <Card
                     x-chunk="dashboard-01-chunk-2"
-                    className="w-full flex flex-col justify-between col-span-1 p-4 "
+                    className="flex flex-col justify-between col-span-1 p-4 box-border"
                 >
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                         <CardTitle className="text-base font-bold leading-[17px]">
@@ -94,17 +124,16 @@ const AdminDashboard = () => {
 
                     <CardContent className="p-0 my-4">
                         <div className="flex items-baseline gap-1 text-5xl font-extrabold tabular-nums leading-none mb-2">
-                            ???
+                            {(statsData !== null) && statsData.pinCount}
                         </div>
                     </CardContent>
 
                     <CardFooter className="p-0"></CardFooter>
                 </Card>
 
-                {/* History */}
                 <Card
                     x-chunk="dashboard-01-chunk-2"
-                    className="w-full flex flex-col justify-between col-span-1 p-4 "
+                    className="flex flex-col justify-between col-span-1 p-4 box-border"
                 >
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-0">
                         <CardTitle className="text-base font-bold leading-[17px]">
@@ -114,7 +143,7 @@ const AdminDashboard = () => {
 
                     <CardContent className="p-0 my-4">
                         <div className="flex items-baseline gap-1 text-5xl font-extrabold tabular-nums leading-none mb-2">
-                            ???
+                            {(statsData !== null) && statsData.bannedUserCount}
                         </div>
                     </CardContent>
                         
@@ -122,10 +151,10 @@ const AdminDashboard = () => {
                 </Card>
             </div>
 
-            <div className="w-full flex justify-center items-center">
+            {/* <div className=""> */}
                 <AdminsList />
 
-            </div>
+            {/* </div> */}
         </AdminContainer>
     );
 };

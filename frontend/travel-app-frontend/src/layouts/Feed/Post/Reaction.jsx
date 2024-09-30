@@ -9,7 +9,7 @@ import ConfettiExplosion from 'react-confetti-explosion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {useInfiniteQuery } from "@tanstack/react-query";
 
-function Reaction({postId, likes = 0, hearts = 0, liked = false, hearted = false}) {
+function Reaction({postId, likes = 0, hearts = 0, liked = false, hearted = false, setRefetchPosts}) {
     const [isExploding, setIsExploding] = useState(false);
 
 	const authHeader = useAuthHeader();
@@ -76,6 +76,7 @@ function Reaction({postId, likes = 0, hearts = 0, liked = false, hearted = false
                 setIsLiked(false);              // ustawia że nie dał like
                 setIsHearted(false);            // ustawia że nie dał serce
             }
+            setRefetchPosts(true);
 		})
 		.catch(error => {
 			console.log(error.message);

@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 
-const BanUserAlert = ({ user, onOpen, onClose}) => {
+const BanUserAlert = ({ user, onOpen, onClose, setRefetchUsers}) => {
     const authHeader = useAuthHeader();
 
     const [daysOfBan, setDaysOfBan] = useState(0);
@@ -56,6 +56,7 @@ const BanUserAlert = ({ user, onOpen, onClose}) => {
                     onSubmit={(e) => {
                         e.preventDefault();
                         banUser();
+                        setRefetchUsers(true);
                         onClose();
                     }}
                 >
