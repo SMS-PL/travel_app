@@ -33,9 +33,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UserRequestPayload userRequestPayload){
-        UserResponseDto updatedUser = userService.updateUser(id, userRequestPayload);
+    @PatchMapping("/")
+    public ResponseEntity<UserResponseDto> updateUser( @RequestBody UserRequestPayload userRequestPayload){
+        UserResponseDto updatedUser = userService.updateUser( userRequestPayload);
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
 

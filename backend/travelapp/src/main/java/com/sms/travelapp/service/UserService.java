@@ -28,7 +28,7 @@ public interface UserService {
     boolean checkIfHeartAvailable();
 
 
-    UserResponseDto updateUser(Long id, UserRequestPayload userRequestPayload);
+    UserResponseDto updateUser( UserRequestPayload userRequestPayload);
 
     UserResponseDto banUser(Long id, int days);
 

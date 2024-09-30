@@ -173,9 +173,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto updateUser(Long id, UserRequestPayload userRequestPayload) {
-        UserEntity user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFound("User Not found!"));
+    public UserResponseDto updateUser( UserRequestPayload userRequestPayload) {
+        UserEntity user = authService.getLoggedUser();
 
         if (userRequestPayload.getFirstName() != null) {
             user.setFirstName(userRequestPayload.getFirstName());
