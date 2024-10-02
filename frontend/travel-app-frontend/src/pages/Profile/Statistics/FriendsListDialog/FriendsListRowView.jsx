@@ -21,8 +21,6 @@ import FriendshipButton from '@/components/FriendshipsButton/FriendshipButton';
 const FriendsListRowView = ({user, setOpen, ...props}) => {
 	const authHeader = useAuthHeader();
 
-    
-
     const declineFriendship = (user) => {
 		fetch(`http://localhost:5000/api/v1/friendship/${user.id}`, {
 			method: 'DELETE',
@@ -46,7 +44,7 @@ const FriendsListRowView = ({user, setOpen, ...props}) => {
 			console.log(error.message);
 		});
 	};
-    console.log(user)
+
     return (
         <div className="p-2 w-full flex flex-row items-center justify-between hover:bg-secondary rounded-md hover:underline" {...props} >
             <Link to={`/profile/${user.id}`} onClick={() => setOpen(false)} className="flex flex-row w-full justify-start items-center cursor-pointer">
@@ -63,7 +61,11 @@ const FriendsListRowView = ({user, setOpen, ...props}) => {
                     <CardTitle className="text-base text-start">{user.firstName} {user.lastName}</CardTitle>
                 </div>
             </Link>
-            <FriendshipButton userId={user.id} friendStatus={user.friendStatus} />
+            {console.log(user)}
+            <FriendshipButton 
+                userId={user.id} 
+                friendStatus={user.friendStatus} 
+            />
             {/* <Icons.trashEmpty className="fill-current w-[25px] h-[25px]" />  */}
 
         </div>

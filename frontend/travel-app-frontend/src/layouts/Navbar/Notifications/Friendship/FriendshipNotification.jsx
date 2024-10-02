@@ -15,6 +15,11 @@ import UserRowView from "@/layouts/Navbar/Notifications/Friendship/UserRowView";
 import { RefreshFriendshipContext } from '@/contexts/RefreshFriendshipContext';
 import SpinLoading from '@/components/ui/SpinLoading';
 import { cn } from '@/lib/utils';
+import { Button } from "@/components/ui/button";
+import{
+    ChevronLeftIcon,
+    ChevronRightIcon,
+} from "@radix-ui/react-icons";
 
 const FriendshipNotification = () => {
 	const authHeader = useAuthHeader();
@@ -28,6 +33,11 @@ const FriendshipNotification = () => {
     const [dataFriendship, setDataFriendship] = useState(null);
     const [notificationCounter, setNotificationCounter] = useState(true);
 
+	// paginacja
+	const [currentPage, setCurrentPage] = useState(0);
+	const [pageSize, setPageSize] = useState(1);
+	const [totalPages, setTotalPages] = useState(0);
+	const [refetchData, setRefetchData] = useState(false);
 
 	useEffect(() => {
 		if(open) {
@@ -41,7 +51,7 @@ const FriendshipNotification = () => {
 	const fetchReceivedFriendship = async () => {
 		setIsLoading(true);
 
-        fetch(`http://localhost:5000/api/v1/friendship/receivedRequests`, {
+        fetch(`http://localhost:5000/api/v1/riendship/receivedRequests/?pageNumber=${currentPage}&pageSize=${pageSize}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json', 
@@ -55,13 +65,32 @@ const FriendshipNotification = () => {
 			return response.json();
 		})
 		.then(data => {
-			setDataFriendship(data);
-			setIsLoading(false);
+			setDataFriendship(data.content);
+			setTotalPages(data.totalPages);
 		})
 		.catch(error => {
 			console.log(error.message);
-		});
+		})
+		.finally(() => {
+			setIsLoading(false);
+		})
 	};
+
+	const nextPage = () => {
+        if(currentPage < (totalPages-1)) {
+            setDataFriendship(null);
+            setCurrentPage(prev => prev + 1);
+            setRefetchData(true);
+        }
+    };
+
+    const prevPage = () => {
+        if(currentPage > 0) {
+            setDataFriendship(null);
+            setCurrentPage(prev => prev - 1);
+            setRefetchData(true);
+        }
+    };
 
     return (
 		<DropdownMenu 
@@ -86,7 +115,10 @@ const FriendshipNotification = () => {
 				<DropdownMenuSeparator />
 				
 				<DropdownMenuGroup className="py-2 max-h-[500px] h-fit overflow-y-auto">
-					{(dataFriendship && dataFriendship.length != 0) ? (
+
+					{!dataFriendship && <SpinLoading className="w-full flex justify-center items-center" /> }
+
+					{dataFriendship && dataFriendship.length != 0 && (
 						dataFriendship.slice().reverse().map((user, i) => (
 							<UserRowView 
 								key={`userFriendship${user.id}${i}`}
@@ -94,13 +126,39 @@ const FriendshipNotification = () => {
 								setLocalRefetch={setLocalRefetch}
 								setGlobalRefreshFriendship={setGlobalRefreshFriendship}
 							/>
-						))
-					) : (
+						)))
+					}
+
+					{dataFriendship && (dataFriendship.length == 0) && (
 						<div className="flex flex-col justify-center items-center">
 							<Icons.userPlusFill className="fill-current w-20 h-20 cursor-pointer opacity-20" />
 							<p className="text-sm text-gray-400">No friend requests</p>
 						</div>
 					)}
+
+					{dataFriendship && (totalPages > 1) && (
+                        <div className={cn("w-full flex flex-row justify-center items-center gap-1", (totalPages == 1) && "hidden")}>
+                            <Button 
+                                onClick={() => prevPage()} 
+                                variant="secondary"
+                                className="w-fit"
+                                disabled={currentPage == 0}
+                            >
+                                <ChevronLeftIcon className="h-6 w-6 cursor-pointer rounded-md" />
+                            </Button>
+                            
+                            <div className="text-sm text-gray-400">{`${currentPage+1}/${totalPages}`}</div>
+
+                            <Button 
+                                onClick={() => nextPage()}
+                                variant="secondary"
+                                className="w-fit"
+                                disabled={currentPage == (totalPages-1)}
+                            >
+                                <ChevronRightIcon className="h-6 w-6 cursor-pointer rounded-md"/>
+                            </Button>
+                        </div>
+                    )}
 
 					
 				</DropdownMenuGroup>

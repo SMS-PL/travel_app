@@ -31,48 +31,21 @@ import {
 import DeleteCommentDialog from "@/layouts/Feed/Post/Comment/DeleteCommentDialog";
 import EditCommentDialog from "@/layouts/Feed/Post/Comment/EditCommentDialog";
 
-const CommentRowView = ({commentId, commentData, commentsData, setCommentsData, setRefetch}) => {
+const CommentRowView = ({commentId, commentData, commentsData, setCommentsData, setRefetch, reacted = false}) => {
 	const authHeader = useAuthHeader();
     const auth = useAuthUser();
     const { toast } = useToast();
 
     const [reactionCount, setReactionCount] = useState(0);
-    const [isReacted, setIsReacted] = useState(false);
+    const [isReacted, setIsReacted] = useState(reacted);
 
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     
     useEffect(() => {
         setReactionCount(commentData.reactionCount);
-        checkIsReacted();
 
-        
-    }, [isReacted, commentsData]);
-
-
-    
-    const checkIsReacted = () => {
-        fetch(`http://localhost:5000/api/v1/comments/${commentId}/reacted`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json', 
-				"Authorization": authHeader,
-			},
-		})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Błąd sieci!');
-			}
-			return response.json();
-		})
-		.then(data => {
-            setIsReacted(data.reacted);
-		})
-		.catch(error => {
-			console.log(error.message);
-		});
-
-    };
+    }, [commentsData]);
 
     const reactToComment = () => {
         fetch(`http://localhost:5000/api/v1/comments/${commentId}/react`, {
@@ -89,21 +62,7 @@ const CommentRowView = ({commentId, commentData, commentsData, setCommentsData, 
 			return response.json();
 		})
 		.then(data => {
-            console.log("Reakcja zarejestrowana pomyślnie!");
             setIsReacted(prevReact => !prevReact);
-            // setReactionCount(data.reactionCount);
-            // console.log(data);
-           
-            // Zaktualizuj `commentsData`, aby zwiększyć `reactionCount` odpowiedniego komentarza
-            // setCommentsData(
-            //     commentsData.map((group) => 
-            //         group.map(comment => 
-            //             comment.id === commentData.id 
-            //                 ? { ...comment, reactionCount: comment.reactionCount + 1 }
-            //                 : comment
-            //         )
-            //     )
-            // );
 
             setCommentsData(prevCommentsData => 
                 prevCommentsData.map(group => 
@@ -121,7 +80,6 @@ const CommentRowView = ({commentId, commentData, commentsData, setCommentsData, 
 
             setReactionCount(prevCount => isReacted ? prevCount - 1 : prevCount + 1);
 
-            console.log(commentsData);
 		})
 		.catch(error => {
 			console.log(error.message);

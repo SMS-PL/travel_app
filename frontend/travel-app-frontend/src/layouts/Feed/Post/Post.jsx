@@ -60,7 +60,7 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
 
     // dane użytkownika i postu
     const [user, setUser] = useState({});
-    const [countryISO, setCountryISO] = useState(postData.countryIso3);
+    const [countryISO, setCountryISO] = useState(postData.countryIso);
     const [countryName, setCountryName] = useState(postData.countryName);
     const [isImageLoading, setIsImageLoading] = useState(true);
 
@@ -78,7 +78,7 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
     const [currentPage, setCurrentPage] = useState(0);
     const [pageSize, setPageSize] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
-    const [totalElements, setTotalElements] = useState(0);
+    const [totalElements, setTotalElements] = useState(postData.commentsCount);
     const [isLastPage, setIsLastPage] = useState(false);
 
     // obsługa pobierania komentarzy
@@ -406,6 +406,7 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
                                             commentsData={commentsData}
                                             setCommentsData={setCommentsData}
                                             setRefetch={setRefetchComments}
+                                            reacted={commentData.reacted}
                                         />
                                     )
                                 ))

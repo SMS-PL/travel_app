@@ -78,7 +78,7 @@ const FriendsListDialog = ({userId}) => {
             setCurrentPage(prev => prev + 1);
             setRefetchData(true);
         }
-    }
+    };
 
     const prevPage = () => {
         if(currentPage > 0) {
@@ -86,7 +86,7 @@ const FriendsListDialog = ({userId}) => {
             setCurrentPage(prev => prev - 1);
             setRefetchData(true);
         }
-    }
+    };
 
     return (
         <Dialog 
@@ -113,7 +113,11 @@ const FriendsListDialog = ({userId}) => {
                         
                         {userFriendsList && userFriendsList.length != 0 && (userFriendsList.map((user, i) => {
                             return (
-                                <FriendsListRowView key={`userFriendshipList${user.id}`} user={user} setOpen={setOpen} />
+                                <FriendsListRowView 
+                                    key={`userFriendshipList${user.id}`} 
+                                    user={user} 
+                                    setOpen={setOpen} 
+                                />
                             )
                         }))}
                     </div>
