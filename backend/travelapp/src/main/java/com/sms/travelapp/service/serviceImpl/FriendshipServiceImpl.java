@@ -158,6 +158,8 @@ public class FriendshipServiceImpl implements FriendshipService {
                 ()-> new UserNotFound("User you want get status of not found!")
         );
 
+        
+
         if(friendshipRepository.existsByUserAndFriend(user,potentialFriend)){
             if(friendshipRepository.existsByUserAndFriend(potentialFriend,user)){
                 return "FRIEND";
