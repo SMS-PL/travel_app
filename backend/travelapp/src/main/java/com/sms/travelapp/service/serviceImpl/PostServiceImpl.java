@@ -269,7 +269,7 @@ public class PostServiceImpl implements PostService {
         return new PageImpl<>(
                 postsPage
                         .stream()
-                        .map(post -> postMapper.mapToPostResponseDto(post, loggedInUser))
+                        .map(postMapper::mapToPostResponseDto)
                         .collect(Collectors.toList()),
                 PageRequest.of(pageNumber, pageSize),
                 postsPage.getTotalElements()

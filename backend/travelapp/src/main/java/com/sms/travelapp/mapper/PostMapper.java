@@ -9,6 +9,7 @@ import com.sms.travelapp.model.UserEntity;
 import com.sms.travelapp.repository.CommentRepository;
 import com.sms.travelapp.repository.CountryRepository;
 import com.sms.travelapp.repository.PostReactionRepository;
+import com.sms.travelapp.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +19,14 @@ public class PostMapper {
     private final CountryRepository countryRepository;
     private final CommentRepository commentRepository;
     private final PostReactionRepository postReactionRepository;
+    private final AuthService authService;
 
     public  PostResponseDto mapToPostResponseDto(Post post){
 
         Country country = countryRepository.findById(post.getCountryId()).orElseThrow();
         Long commentsCount = commentRepository.countByPost_Id(post.getId());
 
-        return PostResponseDto.builder()
+        PostResponseDto postResponseDto = PostResponseDto.builder()
                 .id(post.getId())
                 .authorId(post.getAuthorId())
                 .countryId(post.getCountryId())
@@ -38,10 +40,8 @@ public class PostMapper {
                 .createdAt(post.getCreatedAt())
                 .lastUpdated(post.getLastUpdated())
                 .build();
-    }
 
-    public  PostResponseDto mapToPostResponseDto(Post post, UserEntity loggedInUser){
-
+        UserEntity loggedInUser = authService.getLoggedUser();
         boolean isLiked = false;
         boolean isHearted = false;
         PostReaction postReaction = postReactionRepository.findByAuthorAndPost(loggedInUser, post);
@@ -50,12 +50,12 @@ public class PostMapper {
             isHearted = postReaction.getReactionType() == 1;
         }
 
-        PostResponseDto postResponseDto = mapToPostResponseDto(post);
         postResponseDto.setHearted(isHearted);
         postResponseDto.setLiked(isLiked);
 
         return postResponseDto;
-
     }
+
+
 
 }
