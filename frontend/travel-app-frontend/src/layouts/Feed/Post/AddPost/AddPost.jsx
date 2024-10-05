@@ -143,11 +143,7 @@ const AddPost = ({setAddNewPost}) => {
 
                 <CardFooter className="flex flex-row justify-between items-start gap-4">
                     
-                    <div className="flex flex-row justify-center items-center gap-1">
-                        {/* <Button variant="ghost" className="w-fit text-foreground p-2" type="button">
-                            <Icons.imageAdd className="h-7 w-7 fill-primary"/>
-                        </Button> */}
-
+                    <div className="flex flex-row justify-center items-center gap-4">
                         <div className="flex flex-col justify-center items-center">
                             <SelectCountry value={value} setValue={setValue} setCountryId={setCountryId} />
                         </div>
@@ -158,7 +154,6 @@ const AddPost = ({setAddNewPost}) => {
                             imageURL={imageURL}
                             setImageURL={setImageURL}
                         />
-
                     </div>
 
                     <div className="flex flex-row justify-center items-center gap-2">

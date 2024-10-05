@@ -72,7 +72,7 @@ const SelectCountry = ({value, setValue, setCountryId}) => {
                     variant="ghost"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-fit p-2 justify-between relative"
+                    className="w-fit p-0 justify-between relative"
                 >
                     {value && seletedCountryIso ? 
                         <img src={`https://flagsapi.com/${seletedCountryIso}/flat/64.png`} alt="" className="w-[25px] cursor-pointer" /> 

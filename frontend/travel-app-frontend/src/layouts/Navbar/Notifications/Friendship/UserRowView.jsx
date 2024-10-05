@@ -72,7 +72,7 @@ const UserRowView = ({user, setLocalRefetch, setGlobalRefreshFriendship, ...prop
 
     return (
         <div  className="flex flex-row items-center justify-between p-1 bg-secondary rounded-lg mb-2">
-            <HoverUserInfo userData={user} className="flex w-full">
+            <HoverUserInfo userData={user} className="flex w-fit">
                 <div className="w-full flex flex-row items-center hover:underline" {...props} >
                     <Avatar className="w-[45px] h-[45px]">
                         <AvatarImage 
