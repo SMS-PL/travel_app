@@ -1,10 +1,8 @@
-import React from "react";
-import Navbar from "@/layouts/Navbar/Navbar";
 import MainContainer from "@/components/MainContainer/MainContainer";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-function ErrorPage() {
+const ErrorPage = () => {
     return (
         <MainContainer>
             {/* <h1 className="font-bold text-3xl">404 - Not Found</h1> */}
