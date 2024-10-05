@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,28 +31,36 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private  CustomUserDetailsService customUserDetailsService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = getJWTFromRequest(request);
-        if(StringUtils.hasText(token) && tokenGenerator.validateToken(token)){
-            String username = tokenGenerator.getUsernameFromJwt(token);
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+        try {
+            String token = getJWTFromRequest(request);
+            if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
+                String username = tokenGenerator.getUsernameFromJwt(token);
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
-            UserEntity userEntity = userRepository.findByEmail(userDetails.getUsername())
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
+                UserEntity userEntity = userRepository.findByEmail(userDetails.getUsername())
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
 
-            if (userEntity.getIsBanned() != null && userEntity.getIsBanned()) {
-                throw new PermissionDenied("User is banned");
+                if (userEntity.getIsBanned() != null && userEntity.getIsBanned()) {
+                    throw new PermissionDenied("You are banned");
+                }
 
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(userDetails,
-                            null, userDetails.getAuthorities());
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource()
-                    .buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+            filterChain.doFilter(request, response);
+
+        } catch (PermissionDenied e) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            String jsonError = "{\"error\": \"" + e.getMessage() + "\"}";
+            response.getWriter().write(jsonError);
+            response.getWriter().flush();
         }
-
-        filterChain.doFilter(request,response);
-
     }
 
     private String getJWTFromRequest(HttpServletRequest request) {
