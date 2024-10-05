@@ -20,6 +20,37 @@ import SpinLoading from '@/components/ui/SpinLoading';
 const ProfileStatistics = ({userId, visitedCountriesCount, achievementsCount, friendsCount, pinsCount}) => {
 	const authHeader = useAuthHeader();
 
+	const [countryCounter, setCountryCounter] = useState(239);
+
+	useEffect(() => {
+        fetchCountriesLength();
+	}, []);
+
+    const fetchCountriesLength = () => {
+        fetch(`http://localhost:5000/api/v1/countries/ `, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json', 
+                "Authorization": authHeader,
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Błąd sieci!');
+            }
+            return response.json();
+        })
+        .then(data => {
+			console.log(data.length);
+            setCountryCounter(data.length);
+        })
+        .catch(error => {
+            console.log(error.message);
+        });
+        
+    };
+	
+
     return (
 		<div className="w-full mt-4 grid gap-4 md:gap-6 md:mt-8 grid-cols-2 sm:grid-cols-4 backdrop-blur-[150px]">
 			
@@ -41,7 +72,7 @@ const ProfileStatistics = ({userId, visitedCountriesCount, achievementsCount, fr
 								<div className="flex flex-row items-end justify-start w-full mb-2">
 									{visitedCountriesCount}
 									<span className="text-base font-normal text-muted-foreground">
-										{`/${239}`}
+										{`/${countryCounter}`}
 									</span>
 								</div>
 								<HorizontalBarChart value={visitedCountriesCount} countriesLength={239}/>
