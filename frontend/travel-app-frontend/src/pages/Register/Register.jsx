@@ -164,7 +164,7 @@ const Register = () => {
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="username" className={cn(errors.username ? "text-red-500" : "text-foreground", "flex flex-row justify-start items-center gap-1")} >
                                             Username
-                                            <HoverPopoverInputInfo content={"Username must be between 6 and 16 characters long. Must consist of lowercase letters and may contain numbers (e.g. josh23, emily421 etc)."}/>
+                                            <HoverPopoverInputInfo type="username" />
                                         </Label>
                                         <Input
                                             id="username"
@@ -187,7 +187,7 @@ const Register = () => {
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="firstName" className={cn(errors.firstName ? "text-red-500" : "text-foreground", "flex flex-row justify-start items-center gap-1")}>
                                             First name
-                                            <HoverPopoverInputInfo content={"First name must start with a capital letter and can only consist of letters of the Polish alphabet (e.g. Josh, Emily etc)."}/>
+                                            <HoverPopoverInputInfo type="firstName" />
                                         </Label>
 
                                         <Input
@@ -208,7 +208,7 @@ const Register = () => {
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="lastName" className={cn(errors.lastName ? "text-red-500" : "text-foreground", "flex flex-row justify-start items-center gap-1")}>
                                             Last name
-                                            <HoverPopoverInputInfo content={"Last name must start with a capital letter and can only consist of letters of the Polish alphabet (e.g. Brown, Smith etc)."}/>
+                                            <HoverPopoverInputInfo type="lastName" />
                                         </Label>
                                         <Input
                                             id="lastName"
@@ -252,7 +252,7 @@ const Register = () => {
                                     <div className="flex flex-col space-y-1.5">
                                         <Label htmlFor="password" className={cn(errors.password ? "text-red-500" : "text-foreground", "flex flex-row justify-start items-center gap-1")}>
                                             Password
-                                            <HoverPopoverInputInfo content={"Password must be between 8 and 32 characters long. Must contain upper and lower case letters and at least one number (e.g. J0shBr0wn33, Em11y555 etc)."}/>
+                                            <HoverPopoverInputInfo type="password" />
                                         </Label>
                                         <Input 
                                             id="password" 
