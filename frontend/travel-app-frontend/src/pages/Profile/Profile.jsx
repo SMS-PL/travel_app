@@ -7,22 +7,19 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/icons";
 import FriendshipButton from '@/components/FriendshipsButton/FriendshipButton';
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import Feed from "@/layouts/Feed/Feed";
 import ProfileImageUploader from "@/pages/Profile/ImageUploader/ProfileImageUploader";
 import BackgroundImageUploader from "@/pages/Profile/ImageUploader/BackgroundImageUploader";
-import ProfileSettingsDialog from '@/pages/Profile/ProfileSettingsDialog/ProfileSettingsDialog';
 import ProfileStatistics from '@/pages/Profile/Statistics/ProfileStatistics';
 import SpinLoading from '@/components/ui/SpinLoading';
 
-function Profile() {
+const Profile = () => {
 	const { userId } = useParams();
 	const authHeader = useAuthHeader();
-	const navigate = useNavigate();
 	const auth = useAuthUser();
+    const navigate = useNavigate();
 
 	// dane o użytkowniku
 	const [userData, setUserData] = useState(null);
@@ -31,10 +28,11 @@ function Profile() {
 	const [uploadingImageProfile, setUploadingImageProfile] = useState(false);
 	const [imageProfileURL, setImageProfileURL] = useState("");
 	const [uploadingImageBackground, setUploadingImageBackground] = useState(false);
-	const [imageBackgroundURL, setImageBackgroundURL] = useState("");
+	const [imageBackgroundURL, setImageBackgroundURL] = useState(null);
 
 	// ładowanie danych o użytkowniku
 	useEffect(() => {
+		setImageBackgroundURL(null);
 		getUserData();
 	}, [userId]);
 

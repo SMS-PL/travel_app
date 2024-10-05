@@ -10,7 +10,6 @@ import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
 const PostPage = () => {
 	const { postId, commentId } = useParams();
 	const authHeader = useAuthHeader();
-	const navigate = useNavigate();
 
 	const [postData, setPostData] = useState(null);
 	const [refetchPosts, setRefetchPosts] = useState(false);
@@ -19,23 +18,18 @@ const PostPage = () => {
 	const [isCommentError, setIsCommentError] = useState(false);
 
     useEffect(() => {
-	
 		getPostData();
+		if(refetchPosts) setRefetchPosts(false);
 
-		// if(refetchPosts) {
-		// 	setRefetchPosts(false);
-		// }
-	}, [postId]);
+	}, [postId, refetchPosts]);
 
 	const getPostData = () => {
-		
 		fetch(`http://localhost:5000/api/v1/posts/${postId}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json', 
 				"Authorization": authHeader,
 			},
-			
 		})
 		.then(response => {
 			if (!response.ok) {
@@ -55,8 +49,6 @@ const PostPage = () => {
 		});
 	};
 
-	
-	
     return (
         <MainContainer type="postPage">
 			{!postData && !isPostError && <SpinLoading className="w-full flex justify-center items-center py-5" />}

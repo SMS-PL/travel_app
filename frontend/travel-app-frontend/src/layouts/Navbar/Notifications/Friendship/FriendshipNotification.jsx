@@ -31,13 +31,13 @@ const FriendshipNotification = () => {
 	const [localRefetch, setLocalRefetch] = useState(false);
 
     const [dataFriendship, setDataFriendship] = useState(null);
-    const [notificationCounter, setNotificationCounter] = useState(true);
 
 	// paginacja
 	const [currentPage, setCurrentPage] = useState(0);
 	const [pageSize, setPageSize] = useState(1);
 	const [totalPages, setTotalPages] = useState(0);
 	const [refetchData, setRefetchData] = useState(false);
+    const [isLastPage, setIsLastPage] = useState(false);
 
 	useEffect(() => {
 		if(open) {
@@ -45,13 +45,13 @@ const FriendshipNotification = () => {
 			setLocalRefetch(false);
 			// setGlobalRefreshFriendship(false);
 		}
-	}, [localRefetch, open]);
+	}, [localRefetch, open, currentPage]);
 	// }, [localRefetch, open, globalRefreshFriendship]);
 
 	const fetchReceivedFriendship = async () => {
 		setIsLoading(true);
 
-        fetch(`http://localhost:5000/api/v1/riendship/receivedRequests/?pageNumber=${currentPage}&pageSize=${pageSize}`, {
+        fetch(`http://localhost:5000/api/v1/friendship/receivedRequests?pageNumber=${currentPage}&pageSize=${pageSize}`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json', 
@@ -65,8 +65,24 @@ const FriendshipNotification = () => {
 			return response.json();
 		})
 		.then(data => {
-			setDataFriendship(data.content);
+			// setDataFriendship(data.content);
+			// setDataFriendship(prevData => {
+			// 	const newData = data.content.filter(
+			// 		newUser => !prevData?.some(user => user.id === newUser.id)
+			// 	);
+			// 	return data.first ? newData : [...prevData, ...newData];
+			// });
+
+			setDataFriendship(prevData => {
+                if(data.first) {
+                    return data.content
+                }
+                return [...prevData, ...data.content]
+            });
+
 			setTotalPages(data.totalPages);
+			setIsLastPage(data.last);
+
 		})
 		.catch(error => {
 			console.log(error.message);
@@ -76,19 +92,15 @@ const FriendshipNotification = () => {
 		})
 	};
 
-	const nextPage = () => {
-        if(currentPage < (totalPages-1)) {
-            setDataFriendship(null);
-            setCurrentPage(prev => prev + 1);
-            setRefetchData(true);
+	const handlePrevPage = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1);
         }
     };
-
-    const prevPage = () => {
-        if(currentPage > 0) {
-            setDataFriendship(null);
-            setCurrentPage(prev => prev - 1);
-            setRefetchData(true);
+    
+    const handleNextPage = () => {
+        if (currentPage < (totalPages-1)) {
+            setCurrentPage(prev => prev + 1);
         }
     };
 
@@ -136,30 +148,15 @@ const FriendshipNotification = () => {
 						</div>
 					)}
 
-					{dataFriendship && (totalPages > 1) && (
-                        <div className={cn("w-full flex flex-row justify-center items-center gap-1", (totalPages == 1) && "hidden")}>
-                            <Button 
-                                onClick={() => prevPage()} 
-                                variant="secondary"
-                                className="w-fit"
-                                disabled={currentPage == 0}
-                            >
-                                <ChevronLeftIcon className="h-6 w-6 cursor-pointer rounded-md" />
-                            </Button>
-                            
-                            <div className="text-sm text-gray-400">{`${currentPage+1}/${totalPages}`}</div>
-
-                            <Button 
-                                onClick={() => nextPage()}
-                                variant="secondary"
-                                className="w-fit"
-                                disabled={currentPage == (totalPages-1)}
-                            >
-                                <ChevronRightIcon className="h-6 w-6 cursor-pointer rounded-md"/>
-                            </Button>
-                        </div>
-                    )}
-
+					{(!isLoading && !isLastPage) &&
+						<Button 
+							variant="link" 
+							onClick={() => {handleNextPage()}}
+							className="w-full p-0 h-fit"
+						>
+							Load more...
+						</Button>
+					} 
 					
 				</DropdownMenuGroup>
 

@@ -37,6 +37,11 @@ const ActivityNotification = () => {
 	useEffect(() => {
 		if(open) {
 			fetchNotifications();
+		} else {
+			setCurrentPage(0);
+			setIsFirstPage(false);
+			setIsLastPage(false);
+			setData(null);
 		}
 		
 	}, [open, currentPage]);
@@ -66,6 +71,7 @@ const ActivityNotification = () => {
                 }
                 return [...prevData, ...data.content]
             });
+
 
 			// setData(data);
 			setTotalPages(data.totalPages);

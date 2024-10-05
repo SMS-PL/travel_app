@@ -34,6 +34,7 @@ const BanUserAlert = ({ user, onOpen, onClose, setRefetchUsers}) => {
                 if (!response.ok) {
                     throw new Error("Błąd sieci!");
                 }
+                setRefetchUsers(true);
                 return response.json();
             })
             .then((data) => {
@@ -56,7 +57,7 @@ const BanUserAlert = ({ user, onOpen, onClose, setRefetchUsers}) => {
                     onSubmit={(e) => {
                         e.preventDefault();
                         banUser();
-                        setRefetchUsers(true);
+                        // setRefetchUsers(true);
                         onClose();
                     }}
                 >

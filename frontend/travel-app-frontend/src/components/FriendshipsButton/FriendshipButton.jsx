@@ -30,6 +30,9 @@ const FriendshipButton = ({userId, friendStatus, ...props}) => {
 
     const [friendshipStatus, setFriendshipStatus] = useState(friendStatus);
 
+	useEffect(() => {
+		setFriendshipStatus(friendStatus);
+	}, [friendStatus]);
 
 	// wczytywanie danych o friends
 	// useEffect(() => {
