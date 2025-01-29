@@ -37,6 +37,8 @@ const BackgroundImageUploader = ({uploadingImage, setUploadingImage, imageURL, s
 
             // Check file size
             const maxSize = 10 * 1024 * 1024; // 10MB
+            console.log(maxSize);
+
             if (image.size > maxSize) {
                 toast({
                     variant: "destructive",
@@ -57,7 +59,7 @@ const BackgroundImageUploader = ({uploadingImage, setUploadingImage, imageURL, s
                 setImageURL(downloadURL);
 
                 // zapisanie URL w bazie danych
-                await updateBackgroundPhotoUrl(downloadURL);
+                updateBackgroundPhotoUrl(downloadURL);
 
             } catch (error) {
                 console.log(error);
@@ -67,8 +69,9 @@ const BackgroundImageUploader = ({uploadingImage, setUploadingImage, imageURL, s
         }
     };
   
-    const updateBackgroundPhotoUrl = async (newBackgroundPhotoUrl) => {
-		fetch(`http://localhost:5000/api/v1/users/${auth.id}`, {
+    const updateBackgroundPhotoUrl = (newBackgroundPhotoUrl) => {
+        console.log('Authorization Header:', authHeader);
+		fetch(`http://localhost:5000/api/v1/users/`, {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json', 

@@ -26,9 +26,12 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useToast } from "@/components/ui/use-toast";
+
 
 const DeleteCommentDialog = ({commentId, setCommentsData, commentsData, isOpen, onClose}) => {
     const authHeader = useAuthHeader();
+    const { toast } = useToast();
 
     const deleteCommentOnClick = () => {
 		fetch(`http://localhost:5000/api/v1/comments/${commentId}`, {
@@ -52,11 +55,11 @@ const DeleteCommentDialog = ({commentId, setCommentsData, commentsData, isOpen, 
                 ))
             );
             // setRefetch(true);
-            // toast({
-            //     title: "Hurrah!",
-            //     description: "Comment deleted correctly!",
-            //     className: "bg-green-800"
-            // })
+            toast({
+                title: "Hurrah!",
+                description: "Comment deleted correctly!",
+                className: "bg-green-800 text-white"
+            })
 		})
 		.catch(error => {
 			console.log(error.message);

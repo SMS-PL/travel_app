@@ -101,7 +101,10 @@ const SelectCountry = ({value, setValue, setCountryId}) => {
                                         }}
                                         className="cursor-pointer"
                                     >
-                                        <img src={`https://flagsapi.com/${country.iso}/flat/64.png`} alt="" className="w-[20px] cursor-pointer mr-2" />
+                                        <img 
+                                            src={`https://flagsapi.com/${country.iso}/flat/64.png`} 
+                                            className="w-[20px] cursor-pointer mr-2" 
+                                        />
                                         {country.nicename}
                                         <CheckIcon
                                             className={cn(

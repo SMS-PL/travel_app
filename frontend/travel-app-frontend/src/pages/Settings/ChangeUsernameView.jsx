@@ -35,11 +35,10 @@ const ChangeUsernameView = () => {
 	} = useForm();
 
     const onSubmit = async (values) => {
-        console.log("WHAT")
         if(isValid) {
             
             try {
-                const response = await fetch("http://localhost:5000/api/v1/users", {
+                const response = await fetch("http://localhost:5000/api/v1/users/", {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json', 
@@ -58,8 +57,8 @@ const ChangeUsernameView = () => {
 
                 toast({
                     title: "Hurrah!",
-                    description: "Successfully updated username!",
-                    className: "bg-green-800"
+                    description: "Username changed successfully!",
+                    className: "bg-green-800 text-white"
                 })
 
                 navigate("/login");
@@ -127,12 +126,16 @@ const ChangeUsernameView = () => {
                                 message: "Username is not validated",
                             },
                         })}
-                        className={cn((errors.username != null) && "border-red-600 border-[2px]","m-0")}
+                        className={cn((errors.username != null) && "border-red-600 border-[2px]","m-0", "bg-secondary")}
 
                         onChange={(e) => checkUsernameAvailability(e.target.value)}
                     />
-                    <p className={cn(usernameAvailabilityInfo === null ? "hidden" : "flex" ,"text-red-500 h-2 text-xs")} >{usernameAvailabilityInfo !== null && usernameAvailabilityInfo}</p>
-                    <p className={cn(errors.username == null ? "hidden" : "flex" ,"text-red-500 h-5 text-xs")}>{errors.username && errors.username.message}</p>
+                    <p className={cn(usernameAvailabilityInfo === null ? "hidden" : "flex" ,"text-red-500 h-2 text-xs")} >
+                        {usernameAvailabilityInfo !== null && usernameAvailabilityInfo}
+                    </p>
+                    <p className={cn(errors.username == null ? "hidden" : "flex" ,"text-red-500 h-5 text-xs")}>
+                        {errors.username && errors.username.message}
+                    </p>
 
                 </CardContent>
                 <CardFooter className="border-t px-6 py-4">

@@ -30,7 +30,6 @@ const AdminDashboard = () => {
         fetchStats();
     }, []);
 
-    
     const fetchStats = () => {
         setIsLoading(true);
         fetch(`http://localhost:5000/api/v1/admin/dashboard-stats`, {
@@ -56,6 +55,7 @@ const AdminDashboard = () => {
             setIsLoading(false);
         });
     };
+
     return (
         <AdminContainer>
             

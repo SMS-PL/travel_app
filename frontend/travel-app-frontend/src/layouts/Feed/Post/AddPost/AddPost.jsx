@@ -74,7 +74,7 @@ const AddPost = ({setAddNewPost}) => {
                 toast({
                     title: "Hurrah!",
                     description: "Post added correctly!",
-                    className: "bg-green-800"
+                    className: "bg-green-800 text-white"
                 })
 
                 setValue("");

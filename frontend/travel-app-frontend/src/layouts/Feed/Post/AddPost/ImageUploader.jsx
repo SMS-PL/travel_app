@@ -22,7 +22,7 @@ const ImageUploader = ({uploadingImage, setUploadingImage, imageURL, setImageURL
 
         if(image) {
 
-            // Check file type
+            // Walidacja rozszerzenia pliku
             const fileType = image.type;
             if (!['image/jpeg', 'image/jpg', 'image/png'].includes(fileType)) {
                 toast({
@@ -33,8 +33,8 @@ const ImageUploader = ({uploadingImage, setUploadingImage, imageURL, setImageURL
                 return;
             }
 
-            // Check file size
-            const maxSize = 10 * 1024 * 1024; // 10MB
+            // Walidacja maksymalnego rozmiaru zdjęcia
+            const maxSize = 10 * 1024 * 1024; // 10 MB
             if (image.size > maxSize) {
                 toast({
                     variant: "destructive",

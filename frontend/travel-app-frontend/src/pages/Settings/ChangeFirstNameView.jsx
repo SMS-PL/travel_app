@@ -33,11 +33,10 @@ const ChangeFirstNameView = () => {
 	} = useForm();
 
     const onSubmit = async (values) => {
-        console.log("WHAT")
         if(isValid) {
             
             try {
-                const response = await fetch("http://localhost:5000/api/v1/users", {
+                const response = await fetch("http://localhost:5000/api/v1/users/", {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json', 
@@ -56,8 +55,8 @@ const ChangeFirstNameView = () => {
 
                 toast({
                     title: "Hurrah!",
-                    description: "Successfully registered!",
-                    className: "bg-green-800"
+                    description: "First name changed successfully!",
+                    className: "bg-green-800 text-white"
                 })
 
                 navigate("/login");

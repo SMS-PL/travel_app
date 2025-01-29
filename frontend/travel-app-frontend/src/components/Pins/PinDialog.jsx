@@ -112,7 +112,7 @@ const PinDialog = ({userPinsArray, refetch, setRefetch}) => {
                     </div>
 
                     <div className="w-fit flex justify-end items-center">
-                        {auth.id == userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.id &&
+                        {(auth.id == userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.id) &&
                             <PinSettingsButton 
                                 pinId={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].id}
                                 userId={userPinsArray[Object.keys(userPinsArray)][currentPinIndex].author.id}

@@ -47,13 +47,13 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
 			refetch();
 			setRefetchPosts(false);
 		}
-
 	}, [refetchPosts]);
 
     const fetchPost = async (page) => {
-
         if(type != "profile") {
-            const response = await fetch(`http://localhost:5000/api/v1/posts/feed?feedType=${type}&pageSize=5&pageNumber=${page.pageParam}`, {
+            const response = await fetch(`
+				http://localhost:5000/api/v1/posts/feed?feedType=${type}&pageSize=5&pageNumber=${page.pageParam}
+			`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json', 
@@ -62,7 +62,9 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
             });
             return await response.json();
         } else if(type == "profile" && userId) {
-            const response = await fetch(`http://localhost:5000/api/v1/posts/user/${userId}?pageSize=5&pageNumber=${page.pageParam}`, {
+            const response = await fetch(`
+				http://localhost:5000/api/v1/posts/user/${userId}?pageSize=5&pageNumber=${page.pageParam}
+			`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json', 
@@ -75,11 +77,8 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
 
     const {
 		data,
-		error,
 		fetchNextPage,
 		hasNextPage,
-		isFetching,
-		isFetchingNextPage,
 		status,
 		refetch
 	} = useInfiniteQuery({
@@ -89,7 +88,7 @@ const Feed = ({type = "home", userId = null}) => { // type = home/friends/profil
 		getNextPageParam: (lastPage, pages) => {
 			return lastPage.length === 0 ? null : pages.length + 1;
 		},
-	})
+	});
 
 	useEffect(() => {
 		if(addNewPost) {

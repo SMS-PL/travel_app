@@ -19,9 +19,11 @@ import useAuthHeader from 'react-auth-kit/hooks/useAuthHeader';
 import { Icons } from "@/components/icons";
 import { cn } from '@/lib/utils';
 import HoverPopoverInputInfo from "@/components/ui/HoverPopoverInputInfo";
+import { useToast } from "@/components/ui/use-toast";
 
 const EditPostDialog = ({postId, prevContent, isOpen, setIsOpen, setRefetchPosts, onClose}) => {
     const authHeader = useAuthHeader();
+    const { toast } = useToast();
 
     const {
         register,
@@ -34,7 +36,6 @@ const EditPostDialog = ({postId, prevContent, isOpen, setIsOpen, setRefetchPosts
     }});
 
     const onSubmit = async (values) => {
-        
         if (isValid) {
             await fetch(`http://localhost:5000/api/v1/posts/${postId}`, {
                 method: 'PATCH',
@@ -54,16 +55,20 @@ const EditPostDialog = ({postId, prevContent, isOpen, setIsOpen, setRefetchPosts
                 return response.json();
             })
             .then(data => {
-                console.log(data);
-                // if (refetch) {
-                //     refetch();
-                // }
+                toast({
+                    title: "Hurrah!",
+                    description: "Post edited correctly!",
+                    className: "bg-green-800 text-white"
+                })
                 setRefetchPosts(true);
-
                 onClose();
             })
             .catch(error => {
-                console.log(error);
+                toast({
+                    variant: "destructive",
+                    title: "Uh oh! Failed to edit post!",
+                    description: error.message,
+                })
             });
 
         } else {
@@ -90,15 +95,18 @@ const EditPostDialog = ({postId, prevContent, isOpen, setIsOpen, setRefetchPosts
                             id="editDescription"
                             placeholder="Tell us a little bit about yourself"
                             className={cn(errors.description ? "border-2 border-red-600  focus:border-red-500" : "text-foreground border-0", " resize-y rounded-2xl bg-secondary min-h-[100px]")}
+                            
                             {...register("editDescription", {
-                                required: "Description is required",
                                 maxLength: {
                                     value: 255,
                                     message: "The maximum length of the comment is 255 characters",
                                 },
+                                required: "Description is required",
                             })}
+
                         />
-                        {errors.editDescription && errors.editDescription.type === "required" && (
+
+                        {errors && errors.editDescription && errors.editDescription.type === "required" && (
                             <p className="text-red-500 text-sm">Description is required!</p>
                         )}
                     </div>

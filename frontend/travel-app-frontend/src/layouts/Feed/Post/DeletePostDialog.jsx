@@ -26,9 +26,11 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useToast } from "@/components/ui/use-toast";
 
 const DeletePostDialog = ({postId, isOpen, setIsOpen, setRefetchPosts, onClose}) => {
     const authHeader = useAuthHeader();
+    const { toast } = useToast();
 
     const deletePostOnClick = () => {
         fetch(`http://localhost:5000/api/v1/posts/${postId}`, {
@@ -46,17 +48,21 @@ const DeletePostDialog = ({postId, isOpen, setIsOpen, setRefetchPosts, onClose})
             return response.json();
         })
         .then(data => {
-            console.log(data);
             setRefetchPosts(true);
+
+            toast({
+                title: "Hurrah!",
+                description: "Post deleted correctly!",
+                className: "bg-green-800 text-white"
+            })
 
         })
         .catch(error => {
-            console.log(error);
-            // toast({
-            //     variant: "destructive",
-            //     title: "Uh oh! Failed to delete post!",
-            //     description: error.message,
-            // })
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Failed to delete post!",
+                description: error.message,
+            })
         });
     };
 

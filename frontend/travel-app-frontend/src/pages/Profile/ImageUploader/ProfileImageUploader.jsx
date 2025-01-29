@@ -68,7 +68,7 @@ const ProfileImageUploader = ({uploadingImage, setUploadingImage, imageURL, setI
     };
 
     const updatePhotoUrl = async (newPhotoUrl) => {
-		fetch(`http://localhost:5000/api/v1/users/${auth.id}`, {
+		fetch(`http://localhost:5000/api/v1/users/`, {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json', 
@@ -89,13 +89,13 @@ const ProfileImageUploader = ({uploadingImage, setUploadingImage, imageURL, setI
             console.log(data);
 
             // Aktualizacja photoUrl w cookies
-            signIn({
-                auth: { token: authHeader.replace('Bearer ', ''), type: 'Bearer' },
-                userState: {
-                    ...auth,
-                    photoUrl: newPhotoUrl
-                },
-            });
+            // signIn({
+            //     auth: { token: authHeader.replace('Bearer ', ''), type: 'Bearer' },
+            //     userState: {
+            //         ...auth,
+            //         photoUrl: newPhotoUrl
+            //     },
+            // });
 		})
 		.catch(error => {
 			console.log(error.message);

@@ -52,7 +52,6 @@ const Login = () => {
                 }
 
                 const data = await response.json();
-                // console.log(values);
 
                 signIn({
                     auth: { token: data.accessToken, type: 'Bearer' },
@@ -71,7 +70,7 @@ const Login = () => {
                 toast({
                     title: "Hurrah!",
                     description: "Successfully logged in!",
-                    className: "bg-green-800"
+                    className: "bg-green-800 text-white"
                 })
 
                 navigate("/");
@@ -86,7 +85,6 @@ const Login = () => {
         } else {
             alert("INVALID");
         }
-
     };
 
     if (isAuthenticated()) {
@@ -107,7 +105,13 @@ const Login = () => {
     
                                     <div className="grid w-full items-center gap-4">
                                         <div className="flex flex-col space-y-1.5">
-                                            <Label htmlFor="email" className={cn(errors.email ? "text-red-500" : "text-foreground")}>Email</Label>
+                                            <Label 
+                                                htmlFor="email" 
+                                                className={cn(
+                                                    errors.email ? "text-red-500" : "text-foreground"
+                                                )}>
+                                                    Email
+                                                </Label>
                                             <Input 
                                                 id="email"
                                                 type="email"
@@ -120,7 +124,10 @@ const Login = () => {
                                                     },
                                                 })}
                                             />
-                                            <p className="text-red-500 h-2 text-xs">{errors.email && errors.email.message}</p>
+                                            <p 
+                                                className="text-red-500 h-2 text-xs">
+                                                {errors.email && errors.email.message}
+                                            </p>
                                         </div>
                                         <div className="flex flex-col space-y-1.5">
                                             <Label htmlFor="password" className={cn(errors.password ? "text-red-500" : "text-foreground")}>Password</Label>

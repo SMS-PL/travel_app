@@ -102,7 +102,7 @@ const CommentRowView = ({commentId, commentData, commentsData, setCommentsData, 
                         <HoverUserInfo userData={commentData.author}>
                             <span className="font-bold hover:underline">{commentData !== null && commentData.author.firstName} {commentData.author.lastName}</span> 
                         </HoverUserInfo>
-                        <span className="break-words break-all"> {commentData !== null && commentData.content}</span>
+                        <span className="break-words break-word"> {commentData !== null && commentData.content}</span>
                     </div>
                 </div>
                 

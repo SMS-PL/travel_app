@@ -34,37 +34,36 @@ function PinSettingsButton({userId, setOpenDialog, pinId, setRefetch}) {
             return response.json();
         })
         .then(data => {
-            setOpenDialog(false);
-            setRefetch(true);
-
-            setRefetch(true);
             toast({
                 title: "Hurrah!",
                 description: "Pin deleted successfully!",
-                className: "bg-green-800"
-            })
+                className: "bg-green-800 text-white"
+            });
+            setRefetch(true);
         })
         .catch(error => {
-            console.log(error);
-            const errorMessage = JSON.parse(error.message);
-
             toast({
                 variant: "destructive",
                 title: "Uh oh! Something went wrong.",
-                description: errorMessage.message,
-            })
+                description: "The pin cannot be deleted.",
+            });
+        })
+        .finally(() => {
+            setOpenDialog(false);
         });
-    }
+    };
 
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger className="gap-1 p-2 cursor-pointer hover:bg-secondary rounded-md">
+            <DropdownMenuTrigger 
+                className="gap-1 p-2 cursor-pointer hover:bg-secondary rounded-md"
+            >
                 <DotsHorizontalIcon className="h-5 w-5" />
             </DropdownMenuTrigger>
             
             {auth.id == userId &&
-                <DropdownMenuContent>
+                <DropdownMenuContent side="left">
                     
                         <DropdownMenuItem 
                             className="cursor-pointer" 

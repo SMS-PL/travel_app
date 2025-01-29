@@ -39,7 +39,7 @@ const ProtectedRoute = ({ children }) => {
             },
         });
 
-        // Sprawdź, czy odpowiedź ma kod statusu oznaczający bana
+        // Czy odpowiedź ma kod oznaczający blokadę czasową
         if (!response.ok) {
             signOut();
             navigate('/login');
@@ -47,7 +47,9 @@ const ProtectedRoute = ({ children }) => {
     };
 
     getUserData();
-    return isAuthenticated ? children : null; // Renderuj dzieci tylko, gdy użytkownik jest zalogowany
+    
+    // Renderuj dzieci tylko, gdy użytkownik jest zalogowany
+    return isAuthenticated ? children : null; 
 };
 
 const RoutesPage = () => {

@@ -44,30 +44,28 @@ function Pins() {
     const [refetchData, setRefetchData] = useState(false);
 
     useEffect(() => {
+        // pobranie z serwera danych 
+        // o meldunkach zalogowanego użytkownika
         const loadMyPins = async () => {
             await setIsLoading(true);
-            // await fetchPins(0, 9);
             await fetchOnlyMyPins();
             await setLocalRefetch(false);
             await setIsLoading(false);
         };
-
         loadMyPins();
-
     }, [localRefetch]);
 
     useEffect(() => {
+        // pobranie z serwera danych
+        // o meldunkach znajomych
         const loadFriendsPins = async () => {
             await setIsLoading(true);
             await fetchPins();
-            await setGlobalRefreshFriendship(false);
             await setRefetchData(false);
             await setIsLoading(false);
         };
-
         loadFriendsPins();
-
-    }, [globalRefreshFriendship, refetchData]);
+    }, [refetchData]);
 
 
     const fetchPins = async () => {
@@ -128,16 +126,29 @@ function Pins() {
     };
 
     const onCreate = async () => {
-        if (navigator.geolocation) {
+        try {
+            // Sprawdzenie działania modułu geolokalizacyjnego
+            if (!navigator.geolocation) {
+                toast({
+                    variant: "destructive",
+                    title: "Geolocation not supported",
+                    description: "Your browser does not support geolocation.",
+                });
+                return;
+            }
+    
+            // Pobranie lokalizacji
             const position = await new Promise((resolve, reject) => {
                 navigator.geolocation.getCurrentPosition(resolve, reject);
             });
+    
             const xCoordinate = position.coords.latitude;
             const yCoordinate = position.coords.longitude;
-
-            setCreatingAnimation(true);
-
-            await fetch("http://localhost:5000/api/v1/pins/", {
+    
+            setCreatingAnimation(true); // Włączenie animacji dodawania meldunku
+    
+            // Wysyłanie żądania do API z obsługą błędów
+            const response = await fetch("http://localhost:5000/api/v1/pins/", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json', 
@@ -149,41 +160,46 @@ function Pins() {
                         "y": yCoordinate
                     }
                 }),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => {
-                        throw new Error(JSON.stringify(err));
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                setLocalRefetch(true);
-                setCreatingAnimation(false);
-
-                toast({
-                    title: "Hurrah!",
-                    description: "Successfully add pin!",
-                    className: "bg-green-800"
-                });
-            })
-            .catch(error => {
-                console.log(error);
-                const errorMessage = JSON.parse(error.message);
-    
-                toast({
-                    variant: "destructive",
-                    title: "Uh oh! Something went wrong.",
-                    description: errorMessage.message,
-                })
             });
-            
-        } else {
-            console.log("Nie uzyskano lokalizacji!");
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(JSON.stringify(errorData));
+            }
+
+            setLocalRefetch(true); // Ponowne pobranie meldunków użytkownika
+            setCreatingAnimation(false); // Wyłączenie animacji dodawania meldunku
+    
+            toast({
+                title: "Hurrah!",
+                description: "Successfully added pin!",
+                className: "bg-green-800 text-white"
+            });
+    
+        } catch (error) {
+            // Obsługa błędów
+            let errorMessage = "Unknown error occurred.";
+            if (error.message.startsWith("Geolocation")) {
+                errorMessage = error.message.replace("Geolocation error: ", "");
+            } else if (error.message) {
+                try {
+                    const parsedError = JSON.parse(error.message);
+                    errorMessage = parsedError.message || errorMessage;
+                } catch {
+                    errorMessage = error.message;
+                }
+            }
+    
+            setCreatingAnimation(false); // Wyłączenie animacji dodawania meldunku
+    
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: errorMessage,
+            });
         }
     };
+    
 
     const nextPage = () => {
         if(currentPage < (totalPages-1)) {

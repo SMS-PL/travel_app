@@ -36,8 +36,20 @@ const VectorWorldMap = ({userCountry}) => {
                 }}
                 onRegionTipShow={function (event, label, code, ...props) {
                     label.html(
-                        "<div style='position: absolute; margin-left: 20px; height: fit; width: fit; z-index: 99; background-color: hsl(var(--secondary)); padding: 5px 10px; border-radius: 25px; color: var(--current); text-wrap: nowrap;'>" +
-                            "Country: " + label.html() +
+                        `<div style='
+                            position: absolute; 
+                            margin-left: 20px; 
+                            height: fit; 
+                            width: fit; 
+                            z-index: 99; 
+                            background-color: 
+                            hsl(var(--secondary)); 
+                            padding: 5px 10px; 
+                            border-radius: 25px; 
+                            color: hsl(var(--primary)); 
+                            font-weight: bold; 
+                            text-wrap: nowrap;'>` +
+                            label.html() +
                         "</div>"
                     );
                   }}

@@ -12,29 +12,38 @@ import { useState } from 'react';
 import FriendshipNotification from "@/layouts/Navbar/Notifications/Friendship/FriendshipNotification";
 import ActivityNotification from "@/layouts/Navbar/Notifications/Activity/ActivityNotification";
 
-export function Navbar({type = "default"}) {
+const Navbar = ({type = "default"}) => {
     const isAuthenticated = useIsAuthenticated();
     const location = useLocation();
     
     return (
         <nav className="flex flex-col sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="px-3 grid grid-cols-3 h-12 md:h-14 items-center">
-            {/* "px-3 md:container grid grid-cols-3 h-14 max-w-screen-2xl items-center" */}
                 {/* 1 kolumna */}
                 <div className="col-span-1 flex flex-row gap-3">
                     <Link to="/" className="flex items-center space-x-2">
-                        <span className="text-xl font-normal hidden md:flex">Trav<span className="font-bold text-primary">Share</span></span>
-                        <span className="text-xl font-normal flex justify-center items-center md:hidden">T<span className=" font-bold text-primary">S</span></span>
+                        <span className="text-xl font-normal hidden md:flex">
+                            Trav
+                            <span className="font-bold text-primary">
+                                Share
+                            </span>
+                        </span>
+                        <span className="text-xl font-normal flex justify-center items-center md:hidden">
+                            T
+                            <span className=" font-bold text-primary">
+                                S
+                            </span>
+                        </span>
                     </Link>
-                    
                     {isAuthenticated() && (type != "admin") && (
                         <>
-                            <SearchBar className="" placeholder="Search users on TravShare"/>
+                            <SearchBar 
+                                placeholder="Search users on TravShare"
+                            />
                         </>
                     )}
-
-
                 </div>
+
 
                 {/* 2 kolumna */}
                 <div className="col-span-1 flex justify-center">
@@ -80,6 +89,8 @@ export function Navbar({type = "default"}) {
         </nav>
     );
 }
+
+export default Navbar;
 
 // import { Link } from 'react-router-dom'
 // import useIsAuthenticated from 'react-auth-kit/hooks/useIsAuthenticated';
@@ -139,4 +150,3 @@ export function Navbar({type = "default"}) {
 //     )
 // }
 
-export default Navbar;

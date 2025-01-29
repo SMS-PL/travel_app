@@ -67,7 +67,7 @@ const Register = () => {
                 toast({
                     title: "Hurrah!",
                     description: "Successfully registered!",
-                    className: "bg-green-800"
+                    className: "bg-green-800 text-white"
                 })
 
                 navigate("/login");
@@ -250,7 +250,12 @@ const Register = () => {
 
                                     {/* PASSWORD */}
                                     <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="password" className={cn(errors.password ? "text-red-500" : "text-foreground", "flex flex-row justify-start items-center gap-1")}>
+                                        <Label 
+                                            htmlFor="password" 
+                                            className={cn(
+                                                errors.password ? "text-red-500" : "text-foreground", 
+                                                "flex flex-row justify-start items-center gap-1"
+                                            )}>
                                             Password
                                             <HoverPopoverInputInfo type="password" />
                                         </Label>
@@ -276,7 +281,13 @@ const Register = () => {
                                                 },
                                             })}
                                         />
-                                        <p className={cn(errors.password == null ? "hidden" : "flex" ,"text-red-500 h-5 text-xs")}>{errors.password && errors.password.message}</p>
+                                        <p 
+                                            className={cn(
+                                                errors.password == null ? "hidden" : "flex" ,
+                                                "text-red-500 h-5 text-xs"
+                                            )}>
+                                            {errors.password && errors.password.message}
+                                        </p>
                                     </div>
 
                                     {/* REPEATED PASSWORD */}

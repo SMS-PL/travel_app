@@ -103,7 +103,6 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
 
     const fetchComments = async () => {
         setIsLoadingComments(true);
-
         fetch(`http://localhost:5000/api/v1/comments/${postData.id}?pageSize=${pageSize}&pageNumber=${currentPage}&sortBy=datedesc`, {
 			method: 'GET',
 			headers: {
@@ -196,9 +195,8 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
                 toast({
                     title: "Hurrah!",
                     description: "Comment added correctly!",
-                    className: "bg-green-800"
+                    className: "bg-green-800 text-white"
                 })
-                
                 reset();
                 setCommentsData(prevData => {
                     return [[data], ...commentsData]
@@ -305,7 +303,7 @@ function Post({postData, setAddNewPost, setRefetchPosts, isCommentsOpenFeature =
             </CardHeader>
             
             {/* OPIS I ZDJĘCIE */}
-            <CardContent className="break-all" >
+            <CardContent className="break-words" >
                 {postData.content}
                 <Link to={`/post/${postData && postData.id}`} className="cursor-pointer">
                     <img 

@@ -37,6 +37,7 @@ const Profile = () => {
 	}, [userId]);
 
 	const getUserData = () => {
+		
 		fetch(`http://localhost:5000/api/v1/users/${userId}`, {
 			method: 'GET',
 			headers: {

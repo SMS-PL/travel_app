@@ -99,12 +99,13 @@ function Reaction({postId, likes = 0, hearts = 0, liked = false, hearted = false
 			return response.json();
 		})
 		.then(data => {
-
-            if(reactionType == 0) {             // like
+            // typ reprezentujacy polubienie
+            if(reactionType == 0) {  
                 setIsLiked(like => !like);
                 setIsHearted(false);
-                
-            } else if(reactionType == 1) {      // heart
+            
+            // typ reprezentujacy serce
+            } else if(reactionType == 1) {
                 setIsLiked(false);
                 setIsHearted(heart => !heart);
                 setIsExploding(explode => !explode);
@@ -113,7 +114,6 @@ function Reaction({postId, likes = 0, hearts = 0, liked = false, hearted = false
             setHeartsCounter(data.heart);
 		})
 		.catch(error => {
-			console.log(error.message);
             toast({
                 variant: "destructive",
                 title: "You've already used up your daily heart!",

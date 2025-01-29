@@ -35,11 +35,10 @@ const ChangeEmailView = () => {
 	} = useForm();
 
     const onSubmit = async (values) => {
-        console.log("WHAT")
         if(isValid) {
             
             try {
-                const response = await fetch("http://localhost:5000/api/v1/users", {
+                const response = await fetch("http://localhost:5000/api/v1/users/", {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json', 
@@ -55,14 +54,15 @@ const ChangeEmailView = () => {
                 if(!response.ok) {
                     throw new Error(data.message);
                 }
+                
 
                 toast({
                     title: "Hurrah!",
-                    description: "Successfully registered!",
-                    className: "bg-green-800"
+                    description: "E-mail changed successfully!",
+                    className: "bg-green-800 text-white"
                 })
 
-                navigate("/login");
+                
                 
             } catch (error) {
                 toast({
@@ -118,7 +118,7 @@ const ChangeEmailView = () => {
                 <CardContent>
                     
                     <Input 
-                        className={cn((errors.email != null) && "border-red-600 border-[2px]","bg-secondary")}
+                        className={cn(((emailAvailabilityInfo != null) || (errors.email != null)) && "border-red-600 border-[2px]","bg-secondary")}
                         placeholder="Email..."
                         id="email"
                         {...register("email", {
