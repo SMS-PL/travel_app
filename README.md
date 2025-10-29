@@ -1,5 +1,14 @@
 # 🌍 TravShare - Social Media for Travelers
-A fullstack web application built as part of our **engineering thesis**, designed to connect travelers from around the world. Users can share their travel experiences, create posts, comment, follow others, and add pins with their localization.
+A fullstack web application built as part of our **engineering thesis**, connecting travelers worldwide. Users can share photos, posts, and location pins to showcase their journeys, inspiring global interaction and exploration.
+
+### Main Features
+- 📝 CRUD for posts with photos and descriptions
+- 💬 CRUD for comments + likes and super likes (1 per 24h) for posts & comments
+- 🏅 Achievements system - users collect badges for activity
+- 📍 CRUD for check-ins (active for 24h) to mark travel locations
+- 🌍 User profile statistics - check-in history, achievements, and visited countries map
+- 🤝 Friendship system - connect and interact with other travelers
+- 🧑‍💼 Admin panel - manage users and posts
 
 
 ## ⚙️ Tech Stack
@@ -24,6 +33,9 @@ A fullstack web application built as part of our **engineering thesis**, designe
 
 #### Profile page:
 <img width="550" alt="profil_zdjecia_informacje_staty" src="https://github.com/user-attachments/assets/afea040a-1e2b-43ab-8dd3-e0c44113b255" />
+
+#### Profile page:
+<img width="600" alt="osiagniecia_list" src="https://github.com/user-attachments/assets/d2a05c96-8235-4c55-9d91-d26b9af9d215" />
 
 #### Post component:
 <img width="450"  alt="wpis_całosc" src="https://github.com/user-attachments/assets/96d2c293-f9e3-472f-ae80-7576bcf21296" />
@@ -53,7 +65,14 @@ git clone https://github.com/SMS-PL/travel_app.git
 cd travel_app
 ```
 
-### 2️⃣ Backend Setup (Spring Boot)
+### 2️⃣ Database Setup (MySQL)
+Before starting the backend, create an empty database for the application.
+
+```sql
+CREATE DATABASE travel_app_db;
+```
+
+### 3️⃣ Backend Setup (Spring Boot)
 #### Navigate to the backend directory:
 ```bash
 cd backend/travelapp
@@ -74,12 +93,20 @@ DATABASE_PASSWORD=${your_mysql_password}
 GEO_API_KEY=${your_geolocation_api_key}
 ```
 
-#### Run the Backend Server:
+#### Run the Backend Server (to generate tables with Hibernate):
 ```bash
 mvn spring-boot:run
 ```
 
-### 3️⃣ Frontend Setup (React + Vite)
+#### Insert Initial Data:
+Once the tables are created, insert the required roles:
+```sql
+USE travel_app_db;
+INSERT INTO user_role (name) VALUES ('ROLE_USER');
+INSERT INTO user_role (name) VALUES ('ROLE_ADMIN');
+```
+
+### 4️⃣ Frontend Setup (React + Vite)
 
 #### Navigate to frontend:
 ```bash
@@ -96,25 +123,9 @@ npm install
 npm run dev
 ```
 
-### 4️⃣ Database Configuration (MySql)
-Before running the application, make sure to set up the MySQL database and initial data:
-
-#### Create the Database
-```bash
-CREATE DATABASE travel_app_db;
-```
-
-#### Run the Backend Server to generate DB with hibernate:
-```bash
-mvn spring-boot:run
-```
-
-#### Create Required Roles
-```bash
-USE travel_app_db;
-INSERT INTO user_role (name) VALUES ('ROLE_USER');
-INSERT INTO user_role (name) VALUES ('ROLE_ADMIN');
-```
+### 5️⃣ Access the Application
+- Backend API: http://localhost:8080
+- Frontend app: http://localhost:5173
 
 ## 👥 Authors
 
